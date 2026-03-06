@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مسجل طلبات المحلاوي - نسخة مطورة</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+
+    <style>
+        :root {
+            --primary: #2563eb;
+            --secondary: #64748b;
+            --success: #16a34a;
+            --whatsapp: #25d366;
+            --bg: #f8fafc;
+            --text: #1e293b;
+            --card: #ffffff;
+            --border: #e2e8f0;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+        }
+
+        [data-theme="dark"] {
+            --bg: #0f172a; 
+            --text: #f1f5f9; 
+            --card: #1e293b; 
+            --border: #334155;
+        }
+
+        body { 
+            font-family: 'Segoe UI', 'Arial', system-ui, sans-serif; 
+            background: var(--bg); 
+            color: var(--text); 
+            margin: 0; 
+            padding: 15px; 
+            transition: 0.3s; 
+        }
+        
+        .container { 
+            max-width: 750px; 
+            margin: 0 auto; 
+        }
+
+        header { 
+            background: var(--card); 
+            padding: 15px; 
+            border-radius: 12px; 
+            margin-bottom: 15px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05); 
+        }
+        
+        .nav-bar { 
+            display: flex; 
+            gap: 8px; 
+        }
+        
+        .nav-btn {
+            background: none;
+            border: none;
+            color: var(--text);
+            padding: 8px 12px;
+            cursor: pointer;
+            border-radius: 6px;
+            font-weight: 500;
+        }
+        
+        .nav-btn:hover {
+            background: rgba(37, 99, 235, 0.1);
+        }
+        
+        .nav-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .card { 
+            background: var(--card); 
+            padding: 20px; 
+            border-radius: 12px; 
+            border: 1px solid var(--border); 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05); 
+        }
+        
+        input, select { 
+            width: 100%; 
+            padding: 12px; 
+            margin: 8px 0; 
+            border: 1px solid var(--border); 
+            border-radius: 8px; 
+            background: var(--bg); 
+            color: var(--text); 
+            box-sizing: border-box; 
+            font-size: 1em;
+        }
+        
+        .btn { 
+            padding: 10px 16px; 
+            border: none; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            font-weight: bold; 
+            transition: 0.2s; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 6px; 
+            font-size: 0.95em;
+        }
+        
+        .btn:active { 
+            transform: scale(0.98); 
+        }
+        
+        .btn-main { 
+            background: var(--primary); 
+            color: white; 
+            width: 100%; 
+            margin: 10px 0; 
+            font-size: 1.1em; 
+        }
+        
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+        
+        .btn-warning {
+            background: var(--warning);
+            color: white;
+        }
+        
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            margin-top: 15px; 
+            background: var(--card); 
+            border-radius: 8px; 
+            overflow: hidden; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        
+        th { 
+            background: rgba(0,0,0,0.03); 
+            padding: 12px; 
+            border: 1px solid var(--border); 
+            color: var(--secondary); 
+            text-align: center; 
+            font-size: 1em;
+        }
+        
+        td { 
+            padding: 12px; 
+            border: 1px solid var(--border); 
+            text-align: center; 
+        }
+        
+        .item-name { 
+            text-align: right; 
+            font-weight: 500; 
+            color: var(--primary); 
+        }
+
+        .row-actions { 
+            display: flex; 
+            justify-content: center; 
+            gap: 6px; 
+            border: none !important; 
+        }
+        
+        .row-btn { 
+            padding: 6px 12px; 
+            border-radius: 6px; 
+            border: none; 
+            font-size: 12px; 
+            cursor: pointer; 
+            color: white; 
+            font-weight: 600;
+        }
+        
+        .results-box { 
+            position: absolute; 
+            background: var(--card); 
+            border: 1px solid var(--border); 
+            width: 100%; 
+            z-index: 10; 
+            max-height: 200px; 
+            overflow-y: auto; 
+            border-radius: 8px; 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
+        }
+        
+        .result-item { 
+            padding: 12px; 
+            cursor: pointer; 
+            border-bottom: 1px solid var(--border); 
+        }
+        
+        .result-item:hover { 
+            background: var(--primary); 
+            color: white; 
+        }
+
+        .hidden { 
+            display: none; 
+        }
+        
+        .signature { 
+            text-align: center; 
+            margin-top: 25px; 
+            font-size: 0.9em; 
+            opacity: 0.6; 
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .stat-box {
+            background: var(--bg);
+            padding: 10px;
+            border-radius: 8px;
+            margin: 10px 0;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        /* ========================================= */
+        /* تنسيق قسم تصدير الصورة */
+        /* ========================================= */
+        #finalExportContainer {
+            width: 600px;
+            padding: 30px;
+            background: white;
+            color: black;
+            border: 2px solid #2563eb;
+            border-radius: 15px;
+            position: fixed;
+            left: -9999px;
+            direction: rtl;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        #finalExportContainer h1 { 
+            color: #2563eb; 
+            margin: 0 0 10px; 
+            text-align: center; 
+            font-size: 2em;
+        }
+        
+        #finalExportContainer .header-info { 
+            text-align: center; 
+            margin-bottom: 25px; 
+            border-bottom: 2px solid #eee; 
+            padding-bottom: 15px; 
+        }
+        
+        #finalExportContainer .client-name { 
+            font-size: 1.4em; 
+            font-weight: bold; 
+            margin: 10px 0; 
+            color: #1e293b;
+        }
+        
+        #finalExportContainer table { 
+            width: 100%; 
+            border: 2px solid #000; 
+            margin-top: 0; 
+        }
+        
+        #finalExportContainer th, 
+        #finalExportContainer td { 
+            border: 1px solid #000; 
+            color: black; 
+            padding: 12px; 
+            font-size: 1.1em; 
+        }
+        
+        #finalExportContainer th { 
+            background: #f1f5f9; 
+        }
+        
+        #finalExportContainer .export-footer { 
+            display: flex; 
+            justify-content: space-between; 
+            margin-top: 40px; 
+            font-weight: bold; 
+            font-size: 1.1em; 
+        }
+    </style>
+</head>
+<body data-theme="light">
+
+<div class="container">
+    <header>
+        <div style="font-weight: bold; font-size: 1.3em;">🏢 طلبات المحلاوي</div>
+        <div class="nav-bar">
+            <button class="nav-btn active" id="navMainBtn" onclick="showPage('main')">الطلب</button>
+            <button class="nav-btn" id="navItemsBtn" onclick="showPage('items')">المواد</button>
+        </div>
+        <button onclick="toggleTheme()" style="background:none; border:none; cursor:pointer; font-size:1.3em;" title="تغيير الثيم">🌓</button>
+    </header>
+
+    <!-- صفحة الطلب الرئيسية -->
+    <div id="mainPage" class="card">
+        <input type="text" id="clientName" placeholder="اسم العميل المستلم..." autocomplete="off">
+        
+        <div class="stat-box" id="itemsCount">
+            عدد المواد في الجدول: 0
+        </div>
+        
+        <div style="position: relative;">
+            <input type="text" id="itemSearch" placeholder="ابحث عن مادة..." autocomplete="off">
+            <div id="results" class="results-box hidden"></div>
+        </div>
+        
+        <input type="number" id="qty" placeholder="الكمية المطلوبة" min="1">
+        
+        <div style="display: flex; gap: 8px;">
+            <button class="btn btn-main" onclick="addItem()" style="flex: 3;">+ إضافة للجدول</button>
+            <button class="btn btn-warning" onclick="clearTable()" style="flex: 1;" title="مسح الجدول">🗑️</button>
+        </div>
+
+        <table id="resultTable">
+            <thead>
+                <tr>
+                    <th>المادة المطلوبة</th>
+                    <th>الكمية</th>
+                    <th>تحكم</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+
+        <div class="action-buttons">
+            <button class="btn" style="background:var(--whatsapp); color:white; flex:1;" onclick="exportAsImage()">
+                🖼️ صورة للواتساب
+            </button>
+            <button class="btn" style="background:var(--success); color:white; flex:1;" onclick="window.print()">
+                🖨️ طباعة
+            </button>
+            <button class="btn" style="background:var(--secondary); color:white; flex:1;" onclick="savePDF()">
+                📄 PDF
+            </button>
+        </div>
+        
+        <div class="action-buttons">
+            <button class="btn" style="background:var(--primary); color:white; flex:1;" onclick="saveCurrentOrder()">
+                💾 حفظ الطلب
+            </button>
+            <button class="btn" style="background:var(--danger); color:white; flex:1;" onclick="loadLastOrder()">
+                📂 آخر طلب
+            </button>
+        </div>
+    </div>
+
+    <!-- صفحة إدارة المواد -->
+    <div id="itemsPage" class="card hidden">
+        <h3>📦 إدارة قائمة المواد</h3>
+        <p>أضف أو احذف المواد التي تظهر في بحث الإضافة</p>
+        
+        <div style="display:flex; gap:5px; margin-bottom:15px;">
+            <input type="text" id="newItem" placeholder="مادة جديدة..." autocomplete="off">
+            <button class="btn" style="background:var(--primary); color:white; min-width: 80px;" onclick="addNewItem()">➕ إضافة</button>
+        </div>
+        
+        <div style="margin: 15px 0;">
+            <input type="text" id="searchMasterItems" placeholder="ابحث في المواد..." oninput="filterMasterItems(this.value)">
+        </div>
+        
+        <div id="masterItemsList" style="max-height: 300px; overflow-y: auto; border: 1px solid var(--border); border-radius: 8px; padding: 5px;"></div>
+        
+        <div style="margin-top: 15px; display: flex; gap: 5px;">
+            <button class="btn" style="background:var(--secondary); color:white; flex:1;" onclick="resetDefaultItems()">
+                🔄 استعادة الافتراضي
+            </button>
+            <button class="btn" style="background:var(--danger); color:white; flex:1;" onclick="if(confirm('حذف جميع المواد؟')) { items = []; localStorage.setItem('items', JSON.stringify(items)); renderMasterItems(); }">
+                🗑️ حذف الكل
+            </button>
+        </div>
+    </div>
+
+    <div class="signature">برنامج تسجيل الطلبات | م/ أحمد المحلاوي | الإصدار 2.0</div>
+</div>
+
+<!-- قالب تصدير الصورة (مخفي) -->
+<div id="finalExportContainer">
+    <div class="header-info">
+        <h1>كشف طلب بضاعة</h1>
+        <p>🏢 المحلاوي ستور لإمدادات البناء</p>
+        <p class="client-name" id="exportClientName"></p>
+        <p>تاريخ الطلب: <span id="exportDate"></span></p>
+    </div>
+
+    <table id="exportTable">
+        <thead>
+            <tr>
+                <th>المادة</th>
+                <th>الكمية</th>
+            </tr>
+        </thead>
+        <tbody id="exportTableBody"></tbody>
+    </table>
+
+    <div class="export-footer">
+        <div>توقيع المستلم: .....................</div>
+        <div>توقيع الإدارة: أحمد المحلاوي</div>
+    </div>
+</div>
+
+<script>
+// ==================== البيانات الأساسية ====================
+let items = JSON.parse(localStorage.getItem("items")) || ["رمل", "أسمنت", "حديد 12 مم", "طوب طفلي", "زلط", "جبس", "سيراميك", "دهان أبيض"];
+let savedOrders = JSON.parse(localStorage.getItem("savedOrders")) || [];
+
+// ==================== العناصر ====================
+const searchInput = document.getElementById("itemSearch");
+const resultsDiv = document.getElementById("results");
+const clientNameInput = document.getElementById("clientName");
+const qtyInput = document.getElementById("qty");
+const tableBody = document.querySelector("#resultTable tbody");
+const itemsCountSpan = document.getElementById("itemsCount");
+
+// ==================== دوال مساعدة ====================
+function updateItemsCount() {
+    let count = tableBody.rows.length;
+    itemsCountSpan.innerText = `عدد المواد في الجدول: ${count}`;
+}
+
+// التبديل بين الصفحات
+function showPage(page) {
+    document.querySelectorAll('.card').forEach(c => c.classList.add('hidden'));
+    document.getElementById(page + "Page").classList.remove("hidden");
+    
+    // تحديث حالة الأزرار
+    document.getElementById('navMainBtn').classList.remove('active');
+    document.getElementById('navItemsBtn').classList.remove('active');
+    
+    if(page === 'main') {
+        document.getElementById('navMainBtn').classList.add('active');
+        updateItemsCount();
+    } else {
+        document.getElementById('navItemsBtn').classList.add('active');
+        renderMasterItems();
+    }
+}
+
+// التبديل بين الوضع الليلي والعادي
+function toggleTheme() {
+    const body = document.body;
+    const current = body.getAttribute("data-theme");
+    body.setAttribute("data-theme", current === "light" ? "dark" : "light");
+}
+
+// ==================== البحث الديناميكي ====================
+searchInput.addEventListener("input", function() {
+    let val = this.value.trim().toLowerCase();
+    resultsDiv.innerHTML = "";
+    
+    if(!val) { 
+        resultsDiv.classList.add('hidden'); 
+        return;
+    }
+    
+    let filtered = items.filter(i => i.toLowerCase().includes(val));
+    
+    if(filtered.length === 0) { 
+        resultsDiv.classList.add('hidden'); 
+        return;
+    }
+
+    filtered.forEach(item => {
+        let div = document.createElement("div");
+        div.className = "result-item";
+        div.innerText = item;
+        div.onclick = () => { 
+            searchInput.value = item; 
+            resultsDiv.classList.add('hidden');
+            qtyInput.focus();
+        };
+        resultsDiv.appendChild(div);
+    });
+    
+    resultsDiv.classList.remove('hidden');
+});
+
+// ==================== إدارة الجدول ====================
+function addItem() {
+    let name = searchInput.value.trim();
+    let qty = qtyInput.value.trim();
+    
+    if(!name) return alert("يرجى كتابة اسم المادة");
+    if(!qty || qty <= 0) return alert("يرجى إدخال كمية صحيحة");
+
+    let row = tableBody.insertRow();
+    row.innerHTML = `
+        <td class="item-name">${name}</td>
+        <td style="font-weight:bold; font-size:1.1em;">${qty}</td>
+        <td class="row-actions">
+            <button class="row-btn" style="background:#f59e0b" onclick="editRow(this)">✏️ تعديل</button>
+            <button class="row-btn" style="background:#ef4444" onclick="deleteRow(this)">🗑️ حذف</button>
+        </td>
+    `;
+    
+    searchInput.value = "";
+    qtyInput.value = "";
+    searchInput.focus();
+    updateItemsCount();
+}
+
+function editRow(btn) {
+    let row = btn.parentElement.parentElement;
+    searchInput.value = row.cells[0].innerText;
+    qtyInput.value = row.cells[1].innerText;
+    row.remove();
+    updateItemsCount();
+}
+
+function deleteRow(btn) {
+    if(confirm("تأكيد حذف المادة؟")) {
+        btn.parentElement.parentElement.remove();
+        updateItemsCount();
+    }
+}
+
+function clearTable() {
+    if(tableBody.rows.length > 0 && confirm("هل أنت متأكد من مسح جميع المواد؟")) {
+        tableBody.innerHTML = "";
+        updateItemsCount();
+    }
+}
+
+// ==================== تصدير الصورة (مصحح) ====================
+function exportAsImage() {
+    let client = clientNameInput.value || "عميل غير مسمى";
+    
+    if(tableBody.rows.length === 0) 
+        return alert("الجدول فارغ! أضف مواد أولاً");
+
+    // تجهيز بيانات التصدير
+    document.getElementById("exportClientName").innerText = "العميل: " + client;
+    document.getElementById("exportDate").innerText = new Date().toLocaleDateString('ar-EG');
+    
+    let exportTbody = document.getElementById("exportTableBody");
+    exportTbody.innerHTML = "";
+
+    Array.from(tableBody.rows).forEach(row => {
+        let newRow = exportTbody.insertRow();
+        newRow.innerHTML = `
+            <td style="text-align:right">${row.cells[0].innerText}</td>
+            <td style="font-weight:bold">${row.cells[1].innerText}</td>
+        `;
+    });
+
+    // الحصول على العنصر وإنشاء نسخة منه
+    let originalContainer = document.getElementById("finalExportContainer");
+    let cloneContainer = originalContainer.cloneNode(true);
+    
+    // تجهيز النسخة للتصوير
+    cloneContainer.style.position = "absolute";
+    cloneContainer.style.left = "0";
+    cloneContainer.style.top = "0";
+    cloneContainer.style.visibility = "visible";
+    cloneContainer.style.zIndex = "-1";
+    document.body.appendChild(cloneContainer);
+
+    // تصوير النسخة
+    html2canvas(cloneContainer, {
+        scale: 2,
+        backgroundColor: "#ffffff",
+        logging: false,
+        allowTaint: false,
+        useCORS: true
+    }).then(canvas => {
+        // تحويل إلى صورة وتحميلها
+        let imgData = canvas.toDataURL("image/png");
+        let link = document.createElement('a');
+        link.download = `طلب_${client}_${new Date().toLocaleDateString('ar-EG').replace(/\//g, '-')}.png`;
+        link.href = imgData;
+        link.click();
+
+        // تنظيف
+        document.body.removeChild(cloneContainer);
+    }).catch(error => {
+        alert("حدث خطأ في تصدير الصورة: " + error);
+        document.body.removeChild(cloneContainer);
+    });
+}
+
+// ==================== تصدير PDF (مصحح) ====================
+function savePDF() {
+    // التحقق من وجود المكتبة
+    if (typeof jspdf === 'undefined') {
+        alert("مكتبة PDF لم يتم تحميلها بعد، حاول مرة أخرى");
+        return;
+    }
+    
+    let client = clientNameInput.value || "بدون اسم";
+    let rows = [];
+    
+    Array.from(tableBody.rows).forEach(tr => {
+        rows.push([tr.cells[1].innerText, tr.cells[0].innerText]); // [الكمية, المادة]
+    });
+    
+    if(rows.length === 0) return alert("الجدول فارغ!");
+    
+    const { jsPDF } = jspdf;
+    let doc = new jsPDF();
+    
+    // إضافة العنوان
+    doc.setFontSize(16);
+    doc.text("كشف طلب بضاعة", 105, 15, { align: "center" });
+    
+    doc.setFontSize(12);
+    doc.text(`المستلم: ${client}`, 190, 25, { align: "right" });
+    doc.text(`التاريخ: ${new Date().toLocaleDateString('ar-EG')}`, 190, 32, { align: "right" });
+    
+    // إنشاء الجدول
+    doc.autoTable({
+        head: [['الكمية', 'المادة']],
+        body: rows,
+        startY: 40,
+        styles: { 
+            halign: 'center',
+            font: 'arial',
+            fontSize: 11
+        },
+        headStyles: {
+            fillColor: [37, 99, 235],
+            textColor: 255
+        },
+        alternateRowStyles: {
+            fillColor: [245, 245, 245]
+        }
+    });
+    
+    // التوقيع
+    let finalY = doc.lastAutoTable.finalY + 20;
+    doc.text("توقيع المستلم: _________________", 20, finalY);
+    doc.text("توقيع الإدارة: أحمد المحلاوي", 140, finalY);
+    
+    doc.save(`طلب_${client}.pdf`);
+}
+
+// ==================== حفظ واسترجاع الطلبات ====================
+function saveCurrentOrder() {
+    let client = clientNameInput.value || "بدون اسم";
+    let rows = [];
+    
+    Array.from(tableBody.rows).forEach(tr => {
+        rows.push({
+            item: tr.cells[0].innerText,
+            qty: tr.cells[1].innerText
+        });
+    });
+    
+    if (rows.length === 0) return alert("لا يوجد عناصر للحفظ");
+    
+    savedOrders.push({
+        client: client,
+        date: new Date().toISOString(),
+        items: rows
+    });
+    
+    localStorage.setItem("savedOrders", JSON.stringify(savedOrders));
+    alert("✅ تم حفظ الطلب بنجاح");
+}
+
+function loadLastOrder() {
+    if (savedOrders.length === 0) {
+        alert("لا يوجد طلبات محفوظة");
+        return;
+    }
+    
+    let lastOrder = savedOrders[savedOrders.length - 1];
+    
+    if(confirm(`تحميل آخر طلب للعميل: ${lastOrder.client}؟`)) {
+        // تفريغ الجدول الحالي
+        tableBody.innerHTML = "";
+        
+        // إضافة المواد من الطلب المحفوظ
+        lastOrder.items.forEach(item => {
+            let row = tableBody.insertRow();
+            row.innerHTML = `
+                <td class="item-name">${item.item}</td>
+                <td style="font-weight:bold; font-size:1.1em;">${item.qty}</td>
+                <td class="row-actions">
+                    <button class="row-btn" style="background:#f59e0b" onclick="editRow(this)">✏️ تعديل</button>
+                    <button class="row-btn" style="background:#ef4444" onclick="deleteRow(this)">🗑️ حذف</button>
+                </td>
+            `;
+        });
+        
+        clientNameInput.value = lastOrder.client;
+        updateItemsCount();
+    }
+}
+
+// ==================== إدارة المواد (محسنة) ====================
+function renderMasterItems() {
+    let container = document.getElementById("masterItemsList");
+    
+    if(items.length === 0) {
+        container.innerHTML = '<div style="padding: 20px; text-align: center; color: var(--secondary);">📭 لا توجد مواد، أضف مواد جديدة</div>';
+        return;
+    }
+    
+    container.innerHTML = items.map((it, i) => `
+        <div style="display:flex; justify-content:space-between; align-items:center; padding:10px; border-bottom:1px solid var(--border);">
+            <span style="font-weight:500;">${it}</span>
+            <button class="row-btn" style="background:#ef4444; padding:4px 10px;" onclick="deleteMasterItem(${i})">🗑️ حذف</button>
+        </div>
+    `).join('');
+}
+
+function filterMasterItems(searchTerm) {
+    let container = document.getElementById("masterItemsList");
+    let filtered = items.filter(it => it.toLowerCase().includes(searchTerm.toLowerCase()));
+    
+    if(filtered.length === 0) {
+        container.innerHTML = '<div style="padding: 20px; text-align: center; color: var(--secondary);">🔍 لا توجد نتائج</div>';
+        return;
+    }
+    
+    container.innerHTML = filtered.map((it, index) => {
+        let originalIndex = items.indexOf(it);
+        return `
+            <div style="display:flex; justify-content:space-between; align-items:center; padding:10px; border-bottom:1px solid var(--border);">
+                <span style="font-weight:500;">${it}</span>
+                <button class="row-btn" style="background:#ef4444; padding:4px 10px;" onclick="deleteMasterItem(${originalIndex})">🗑️ حذف</button>
+            </div>
+        `;
+    }).join('');
+}
+
+function addNewItem() {
+    let val = document.getElementById("newItem").value.trim();
+    if(val) { 
+        if(!items.includes(val)) {
+            items.push(val); 
+            localStorage.setItem("items", JSON.stringify(items)); 
+            renderMasterItems(); 
+            document.getElementById("newItem").value = "";
+            document.getElementById("searchMasterItems").value = "";
+        } else {
+            alert("هذه المادة موجودة بالفعل");
+        }
+    }
+}
+
+function deleteMasterItem(index) {
+    if(confirm(`حذف "${items[index]}"؟`)) {
+        items.splice(index, 1); 
+        localStorage.setItem("items", JSON.stringify(items)); 
+        renderMasterItems();
+        document.getElementById("searchMasterItems").value = "";
+    }
+}
+
+function resetDefaultItems() {
+    if(confirm("استعادة قائمة المواد الافتراضية؟")) {
+        items = ["رمل", "أسمنت", "حديد 12 مم", "طوب طفلي", "زلط", "جبس", "سيراميك", "دهان أبيض"];
+        localStorage.setItem("items", JSON.stringify(items));
+        renderMasterItems();
+        document.getElementById("searchMasterItems").value = "";
+    }
+}
+
+// ==================== إغلاق قائمة البحث ====================
+document.addEventListener("click", (e) => { 
+    if(e.target !== searchInput && !resultsDiv.contains(e.target)) {
+        resultsDiv.classList.add('hidden'); 
+    }
+});
+
+// تحديث العدد عند التحميل
+updateItemsCount();
+
+// تنشيط الصفحة الرئيسية
+showPage('main');
+</script>
+</body>
+</html>
