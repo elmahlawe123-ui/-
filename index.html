@@ -119,10 +119,10 @@
 </div>
 
 <script>
-    // 🔗 رابط الـ Web App الخاص بك
-    const SHEET_API_URL = "ضع_هنا_رابط_الـ_exec_الخاص_بشيت_جوجل";
+    // 🔗 رابط الـ Web App الخاص بك - غيّر هذا الرابط إلى رابطك
+    const SHEET_API_URL = "https://script.google.com/macros/s/AKfycbxpLCjlUwVshujUaPqIDjz1LM85sExfEnd8qBoPkybaqVL3v_ugjZYX7MohzcW4lAQf/exec";
 
-    let items = JSON.parse(localStorage.getItem("items")) || [];
+    let items = JSON.parse(localStorage.getItem("items")) || ["رمل", "أسمنت", "حديد", "طوب"];
 
     // 1. جلب البيانات وتحديث الواجهتين
     async function syncData() {
@@ -135,14 +135,16 @@
                 localStorage.setItem("items", JSON.stringify(items));
                 renderGallery(); // تحديث صفحة التصفح
                 status.innerHTML = "✅ البيانات محدثة من جوجل شيت";
+                status.style.color = "var(--success)";
             }
         } catch (e) {
-            status.innerHTML = "⚠️ وضع الأوفلاين (بيانات مخزنة)";
+            status.innerHTML = "⚠️ وضع الأوفلاين (بيانات مخزنة محلياً)";
+            status.style.color = "var(--warning)";
             renderGallery();
         }
     }
 
-    // 2. البحث السريع (Optimized Search)
+    // 2. البحث السريع
     const searchInput = document.getElementById("itemSearch");
     const resultsDiv = document.getElementById("results");
 
@@ -205,17 +207,22 @@
     }
 
     function addItem() {
-        const name = searchInput.value;
-        const qty = document.getElementById("qty").value;
-        if(!name || !qty) return alert("أكمل البيانات");
+        const name = searchInput.value.trim();
+        const qty = document.getElementById("qty").value.trim();
+        if(!name) return alert("أدخل اسم الصنف");
+        if(!qty || qty <= 0) return alert("أدخل كمية صحيحة");
 
         const tbody = document.querySelector("#resultTable tbody");
         const row = tbody.insertRow();
-        row.innerHTML = `<td>${name}</td><td style="font-weight:bold">${qty}</td><td><button onclick="this.parentElement.parentElement.remove()" style="background:#ef4444; color:white; border:none; padding:5px 10px; border-radius:5px;">X</button></td>`;
-        searchInput.value = ""; document.getElementById("qty").value = "";
+        row.innerHTML = `<td>${name}</td><td style="font-weight:bold">${qty}</td><td><button onclick="this.parentElement.parentElement.remove()" style="background:#ef4444; color:white; border:none; padding:5px 10px; border-radius:5px;">✖</button></td>`;
+        searchInput.value = ""; 
+        document.getElementById("qty").value = "";
     }
 
-    function clearTable() { if(confirm("مسح الطلب؟")) document.querySelector("#resultTable tbody").innerHTML = ""; }
+    function clearTable() { 
+        if(confirm("مسح الطلب بالكامل؟")) 
+            document.querySelector("#resultTable tbody").innerHTML = ""; 
+    }
 
     async function exportAsImage() {
         const client = document.getElementById("clientName").value || "بدون اسم";
@@ -247,7 +254,10 @@
     }
 
     window.onload = syncData;
-    document.addEventListener("click", (e) => { if(e.target !== searchInput) resultsDiv.classList.add('hidden'); });
+    document.addEventListener("click", (e) => { 
+        if(e.target !== searchInput && !resultsDiv.contains(e.target)) 
+            resultsDiv.classList.add('hidden'); 
+    });
 </script>
 
 </body>
