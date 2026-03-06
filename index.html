@@ -3,80 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مسجل طلبات المحلاوي - نسخة تصدير الصور</title>
+    <title>مسجل طلبات المحلاوي - نسخة الربط مع جوجل</title>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
-
+    
     <style>
         :root {
-            --primary: #2563eb;
-            --secondary: #64748b;
-            --success: #16a34a;
-            --whatsapp: #25d366;
-            --bg: #f8fafc;
-            --text: #1e293b;
-            --card: #ffffff;
-            --border: #e2e8f0;
+            --primary: #2563eb; --secondary: #64748b; --success: #16a34a;
+            --whatsapp: #25d366; --bg: #f8fafc; --text: #1e293b;
+            --card: #ffffff; --border: #e2e8f0;
         }
-
         [data-theme="dark"] {
             --bg: #0f172a; --text: #f1f5f9; --card: #1e293b; --border: #334155;
         }
-
-        body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 15px; transition: 0.3s; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 15px; transition: 0.3s; }
         .container { max-width: 750px; margin: 0 auto; }
-
         header { background: var(--card); padding: 15px; border-radius: 12px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-        .nav-bar { display: flex; gap: 8px; }
-        
         .card { background: var(--card); padding: 20px; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-        
-        input, select { width: 100%; padding: 10px; margin: 6px 0; border: 1px solid var(--border); border-radius: 8px; background: var(--bg); color: var(--text); box-sizing: border-box; }
-        
-        .btn { padding: 10px 16px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 6px; }
-        .btn:active { transform: scale(0.98); }
-        .btn-main { background: var(--primary); color: white; width: 100%; margin: 10px 0; font-size: 1.1em; }
-        
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; background: var(--card); border-radius: 8px; overflow: hidden; }
-        th { background: rgba(0,0,0,0.03); padding: 12px; border: 1px solid var(--border); color: var(--secondary); text-align: center; }
-        td { padding: 10px; border: 1px solid var(--border); text-align: center; }
-        .item-name { text-align: right; font-weight: 500; color: var(--primary); }
-
-        .row-actions { display: flex; justify-content: center; gap: 4px; border: none !important; }
-        .row-btn { padding: 4px 8px; border-radius: 6px; border: none; font-size: 12px; cursor: pointer; color: white; }
-        
-        /* ألوان النتائج والأزرار */
-        .results-box { position: absolute; background: var(--card); border: 1px solid var(--border); width: 100%; z-index: 10; max-height: 150px; overflow-y: auto; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        input { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid var(--border); border-radius: 8px; background: var(--bg); color: var(--text); box-sizing: border-box; }
+        .btn { padding: 12px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s; }
+        .btn-main { background: var(--primary); color: white; width: 100%; margin: 10px 0; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { padding: 12px; border: 1px solid var(--border); text-align: center; }
+        .results-box { position: absolute; background: var(--card); border: 1px solid var(--border); width: 100%; z-index: 10; max-height: 200px; overflow-y: auto; border-radius: 8px; }
         .result-item { padding: 10px; cursor: pointer; border-bottom: 1px solid var(--border); }
         .result-item:hover { background: var(--primary); color: white; }
-
         .hidden { display: none; }
-        .signature { text-align: center; margin-top: 25px; font-size: 0.9em; opacity: 0.6; }
-
-        /* ========================================= */
-        /* تنسيق قسم تصدير الصورة (مخفي في الصفحة) */
-        /* ========================================= */
-        #finalExportContainer {
-            width: 600px; /* عرض ثابت للصورة الناتجة */
-            padding: 30px;
-            background: white; /* خلفية بيضاء دائماً للصورة */
-            color: black;
-            border: 2px solid #2563eb;
-            border-radius: 15px;
-            position: fixed;
-            left: -9999px; /* إخفاء خارج الشاشة */
-            direction: rtl;
-        }
-
-        #finalExportContainer h1 { color: #2563eb; margin: 0; text-align: center; }
-        #finalExportContainer .header-info { text-align: center; margin-bottom: 25px; border-bottom: 2px solid #eee; padding-bottom: 15px; }
-        #finalExportContainer .client-name { font-size: 1.3em; font-weight: bold; margin: 10px 0; }
-        #finalExportContainer table { width: 100%; border: 2px solid #000; margin-top: 0; }
-        #finalExportContainer th, #finalExportContainer td { border: 1px solid #000; color: black; padding: 12px; font-size: 1.1em; }
-        #finalExportContainer th { background: #f1f5f9; }
-        #finalExportContainer .export-footer { display: flex; justify-content: space-between; margin-top: 40px; font-weight: bold; font-size: 1.1em; }
+        
+        /* تنسيق كشف التصدير للواتساب */
+        #finalExportContainer { width: 600px; padding: 30px; background: white; color: black; position: fixed; left: -9999px; direction: rtl; border: 2px solid #2563eb; border-radius: 15px; }
+        #finalExportContainer h1 { color: #2563eb; text-align: center; margin: 0; }
+        .export-header { text-align: center; border-bottom: 2px solid #eee; padding-bottom: 15px; margin-bottom: 20px; }
     </style>
 </head>
 <body data-theme="light">
@@ -84,238 +41,156 @@
 <div class="container">
     <header>
         <div style="font-weight: bold; font-size: 1.2em;">🏢 طلبات المحلاوي</div>
-        <div class="nav-bar">
-            <button class="btn" style="background:none; color:var(--text)" onclick="showPage('main')">الطلب</button>
-            <button class="btn" style="background:none; color:var(--text)" onclick="showPage('items')">المواد</button>
-        </div>
         <button onclick="toggleTheme()" style="background:none; border:none; cursor:pointer; font-size:1.3em;">🌓</button>
     </header>
 
-    <div id="mainPage" class="card">
-        <input type="text" id="clientName" placeholder="اسم العميل المستلم...">
+    <div class="card">
+        <input type="text" id="clientName" placeholder="اسم العميل...">
         
         <div style="position: relative;">
-            <input type="text" id="itemSearch" placeholder="ابحث عن مادة..." autocomplete="off">
+            <input type="text" id="itemSearch" placeholder="ابحث عن صنف من الجدول..." autocomplete="off">
             <div id="results" class="results-box hidden"></div>
         </div>
         
-        <input type="number" id="qty" placeholder="الكمية المطلوبة">
-        <button class="btn btn-main" onclick="addItem()">+ إضافة للجدول</button>
+        <input type="number" id="qty" placeholder="الكمية">
+        <button class="btn btn-main" onclick="addItem()">+ إضافة للطلب</button>
 
         <table id="resultTable">
             <thead>
                 <tr>
-                    <th>المادة المطلوبة</th>
+                    <th>الصنف</th>
                     <th>الكمية</th>
-                    <th>تحكم</th>
+                    <th>حذف</th>
                 </tr>
             </thead>
             <tbody></tbody>
         </table>
 
-        <div style="display: flex; gap: 8px; margin-top: 20px; flex-wrap: wrap;">
+        <div style="display: flex; gap: 10px; margin-top: 20px;">
             <button class="btn" style="background:var(--whatsapp); color:white; flex:1;" onclick="exportAsImage()">
-                🖼️ حفظ كصورة للواتساب
+                🖼️ حفظ للواتساب
             </button>
-            <button class="btn" style="background:var(--success); color:white; flex:1;" onclick="window.print()">
-                🖨️ طباعة الطلب
-            </button>
-            <button class="btn" style="background:var(--secondary); color:white; flex:1;" onclick="savePDF()">
-                📄 حفظ PDF
+            <button class="btn" style="background:var(--secondary); color:white;" onclick="clearTable()">
+                🗑️ مسح الكل
             </button>
         </div>
+        <div id="status" style="font-size: 0.8em; text-align: center; margin-top: 10px; opacity: 0.7;">جاري تحديث الأصناف...</div>
     </div>
-
-    <div id="itemsPage" class="card hidden">
-        <h3>إدارة قائمة المواد</h3>
-        <div style="display:flex; gap:5px; margin-bottom:15px;">
-            <input type="text" id="newItem" placeholder="مادة جديدة...">
-            <button class="btn" style="background:var(--primary); color:white;" onclick="addNewItem()">إضافة</button>
-        </div>
-        <div id="masterItemsList"></div>
-    </div>
-
-    <div class="signature">برنامج تسجيل الطلبات | م/ أحمد المحلاوي</div>
 </div>
 
 <div id="finalExportContainer">
-    <div class="header-info">
+    <div class="export-header">
         <h1>كشف طلب بضاعة</h1>
         <p>🏢 المحلاوي ستور لإمدادات البناء</p>
-        <p class="client-name" id="exportClientName"></p>
-        <p>تاريخ الطلب: <span id="exportDate"></span></p>
+        <p id="expClient" style="font-weight: bold; font-size: 1.2em;"></p>
+        <p id="expDate"></p>
     </div>
-
-    <table id="exportTable">
+    <table style="width: 100%; border: 2px solid black;">
         <thead>
-            <tr>
-                <th>المادة</th>
-                <th>الكمية</th>
+            <tr style="background: #f1f5f9;">
+                <th style="border: 1px solid black;">الصنف</th>
+                <th style="border: 1px solid black;">الكمية</th>
             </tr>
         </thead>
-        <tbody id="exportTableBody">
-            </tbody>
+        <tbody id="expBody"></tbody>
     </table>
-
-    <div class="export-footer">
-        <div>توقيع المستلم: .....................</div>
-        <div>توقيع الإدارة: أحمد المحلاوي</div>
+    <div style="display: flex; justify-content: space-between; margin-top: 40px; font-weight: bold;">
+        <div>توقيع المستلم: .................</div>
+        <div>الإدارة: أحمد المحلاوي</div>
     </div>
 </div>
 
 <script>
-// البيانات
-let items = JSON.parse(localStorage.getItem("items")) || ["رمل", "أسمنت", "حديد 12", "طوب طفلي"];
-let orders = JSON.parse(localStorage.getItem("orders")) || [];
+    // 🔗 ضع رابط الـ Web App الخاص بك هنا
+    const SHEET_API_URL = "ضع_هنا_الرابط_الذي_ينتهي_بكلمة_exec";
 
-// التبديل بين الوضع الليلي والعادي
-function toggleTheme() {
-    const body = document.body;
-    body.setAttribute("data-theme", body.getAttribute("data-theme") === "light" ? "dark" : "light");
-}
+    let items = JSON.parse(localStorage.getItem("items")) || ["تحميل..."];
 
-function showPage(p) {
-    document.querySelectorAll('.card').forEach(c => c.classList.add('hidden'));
-    document.getElementById(p + "Page").classList.remove("hidden");
-    if(p === 'items') renderMasterItems();
-}
+    // 1. جلب البيانات من جوجل شيت
+    async function loadFromSheet() {
+        const status = document.getElementById("status");
+        try {
+            const response = await fetch(SHEET_API_URL);
+            const data = await response.json();
+            if(data && data.length > 0) {
+                items = data;
+                localStorage.setItem("items", JSON.stringify(items));
+                status.innerText = "✅ تم تحديث الأصناف من جوجل شيت";
+            }
+        } catch (e) {
+            status.innerText = "⚠️ فشل التحديث (تعمل بالنسخة المخزنة)";
+            console.error(e);
+        }
+    }
 
-// البحث
-const searchInput = document.getElementById("itemSearch");
-const resultsDiv = document.getElementById("results");
+    // 2. البحث التفاعلي
+    const searchInput = document.getElementById("itemSearch");
+    const resultsDiv = document.getElementById("results");
 
-searchInput.addEventListener("input", function() {
-    let val = this.value.trim().toLowerCase();
-    resultsDiv.innerHTML = "";
-    if(!val) { resultsDiv.classList.add('hidden'); return; }
-    
-    let filtered = items.filter(i => i.toLowerCase().includes(val));
-    if(filtered.length === 0) { resultsDiv.classList.add('hidden'); return; }
-
-    filtered.forEach(item => {
-        let div = document.createElement("div");
-        div.className = "result-item";
-        div.innerText = item;
-        div.onclick = () => { searchInput.value = item; resultsDiv.classList.add('hidden'); };
-        resultsDiv.appendChild(div);
-    });
-    resultsDiv.classList.remove('hidden');
-});
-
-// إضافة للجدول
-function addItem() {
-    let name = searchInput.value;
-    let qty = document.getElementById("qty").value;
-    if(!name || !qty) return alert("يرجى إكمال البيانات");
-
-    let tbody = document.querySelector("#resultTable tbody");
-    let row = tbody.insertRow();
-    row.innerHTML = `
-        <td class="item-name">${name}</td>
-        <td style="font-weight:bold; font-size:1.1em;">${qty}</td>
-        <td class="row-actions">
-            <button class="row-btn" style="background:#f59e0b" onclick="editRow(this)">تعديل</button>
-            <button class="row-btn" style="background:#ef4444" onclick="this.parentElement.parentElement.remove()">حذف</button>
-        </td>
-    `;
-    searchInput.value = ""; document.getElementById("qty").value = ""; searchInput.focus();
-}
-
-function editRow(btn) {
-    let row = btn.parentElement.parentElement;
-    searchInput.value = row.cells[0].innerText;
-    document.getElementById("qty").value = row.cells[1].innerText;
-    row.remove();
-}
-
-// =========================================
-// وظيفة التصدير كصورة (الفاتورة الأنيقة)
-// =========================================
-function exportAsImage() {
-    let client = document.getElementById("clientName").value || "عميل غير مسمى";
-    let tbody = document.querySelector("#resultTable tbody");
-    
-    if(tbody.rows.length === 0) return alert("الجدول فارغ!");
-
-    // 1. تجهيز البيانات في القسم المخفي (Export Container)
-    document.getElementById("exportClientName").innerText = "العميل: " + client;
-    document.getElementById("exportDate").innerText = new Date().toLocaleDateString('ar-EG');
-    
-    let exportTbody = document.getElementById("exportTableBody");
-    exportTbody.innerHTML = ""; // تنظيف الجدول القديم
-
-    // نقل البيانات من الجدول المرئي للجدول المخفي
-    Array.from(tbody.rows).forEach(row => {
-        let newRow = exportTbody.insertRow();
-        newRow.innerHTML = `
-            <td style="text-align:right">${row.cells[0].innerText}</td>
-            <td style="font-weight:bold">${row.cells[1].innerText}</td>
-        `;
-    });
-
-    // 2. استخدام مكتبة html2canvas لالتقاط الصورة
-    let container = document.getElementById("finalExportContainer");
-    
-    // إظهار مؤقت لالتقاط الصورة بدقة
-    container.style.left = "0px"; 
-    container.style.top = "0px";
-    container.style.visibility = "hidden"; // مخفي عن العين لكن موجود للمكتبة
-
-    html2canvas(container, {
-        scale: 2, // جودة عالية (Double resolution)
-        useCORS: true, // للسماح بتحميل الصور الخارجية إن وجدت
-        backgroundColor: "#ffffff" // خلفية بيضاء ناصعة للصورة
-    }).then(canvas => {
-        // تحويل الـ Canvas لرابط صورة (PNG)
-        let imgData = canvas.toDataURL("image/png");
+    searchInput.addEventListener("input", function() {
+        let val = this.value.trim().toLowerCase();
+        resultsDiv.innerHTML = "";
+        if(!val) { resultsDiv.classList.add('hidden'); return; }
         
-        // إنشاء رابط تحميل وهمي للضغط عليه تلقائياً
-        let link = document.createElement('a');
-        link.download = `طلب_${client}_${new Date().toLocaleDateString('ar-EG')}.png`;
-        link.href = imgData;
-        link.click(); // بدء التحميل
+        let filtered = items.filter(i => i.toString().toLowerCase().includes(val));
+        filtered.forEach(item => {
+            let div = document.createElement("div");
+            div.className = "result-item";
+            div.innerText = item;
+            div.onclick = () => { searchInput.value = item; resultsDiv.classList.add('hidden'); document.getElementById("qty").focus(); };
+            resultsDiv.appendChild(div);
+        });
+        resultsDiv.classList.remove('hidden');
+    });
 
-        // إخفاء الـ Container مرة أخرى
+    // 3. وظائف الجدول
+    function addItem() {
+        let name = searchInput.value;
+        let qty = document.getElementById("qty").value;
+        if(!name || !qty) return alert("أدخل الصنف والكمية");
+
+        let tbody = document.querySelector("#resultTable tbody");
+        let row = tbody.insertRow();
+        row.innerHTML = `<td>${name}</td><td>${qty}</td><td><button onclick="this.parentElement.parentElement.remove()" style="background:red; color:white; border:none; border-radius:4px;">X</button></td>`;
+        
+        searchInput.value = ""; document.getElementById("qty").value = ""; searchInput.focus();
+    }
+
+    function clearTable() { if(confirm("مسح الطلب؟")) document.querySelector("#resultTable tbody").innerHTML = ""; }
+
+    // 4. تصدير الصورة
+    async function exportAsImage() {
+        let client = document.getElementById("clientName").value || "عميل غير مسمى";
+        let rows = document.querySelectorAll("#resultTable tbody tr");
+        if(rows.length === 0) return alert("الجدول فارغ");
+
+        document.getElementById("expClient").innerText = "العميل: " + client;
+        document.getElementById("expDate").innerText = "التاريخ: " + new Date().toLocaleDateString('ar-EG');
+        
+        let expBody = document.getElementById("expBody");
+        expBody.innerHTML = "";
+        rows.forEach(r => {
+            expBody.innerHTML += `<tr><td style="border:1px solid black; text-align:right; padding:8px;">${r.cells[0].innerText}</td><td style="border:1px solid black; font-weight:bold; padding:8px;">${r.cells[1].innerText}</td></tr>`;
+        });
+
+        const container = document.getElementById("finalExportContainer");
+        container.style.left = "0";
+        const canvas = await html2canvas(container, {scale: 2});
+        const link = document.createElement('a');
+        link.download = `طلب_${client}.png`;
+        link.href = canvas.toDataURL();
+        link.click();
         container.style.left = "-9999px";
-        container.style.visibility = "visible";
-    });
-}
+    }
 
-// تصدير PDF (النسخة التقليدية للطباعة الاحترافية)
-function savePDF() {
-    const { jsPDF } = window.jspdf;
-    let doc = new jsPDF();
-    let client = document.getElementById("clientName").value || "بدون اسم";
-    let rows = [];
-    document.querySelectorAll("#resultTable tbody tr").forEach(tr => {
-        rows.push([tr.cells[1].innerText, tr.cells[0].innerText]); // عكس الترتيب للعربية
-    });
-    if(rows.length === 0) return alert("الجدول فارغ!");
-    doc.text("طلب بضاعة للمستلم: " + client, 190, 15, { align: "right" });
-    doc.autoTable({ head: [['الكمية', 'المادة']], body: rows, startY: 25, styles: { halign: 'right' } });
-    doc.save(`طلب_${client}.pdf`);
-}
+    function toggleTheme() {
+        document.body.setAttribute("data-theme", document.body.getAttribute("data-theme") === "light" ? "dark" : "light");
+    }
 
-// إدارة المواد
-function renderMasterItems() {
-    let container = document.getElementById("masterItemsList");
-    container.innerHTML = items.map((it, i) => `
-        <div style="display:flex; justify-content:space-between; padding:8px; border-bottom:1px solid var(--border)">
-            <span>${it}</span>
-            <button class="row-btn" style="background:#ef4444; padding:2px 6px;" onclick="deleteMasterItem(${i})">حذف</button>
-        </div>
-    `).join('');
-}
-
-function addNewItem() {
-    let val = document.getElementById("newItem").value.trim();
-    if(val) { items.push(val); localStorage.setItem("items", JSON.stringify(items)); renderMasterItems(); document.getElementById("newItem").value=""; }
-}
-
-function deleteMasterItem(i) { items.splice(i, 1); localStorage.setItem("items", JSON.stringify(items)); renderMasterItems(); }
-
-// إغلاق قائمة البحث عند الضغط خارجها
-document.addEventListener("click", (e) => { if(e.target !== searchInput) resultsDiv.classList.add('hidden'); });
+    // تشغيل عند التحميل
+    window.onload = loadFromSheet;
+    document.addEventListener("click", (e) => { if(e.target !== searchInput) resultsDiv.classList.add('hidden'); });
 </script>
+
 </body>
 </html>
