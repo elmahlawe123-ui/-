@@ -5,20 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>نظام المحلاوي لإمدادات البناء</title>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     
     <style>
         :root {
             --primary: #2563eb; --secondary: #64748b; --success: #16a34a;
-            --excel: #1d6f42; --whatsapp: #25d366; --bg: #f8fafc; --text: #1e293b;
+            --excel: #1d6f42; --bg: #f8fafc; --text: #1e293b;
             --card: #ffffff; --border: #e2e8f0;
         }
         [data-theme="dark"] {
             --bg: #0f172a; --text: #f1f5f9; --card: #1e293b; --border: #334155;
         }
-        body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding-bottom: 30px; transition: 0.3s; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding-bottom: 30px; }
         
         header { background: var(--card); padding: 15px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 1000; }
         .nav-tabs { display: flex; background: var(--card); border-bottom: 1px solid var(--border); position: sticky; top: 58px; z-index: 999; }
@@ -29,8 +27,8 @@
         .card { background: var(--card); padding: 20px; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 15px; }
         
         input { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid var(--border); border-radius: 8px; background: var(--bg); color: var(--text); box-sizing: border-box; font-size: 16px; outline: none; }
-        .btn { padding: 14px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 14px; transition: 0.2s; text-decoration: none; }
-        .btn:active { transform: scale(0.98); opacity: 0.8; }
+        .btn { padding: 14px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 14px; transition: 0.2s; }
+        .btn:active { transform: scale(0.95); opacity: 0.8; }
         .btn-main { background: var(--primary); color: white; width: 100%; margin: 10px 0; }
         
         table { width: 100%; border-collapse: collapse; margin-top: 15px; }
@@ -46,23 +44,37 @@
         .hidden { display: none; }
         .status-bar { font-size: 0.8em; text-align: center; padding: 10px; font-weight: bold; color: var(--primary); }
 
-        /* حاوية التصدير الاحترافية (مخفية) */
-        #finalExportContainer { width: 700px; padding: 50px; background: white; color: black; position: fixed; left: -9999px; top: 0; direction: rtl; }
+        /* حاوية التصدير - مخفية في العرض العادي وظاهرة في الطباعة */
+        #finalExportContainer { display: none; direction: rtl; }
+
+        /* تنسيقات الطباعة (المسؤولة عن الـ PDF) */
+        @media print {
+            body * { visibility: hidden; }
+            #finalExportContainer { 
+                display: block !important; 
+                visibility: visible !important; 
+                position: absolute; 
+                left: 0; top: 0; width: 100%; 
+                padding: 20px;
+            }
+            #finalExportContainer * { visibility: visible !important; }
+            .no-print { display: none !important; }
+        }
     </style>
 </head>
 <body data-theme="light">
 
-<header>
+<header class="no-print">
     <div style="font-weight: bold; font-size: 1.2em;">🏢 المحلاوي ستور</div>
     <button onclick="toggleTheme()" style="background:none; border:none; cursor:pointer; font-size:1.4em;">🌓</button>
 </header>
 
-<div class="nav-tabs">
+<div class="nav-tabs no-print">
     <button id="tab1" class="active" onclick="switchPage('order')">تسجيل طلب</button>
     <button id="tab2" onclick="switchPage('browse')">إدارة الأصناف</button>
 </div>
 
-<div class="container">
+<div class="container no-print">
     <div id="status" class="status-bar">جاري التحديث...</div>
 
     <div id="orderPage">
@@ -80,11 +92,10 @@
                 <tbody></tbody>
             </table>
 
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px;">
-                <button class="btn" style="background:var(--whatsapp); color:white;" onclick="exportManager('image')">🖼️ صورة</button>
-                <button class="btn" style="background:var(--primary); color:white;" onclick="exportManager('pdf')">📄 PDF</button>
-                <button class="btn" style="background:var(--excel); color:white; grid-column: span 2;" onclick="exportExcel()">📊 تصدير Excel (إكسل)</button>
-                <button class="btn" style="background:var(--secondary); color:white; grid-column: span 2;" onclick="clearTable()">🗑️ مسح الكل</button>
+            <div style="display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 20px;">
+                <button class="btn" style="background:#000; color:white;" onclick="preparePrint()">📄 حفظ كـ PDF (طباعة)</button>
+                <button class="btn" style="background:var(--excel); color:white;" onclick="exportExcel()">📊 تصدير ملف Excel</button>
+                <button class="btn" style="background:var(--secondary); color:white;" onclick="clearTable()">🗑️ مسح الجدول</button>
             </div>
         </div>
     </div>
@@ -102,17 +113,17 @@
 </div>
 
 <div id="finalExportContainer">
-    <div style="text-align: center; border-bottom: 5px solid #2563eb; padding-bottom: 20px; margin-bottom: 30px;">
-        <h1 style="margin:0; color:#2563eb; font-size: 32px;">كشف طلب بضاعة</h1>
-        <p style="font-size:18px; margin:10px 0;">المحلاوي لإمدادات البناء</p>
-        <p id="expClient" style="font-weight:bold; font-size:22px; margin:15px 0; background:#f1f5f9; padding:10px;"></p>
+    <div style="text-align: center; border-bottom: 4px solid #2563eb; padding-bottom: 15px; margin-bottom: 20px;">
+        <h1 style="margin:0; color:#2563eb; font-size: 28px;">كشف طلب بضاعة</h1>
+        <p style="font-size:16px; margin:5px 0;">المحلاوي لإمدادات البناء</p>
+        <p id="expClient" style="font-weight:bold; font-size:20px; margin:10px 0; background:#f1f5f9; padding:10px; border-radius:5px;"></p>
         <p id="expDate" style="color:#64748b"></p>
     </div>
-    <table style="width: 100%; border: 2px solid #000; font-size: 18px; border-collapse: collapse;">
-        <thead><tr style="background:#e2e8f0"><th style="border:1px solid #000; padding:15px;">الصنف</th><th style="border:1px solid #000; padding:15px;">الكمية</th></tr></thead>
+    <table style="width: 100%; border: 1px solid #000; font-size: 16px; border-collapse: collapse;">
+        <thead><tr style="background:#e2e8f0"><th style="border:1px solid #000; padding:12px;">الصنف</th><th style="border:1px solid #000; padding:12px;">الكمية</th></tr></thead>
         <tbody id="expBody"></tbody>
     </table>
-    <div style="display:flex; justify-content:space-between; margin-top:100px; font-weight:bold; font-size: 20px;">
+    <div style="display:flex; justify-content:space-between; margin-top:80px; font-weight:bold; font-size: 18px;">
         <div>توقيع المستلم: ____________</div>
         <div>الإدارة: م/ أحمد المحلاوي</div>
     </div>
@@ -123,12 +134,11 @@
     let items = JSON.parse(localStorage.getItem("items")) || [];
 
     async function syncData() {
-        const status = document.getElementById("status");
         try {
             const res = await fetch(SHEET_URL);
             const data = await res.json();
-            if(data) { items = data; localStorage.setItem("items", JSON.stringify(items)); renderGallery(); status.innerHTML = "✅ البيانات محدثة"; }
-        } catch (e) { status.innerHTML = "📡 وضع الأوفلاين"; renderGallery(); }
+            if(data) { items = data; localStorage.setItem("items", JSON.stringify(items)); renderGallery(); document.getElementById("status").innerHTML = "✅ متصل"; }
+        } catch (e) { document.getElementById("status").innerHTML = "📡 وضع الأوفلاين"; renderGallery(); }
     }
 
     function renderGallery() {
@@ -143,12 +153,10 @@
     async function saveToSheet() {
         const name = document.getElementById("newItemName").value.trim();
         if(!name) return;
-        document.getElementById("status").innerText = "⏳ جاري الحفظ...";
         await fetch(SHEET_URL, { method: "POST", mode: "no-cors", body: JSON.stringify({ itemName: name }) });
         document.getElementById("newItemName").value = ""; setTimeout(syncData, 2000);
     }
 
-    // البحث والجدول
     const searchInput = document.getElementById("itemSearch");
     const resultsDiv = document.getElementById("results");
     searchInput.oninput = () => {
@@ -172,7 +180,7 @@
         searchInput.value = ""; document.getElementById("qty").value = "";
     }
 
-    function clearTable() { if(confirm("حذف كل الطلبات؟")) document.querySelector("#resultTable tbody").innerHTML = ""; }
+    function clearTable() { if(confirm("حذف الطلب؟")) document.querySelector("#resultTable tbody").innerHTML = ""; }
 
     function switchPage(page) {
         document.getElementById("orderPage").classList.toggle("hidden", page !== 'order');
@@ -181,45 +189,30 @@
         document.getElementById("tab2").classList.toggle("active", page === 'browse');
     }
 
-    // مدير التصدير (PDF وصور)
-    async function exportManager(type) {
-        const client = document.getElementById("clientName").value || "عميل";
+    // تجهيز الطباعة (الحل الأضمن للـ PDF)
+    function preparePrint() {
+        const client = document.getElementById("clientName").value || "عميل بدون اسم";
         const rows = document.querySelectorAll("#resultTable tbody tr");
         if(rows.length === 0) return alert("الجدول فارغ");
 
         document.getElementById("expClient").innerText = "المستلم: " + client;
         document.getElementById("expDate").innerText = "التاريخ: " + new Date().toLocaleDateString('ar-EG');
         const b = document.getElementById("expBody"); b.innerHTML = "";
-        rows.forEach(r => { b.innerHTML += `<tr><td style="border:1px solid #000; padding:15px; text-align:right;">${r.cells[0].innerText}</td><td style="border:1px solid #000; padding:15px; font-weight:bold; text-align:center;">${r.cells[1].innerText}</td></tr>`; });
+        rows.forEach(r => { b.innerHTML += `<tr><td style="border:1px solid #000; padding:12px; text-align:right;">${r.cells[0].innerText}</td><td style="border:1px solid #000; padding:12px; font-weight:bold; text-align:center;">${r.cells[1].innerText}</td></tr>`; });
 
-        const cont = document.getElementById("finalExportContainer");
-        cont.style.left = "0"; // إظهار مؤقت للمكتبة
-        
-        try {
-            await new Promise(r => setTimeout(r, 600));
-            const canvas = await html2canvas(cont, { scale: 2, useCORS: true });
-            if(type === 'image') {
-                const a = document.createElement('a'); a.download = `طلب_${client}.png`; a.href = canvas.toDataURL("image/png"); a.click();
-            } else {
-                const pdf = new jspdf.jsPDF('p', 'mm', 'a4');
-                const pWidth = pdf.internal.pageSize.getWidth();
-                pdf.addImage(canvas.toDataURL('image/jpeg', 1.0), 'JPEG', 0, 0, pWidth, (canvas.height * pWidth) / canvas.width);
-                pdf.save(`طلب_${client}.pdf`);
-            }
-        } finally { cont.style.left = "-9999px"; }
+        window.print();
     }
 
-    // تصدير إكسل
     function exportExcel() {
         const client = document.getElementById("clientName").value || "عميل";
         const rows = document.querySelectorAll("#resultTable tbody tr");
         if(rows.length === 0) return alert("الجدول فارغ");
 
-        let data = [["كشف بضاعة - المحلاوي"], ["العميل:", client], ["التاريخ:", new Date().toLocaleDateString('ar-EG')], [""], ["الصنف", "الكمية"]];
+        let data = [["كشف بضاعة - المحلاوي"], ["العميل:", client], ["تاريخ:", new Date().toLocaleDateString('ar-EG')], [""], ["الصنف", "الكمية"]];
         rows.forEach(r => data.push([r.cells[0].innerText, r.cells[1].innerText]));
 
         const ws = XLSX.utils.aoa_to_sheet(data);
-        ws['!dir'] = "rtl"; // من اليمين لليسار
+        ws['!dir'] = "rtl";
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, "Order");
         XLSX.writeFile(wb, `طلب_${client}.xlsx`);
