@@ -30,6 +30,7 @@
             color: var(--text); 
             margin: 0; 
             padding-bottom: 30px; 
+            font-size: 16px; /* حجم نص موحد */
         }
         
         .brand-name {
@@ -57,35 +58,162 @@
         }
 
         .nav-tabs { display: flex; background: var(--card); border-bottom: 1px solid var(--border); }
-        .nav-tabs button { flex: 1; padding: 15px; border: none; background: none; color: #94a3b8; font-weight: bold; cursor: pointer; font-family: 'Cairo'; }
-        .nav-tabs button.active { color: var(--primary); border-bottom: 3px solid var(--primary); background: rgba(176, 141, 87, 0.1); }
+        .nav-tabs button { 
+            flex: 1; 
+            padding: 15px; 
+            border: none; 
+            background: none; 
+            color: #94a3b8; 
+            font-weight: bold; 
+            cursor: pointer; 
+            font-family: 'Cairo'; 
+        }
+        .nav-tabs button.active { 
+            color: var(--primary); 
+            border-bottom: 3px solid var(--primary); 
+            background: rgba(176, 141, 87, 0.1); 
+        }
 
         .container { padding: 15px; max-width: 800px; margin: 0 auto; }
-        .card { background: var(--card); padding: 20px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 15px; }
+        .card { 
+            background: var(--card); 
+            padding: 25px; /* زيادة padding */
+            border-radius: 12px; 
+            border: 1px solid var(--border); 
+            margin-bottom: 20px; /* زيادة المسافة السفلية */
+        }
         
-        input { width: 100%; padding: 14px; margin: 8px 0; border: 1px solid var(--border); border-radius: 8px; background: rgba(255,255,255,0.05); color: var(--text); box-sizing: border-box; font-size: 16px; outline: none; font-family: 'Cairo'; }
+        input { 
+            width: 100%; 
+            padding: 14px; 
+            margin: 8px 0; 
+            border: 1px solid var(--border); 
+            border-radius: 8px; 
+            background: rgba(255,255,255,0.05); 
+            color: var(--text); 
+            box-sizing: border-box; 
+            font-size: 16px; 
+            outline: none; 
+            font-family: 'Cairo'; 
+        }
         
-        .btn { padding: 12px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.3s; font-family: 'Cairo'; font-size: 14px; }
-        .btn-main { background: var(--primary); color: white; width: 100%; margin: 10px 0; font-size: 18px; }
+        input:focus {
+            border-color: var(--primary);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .btn { 
+            padding: 12px; 
+            border: none; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            font-weight: bold; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 8px; 
+            transition: 0.3s; 
+            font-family: 'Cairo'; 
+            font-size: 14px; 
+        }
+        .btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: scale(1.05);
+            transition: 0.3s;
+        }
+        .btn-main { 
+            background: var(--primary); 
+            color: white; 
+            width: 100%; 
+            margin: 10px 0; 
+            font-size: 18px; 
+        }
         
-        .grid-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
-        .full-width { grid-column: span 2; }
+        .grid-buttons { 
+            display: grid; 
+            grid-template-columns: repeat(2, 1fr); 
+            gap: 15px; 
+            margin-top: 20px; 
+        }
+        .full-width { 
+            grid-column: span 2; 
+        }
 
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; background: var(--card); border-radius: 8px; overflow: hidden; }
-        th, td { padding: 12px; border: 1px solid var(--border); text-align: center; }
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            margin-top: 15px; 
+            background: var(--card); 
+            border-radius: 8px; 
+            overflow: hidden; 
+        }
+        th, td { 
+            padding: 12px; 
+            border: 1px solid var(--border); 
+            text-align: center; 
+        }
+        tr:nth-child(even) {
+            background: rgba(255, 255, 255, 0.05);
+        }
 
-        .results-box { position: absolute; background: var(--card); border: 1px solid var(--primary); width: 100%; z-index: 1100; max-height: 250px; overflow-y: auto; border-radius: 8px; }
-        .result-item { padding: 15px; cursor: pointer; border-bottom: 1px solid var(--border); text-align: right; }
+        .results-box { 
+            position: absolute; 
+            background: var(--card); 
+            border: 1px solid var(--primary); 
+            width: 100%; 
+            z-index: 1100; 
+            max-height: 250px; 
+            overflow-y: auto; 
+            border-radius: 8px; 
+        }
+        .result-item { 
+            padding: 15px; 
+            cursor: pointer; 
+            border-bottom: 1px solid var(--border); 
+            text-align: right; 
+        }
 
-        .hidden { display: none !important; }
-        .item-card { background: var(--card); border: 1px solid var(--border); padding: 12px; border-radius: 8px; text-align: center; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+        .hidden { 
+            display: none !important; 
+        }
+        .item-card { 
+            background: var(--card); 
+            border: 1px solid var(--border); 
+            padding: 12px; 
+            border-radius: 8px; 
+            text-align: center; 
+            margin-bottom: 10px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+        }
 
         #finalExportContainer { 
-            display: block; direction: rtl; padding: 40px; background: white !important; 
-            width: 750px; color: black !important; position: fixed; left: -9999px; top: 0; 
+            display: block; 
+            direction: rtl; 
+            padding: 40px; 
+            background: white !important; 
+            width: 750px; 
+            color: black !important; 
+            position: fixed; 
+            left: -9999px; 
+            top: 0; 
         }
-        .invoice-table { width: 100%; border-collapse: collapse; margin-top: 20px; border: 2px solid black; }
-        .invoice-table th, .invoice-table td { padding: 12px; font-size: 20px; font-weight: bold; text-align: center; border: 1px solid black; color: black !important; background: white !important; }
+        .invoice-table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            margin-top: 20px; 
+            border: 2px solid black; 
+        }
+        .invoice-table th, .invoice-table td { 
+            padding: 12px; 
+            font-size: 20px; 
+            font-weight: bold; 
+            text-align: center; 
+            border: 1px solid black; 
+            color: black !important; 
+            background: white !important; 
+        }
     </style>
 </head>
 <body>
@@ -317,8 +445,16 @@
         document.getElementById("tab2").classList.toggle("active", p === 'browse');
     }
 
-    function clearTable() { if(confirm("مسح الجدول بالكامل؟")) document.querySelector("#resultTable tbody").innerHTML = ""; }
-    window.onclick = function(event) { if (!event.target.matches('#itemSearch')) { document.getElementById("results").classList.add('hidden'); } };
+    function clearTable() { 
+        if(confirm("مسح الجدول بالكامل؟")) 
+            document.querySelector("#resultTable tbody").innerHTML = ""; 
+    }
+
+    window.onclick = function(event) { 
+        if (!event.target.matches('#itemSearch')) { 
+            document.getElementById("results").classList.add('hidden'); 
+        } 
+    };
 </script>
 
 </body>
