@@ -1,93 +1,273 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
-
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>نظام المحلاوي لإمدادات البناء</title>
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    
+    <style>
+        :root {
+            --primary: #2563eb; --secondary: #64748b; --success: #16a34a;
+            --excel: #1d6f42; --bg: #f8fafc; --text: #1e293b;
+            --card: #ffffff; --border: #e2e8f0;
+        }
+        [data-theme="dark"] {
+            --bg: #0f172a; --text: #f1f5f9; --card: #1e293b; --border: #334155;
+        }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding-bottom: 30px; }
+        
+        header { background: var(--card); padding: 15px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 1000; }
+        .nav-tabs { display: flex; background: var(--card); border-bottom: 1px solid var(--border); position: sticky; top: 58px; z-index: 999; }
+        .nav-tabs button { flex: 1; padding: 15px; border: none; background: none; color: var(--secondary); font-weight: bold; cursor: pointer; border-bottom: 3px solid transparent; }
+        .nav-tabs button.active { color: var(--primary); border-bottom-color: var(--primary); background: rgba(37, 99, 235, 0.05); }
 
-<title>نظام المحلاوي لإمدادات البناء</title>
+        .container { padding: 15px; max-width: 800px; margin: 0 auto; }
+        .card { background: var(--card); padding: 20px; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 15px; }
+        
+        input { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid var(--border); border-radius: 8px; background: var(--bg); color: var(--text); box-sizing: border-box; font-size: 16px; outline: none; }
+        .btn { padding: 14px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 14px; transition: 0.2s; }
+        .btn:active { transform: scale(0.95); opacity: 0.8; }
+        .btn-main { background: var(--primary); color: white; width: 100%; margin: 10px 0; }
+        
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { padding: 12px; border: 1px solid var(--border); text-align: center; }
+        
+        .results-box { position: absolute; background: var(--card); border: 1px solid var(--border); width: 100%; z-index: 1100; max-height: 200px; overflow-y: auto; border-radius: 8px; box-shadow: 0 10px 15px rgba(0,0,0,0.1); }
+        .result-item { padding: 12px; cursor: pointer; border-bottom: 1px solid var(--border); text-align: right; }
+        .result-item:hover { background: var(--primary); color: white; }
 
-<link rel="stylesheet" href="style.css">
+        .items-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 10px; margin-top: 10px; }
+        .item-card { background: var(--card); border: 1px solid var(--border); padding: 15px; border-radius: 10px; text-align: center; cursor: pointer; font-size: 13px; font-weight: bold; }
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+        .hidden { display: none; }
+        .status-bar { font-size: 0.8em; text-align: center; padding: 10px; font-weight: bold; color: var(--primary); }
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
+        /* تنسيق كشف التصدير - يظهر فقط عند التصوير */
+        #finalExportContainer { 
+            display: none; 
+            direction: rtl; 
+            padding: 40px; 
+            background: white; 
+            width: 800px; 
+            color: black;
+        }
+    </style>
 </head>
-
-<body>
+<body data-theme="light">
 
 <header>
-المحلاوي لإمدادات البناء
+    <div style="font-weight: bold; font-size: 1.2em;">🏢 المحلاوي ستور</div>
+    <button onclick="toggleTheme()" style="background:none; border:none; cursor:pointer; font-size:1.4em;">🌓</button>
 </header>
 
-<div class="card">
-
-<input id="clientName" placeholder="اسم العميل">
-
-<input id="itemName" placeholder="اسم الصنف">
-
-<input id="qty" type="number" placeholder="الكمية">
-
-<button class="btn-main" onclick="addItem()">إضافة</button>
-
-<table id="table">
-
-<thead>
-
-<tr>
-<th>الصنف</th>
-<th>الكمية</th>
-<th>حذف</th>
-</tr>
-
-</thead>
-
-<tbody></tbody>
-
-</table>
-
-<div class="actions">
-
-<button onclick="exportPDF()" class="pdf">
-PDF
-</button>
-
-<button onclick="sendWhatsApp()" class="wa">
-واتساب
-</button>
-
-<button onclick="exportExcel()" class="excel">
-Excel
-</button>
-
-<button onclick="exportImage()" class="img">
-صورة
-</button>
-
-<button onclick="clearTable()" class="clear">
-مسح
-</button>
-
+<div class="nav-tabs">
+    <button id="tab1" class="active" onclick="switchPage('order')">تسجيل طلب</button>
+    <button id="tab2" onclick="switchPage('browse')">الأصناف</button>
 </div>
 
+<div class="container">
+    <div id="status" class="status-bar">جاري التحديث...</div>
+
+    <div id="orderPage">
+        <div class="card">
+            <input type="text" id="clientName" placeholder="اسم العميل..." oninput="saveCurrentTable()">
+            <div style="position: relative;">
+                <input type="text" id="itemSearch" placeholder="ابحث عن مادة..." autocomplete="off">
+                <div id="results" class="results-box hidden"></div>
+            </div>
+            <input type="number" id="qty" placeholder="الكمية" inputmode="numeric">
+            <button class="btn btn-main" onclick="addItem()">+ إضافة للجدول</button>
+
+            <table id="resultTable">
+                <thead><tr style="background:rgba(0,0,0,0.05)"><th>المادة</th><th>الكمية</th><th>حذف</th></tr></thead>
+                <tbody></tbody>
+            </table>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px;">
+                <button class="btn" style="background:#000; color:white; grid-column: span 2;" onclick="exportAsImage()">📸 حفظ كصورة (للواتساب)</button>
+                <button class="btn" style="background:var(--excel); color:white;" onclick="exportExcel()">📊 ملف Excel</button>
+                <button class="btn" style="background:var(--secondary); color:white;" onclick="clearTable()">🗑️ مسح الكل</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="browsePage" class="hidden">
+        <div class="card">
+            <h3>إضافة صنف جديد للسيستم</h3>
+            <div style="display: flex; gap: 8px;">
+                <input type="text" id="newItemName" placeholder="اسم الصنف..." style="margin:0">
+                <button class="btn" style="background:var(--success); color:white; width: 80px;" onclick="saveToSheet()">إضافة</button>
+            </div>
+        </div>
+        <div class="card"><div id="itemsGrid" class="items-grid"></div></div>
+    </div>
 </div>
 
-<div id="exportArea">
-
-<h2>كشف طلب بضاعة</h2>
-
-<div id="expClient"></div>
-
-<table id="expTable"></table>
-
+<div id="finalExportContainer">
+    <div style="text-align: center; border-bottom: 5px solid #2563eb; padding-bottom: 20px; margin-bottom: 30px;">
+        <h1 style="margin:0; color:#2563eb; font-size: 35px;">كشف طلب بضاعة</h1>
+        <p style="font-size:20px; margin:5px 0;">المحلاوي لإمدادات البناء</p>
+        <div id="expClient" style="font-weight:bold; font-size:24px; margin:20px 0; background:#f1f5f9; padding:15px; border: 1px solid #cbd5e1; border-radius:8px;"></div>
+        <p id="expDate" style="color:#64748b; font-size: 18px;"></p>
+    </div>
+    <table style="width: 100%; border: 2px solid #000; font-size: 20px; border-collapse: collapse;">
+        <thead><tr style="background:#e2e8f0"><th style="border:2px solid #000; padding:15px;">الصنف</th><th style="border:2px solid #000; padding:15px;">الكمية</th></tr></thead>
+        <tbody id="expBody"></tbody>
+    </table>
+    <div style="display:flex; justify-content:space-between; margin-top:100px; font-weight:bold; font-size: 20px;">
+        <div>توقيع المستلم: ____________</div>
+        <div style="text-align: center;">ختم المؤسسة<br><br>________________</div>
+        <div>الإدارة: م/ أحمد المحلاوي</div>
+    </div>
 </div>
 
-<script src="script.js"></script>
+<script>
+    const SHEET_URL = "https://script.google.com/macros/s/AKfycbwdlHeu2NYDxKlzgTaZFh9L_JmpNmwrUrGSiAXCzGLjnMYa_AOUF8q3J8uCXro0y1oo/exec";
+    let items = JSON.parse(localStorage.getItem("items")) || [];
+
+    // --- وظائف الحفظ التلقائي ---
+    function saveCurrentTable() {
+        const rows = [];
+        document.querySelectorAll("#resultTable tbody tr").forEach(tr => {
+            rows.push({ name: tr.cells[0].innerText, qty: tr.cells[1].innerText });
+        });
+        localStorage.setItem("draftOrder", JSON.stringify(rows));
+        localStorage.setItem("draftClient", document.getElementById("clientName").value);
+    }
+
+    function loadSavedTable() {
+        const savedRows = JSON.parse(localStorage.getItem("draftOrder") || "[]");
+        document.getElementById("clientName").value = localStorage.getItem("draftClient") || "";
+        const tbody = document.querySelector("#resultTable tbody");
+        tbody.innerHTML = "";
+        savedRows.forEach(item => {
+            const row = tbody.insertRow();
+            row.innerHTML = `<td style="text-align:right">${item.name}</td><td style="font-weight:bold">${item.qty}</td><td><button onclick="deleteRow(this)" style="background:#ef4444; color:white; border:none; padding:5px 10px; border-radius:5px;">X</button></td>`;
+        });
+    }
+
+    function deleteRow(btn) {
+        btn.parentElement.parentElement.remove();
+        saveCurrentTable();
+    }
+
+    // --- مزامنة البيانات ---
+    async function syncData() {
+        try {
+            const res = await fetch(SHEET_URL);
+            const data = await res.json();
+            if(data) { items = data; localStorage.setItem("items", JSON.stringify(items)); renderGallery(); document.getElementById("status").innerHTML = "✅ متصل"; }
+        } catch (e) { document.getElementById("status").innerHTML = "📡 وضع الأوفلاين"; renderGallery(); }
+    }
+
+    function renderGallery() {
+        const grid = document.getElementById("itemsGrid"); grid.innerHTML = "";
+        items.forEach(item => {
+            const d = document.createElement("div"); d.className = "item-card"; d.textContent = item;
+            d.onclick = () => { document.getElementById("itemSearch").value = item; switchPage('order'); document.getElementById("qty").focus(); };
+            grid.appendChild(d);
+        });
+    }
+
+    async function saveToSheet() {
+        const name = document.getElementById("newItemName").value.trim();
+        if(!name) return;
+        document.getElementById("status").innerHTML = "⏳ جاري الإضافة...";
+        await fetch(SHEET_URL, { method: "POST", mode: "no-cors", body: JSON.stringify({ itemName: name }) });
+        document.getElementById("newItemName").value = ""; 
+        setTimeout(syncData, 2000);
+    }
+
+    // --- نظام البحث والإضافة ---
+    const searchInput = document.getElementById("itemSearch");
+    const resultsDiv = document.getElementById("results");
+
+    searchInput.oninput = () => {
+        const val = searchInput.value.toLowerCase(); resultsDiv.innerHTML = "";
+        if(!val) return resultsDiv.classList.add('hidden');
+        const filtered = items.filter(i => i.toString().toLowerCase().includes(val)).slice(0, 10);
+        filtered.forEach(item => {
+            const d = document.createElement("div"); d.className = "result-item"; d.textContent = item;
+            d.onclick = () => { searchInput.value = item; resultsDiv.classList.add('hidden'); document.getElementById("qty").focus(); };
+            resultsDiv.appendChild(d);
+        });
+        resultsDiv.classList.toggle('hidden', filtered.length === 0);
+    };
+
+    function addItem() {
+        const name = searchInput.value, qty = document.getElementById("qty").value;
+        if(!name || !qty) return alert("أكمل البيانات");
+        const tbody = document.querySelector("#resultTable tbody");
+        const row = tbody.insertRow();
+        row.innerHTML = `<td style="text-align:right">${name}</td><td style="font-weight:bold">${qty}</td><td><button onclick="deleteRow(this)" style="background:#ef4444; color:white; border:none; padding:5px 10px; border-radius:5px;">X</button></td>`;
+        saveCurrentTable();
+        searchInput.value = ""; document.getElementById("qty").value = ""; searchInput.focus();
+    }
+
+    // --- تصدير الصورة (الحل الأفضل للموبايل) ---
+    function exportAsImage() {
+        const client = document.getElementById("clientName").value || "عميل بدون اسم";
+        const rows = document.querySelectorAll("#resultTable tbody tr");
+        if(rows.length === 0) return alert("الجدول فارغ");
+
+        document.getElementById("expClient").innerText = "المستلم: " + client;
+        document.getElementById("expDate").innerText = "تاريخ الطلب: " + new Date().toLocaleDateString('ar-EG');
+        const b = document.getElementById("expBody"); b.innerHTML = "";
+        rows.forEach(r => { 
+            b.innerHTML += `<tr><td style="border:2px solid #000; padding:15px; text-align:right;">${r.cells[0].innerText}</td><td style="border:2px solid #000; padding:15px; font-weight:bold; text-align:center;">${r.cells[1].innerText}</td></tr>`; 
+        });
+
+        const target = document.getElementById("finalExportContainer");
+        target.style.display = "block"; 
+
+        html2canvas(target, { scale: 2 }).then(canvas => {
+            const link = document.createElement('a');
+            link.download = `طلب_${client}.png`;
+            link.href = canvas.toDataURL("image/png");
+            link.click();
+            target.style.display = "none";
+        });
+    }
+
+    function exportExcel() {
+        const client = document.getElementById("clientName").value || "عميل";
+        const rows = document.querySelectorAll("#resultTable tbody tr");
+        if(rows.length === 0) return alert("الجدول فارغ");
+        let data = [["كشف بضاعة - المحلاوي"], ["العميل:", client], ["تاريخ:", new Date().toLocaleDateString('ar-EG')], [""], ["الصنف", "الكمية"]];
+        rows.forEach(r => data.push([r.cells[0].innerText, r.cells[1].innerText]));
+        const ws = XLSX.utils.aoa_to_sheet(data);
+        ws['!dir'] = "rtl";
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Order");
+        XLSX.writeFile(wb, `طلب_${client}.xlsx`);
+    }
+
+    function clearTable() { 
+        if(confirm("سيتم مسح الجدول بالكامل، هل أنت متأكد؟")) {
+            document.querySelector("#resultTable tbody").innerHTML = ""; 
+            localStorage.removeItem("draftOrder");
+            localStorage.removeItem("draftClient");
+            document.getElementById("clientName").value = "";
+        }
+    }
+
+    function switchPage(page) {
+        document.getElementById("orderPage").classList.toggle("hidden", page !== 'order');
+        document.getElementById("browsePage").classList.toggle("hidden", page !== 'browse');
+        document.getElementById("tab1").classList.toggle("active", page === 'order');
+        document.getElementById("tab2").classList.toggle("active", page === 'browse');
+    }
+
+    function toggleTheme() {
+        const b = document.body; b.setAttribute("data-theme", b.getAttribute("data-theme") === "light" ? "dark" : "light");
+    }
+
+    window.onload = () => { syncData(); loadSavedTable(); };
+    document.onclick = (e) => { if(e.target !== searchInput) resultsDiv.classList.add('hidden'); };
+</script>
 
 </body>
-
 </html>
