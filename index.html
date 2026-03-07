@@ -3,145 +3,250 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>إدارة أصناف المحلاوي السحابية</title>
+    <title>نظام المحلاوي - الإصدار المستقر</title>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    
     <style>
         :root { --primary: #b08d57; --bg: #0f172a; --text: #f1f5f9; --card: #1e293b; --border: #334155; --dark: #000000; --danger: #ef4444; --edit: #3b82f6; }
+        [data-theme="light"] { --bg: #f8fafc; --text: #1e293b; --card: #ffffff; --border: #e2e8f0; }
         body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding-bottom: 30px; }
-        header { background: var(--dark); padding: 15px; text-align: center; border-bottom: 2px solid var(--primary); }
-        .container { padding: 15px; max-width: 600px; margin: 0 auto; }
+        
+        header { background: var(--dark); padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--primary); position: sticky; top: 0; z-index: 1000; }
+        .nav-tabs { display: flex; background: var(--card); border-bottom: 1px solid var(--border); }
+        .nav-tabs button { flex: 1; padding: 15px; border: none; background: none; color: #94a3b8; font-weight: bold; cursor: pointer; }
+        .nav-tabs button.active { color: var(--primary); border-bottom: 3px solid var(--primary); background: rgba(176, 141, 87, 0.1); }
+
+        .container { padding: 15px; max-width: 800px; margin: 0 auto; }
         .card { background: var(--card); padding: 20px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 15px; }
-        input { width: 100%; padding: 14px; margin: 8px 0; border: 1px solid var(--border); border-radius: 8px; background: rgba(255,255,255,0.05); color: var(--text); box-sizing: border-box; font-size: 16px; }
-        .btn-main { background: var(--primary); color: white; width: 100%; padding: 12px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 18px; }
-        .manage-grid { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 20px; }
-        .item-card { background: var(--card); border: 1px solid var(--border); padding: 15px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; }
-        .btn-sm { padding: 8px 12px; border-radius: 5px; border: none; cursor: pointer; color: white; margin-right: 5px; }
-        .loading { text-align: center; color: var(--primary); font-weight: bold; }
-        .hidden { display: none; }
+        
+        input { width: 100%; padding: 14px; margin: 8px 0; border: 1px solid var(--border); border-radius: 8px; background: rgba(255,255,255,0.05); color: var(--text); box-sizing: border-box; font-size: 16px; outline: none; }
+        [data-theme="light"] input { background: #fff; color: #000; }
+        
+        .btn { padding: 12px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.3s; }
+        .btn-main { background: var(--primary); color: white; width: 100%; margin: 10px 0; font-size: 18px; }
+        
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; background: var(--card); border-radius: 8px; overflow: hidden; }
+        th, td { padding: 12px; border: 1px solid var(--border); text-align: center; }
+
+        .results-box { position: absolute; background: var(--card); border: 1px solid var(--primary); width: 100%; z-index: 1100; max-height: 250px; overflow-y: auto; border-radius: 8px; }
+        .result-item { padding: 15px; cursor: pointer; border-bottom: 1px solid var(--border); text-align: right; }
+
+        .hidden { display: none !important; }
+        .item-card { background: var(--card); border: 1px solid var(--border); padding: 12px; border-radius: 8px; text-align: center; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+
+        /* ستايل الفاتورة الاحترافية للتصدير */
+        #finalExportContainer { 
+            display: block; direction: rtl; padding: 40px; background: white !important; 
+            width: 750px; color: black !important; position: fixed; left: -9999px; top: 0; 
+        }
+        .invoice-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        .invoice-table th, .invoice-table td { border: 2px solid black; color: black; padding: 12px; font-size: 20px; font-weight: bold; text-align: center; }
     </style>
 </head>
-<body>
+<body data-theme="dark">
 
-<header>
-    <h2 style="margin:0; color:var(--primary);">قائمة أصناف المحلاوي (Cloud)</h2>
-</header>
+<div id="loginOverlay" style="position:fixed; inset:0; background:var(--dark); z-index:9999; display:flex; align-items:center; justify-content:center; flex-direction:column;">
+    <div class="card" style="width:320px; text-align:center; border: 2px solid var(--primary);">
+        <img src="https://i.ibb.co/4R44srhj/image.jpg" style="width: 100px; height:100px; border-radius: 50%; border: 2px solid var(--primary); margin-bottom: 15px; object-fit: cover;">
+        <h2 style="color:var(--primary); margin:0;">المحلاوي</h2>
+        <input type="password" id="passInput" placeholder="الرمز (123)" style="text-align:center; margin-top:15px;" onkeydown="if(event.key==='Enter') checkPassword()">
+        <button class="btn btn-main" onclick="checkPassword()">دخول</button>
+    </div>
+</div>
 
-<div class="container">
-    <div class="card">
-        <h3>إضافة صنف جديد للسحابة</h3>
-        <input type="text" id="newItemName" placeholder="اكتب اسم الصنف هنا...">
-        <button class="btn-main" onclick="addItemToCloud()">حفظ في جوجل شيت</button>
+<div id="appContent" class="hidden">
+    <header>
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <img src="https://i.ibb.co/4R44srhj/image.jpg" style="width: 35px; height:35px; border-radius: 50%; object-fit: cover;">
+            <div style="color: white; font-weight: bold;">المحلاوي</div>
+        </div>
+    </header>
+
+    <div class="nav-tabs">
+        <button id="tab1" class="active" onclick="switchPage('order')">تسجيل طلب</button>
+        <button id="tab2" onclick="switchPage('browse')">إدارة الأصناف</button>
     </div>
 
-    <div class="card">
-        <h3>الأصناف الحالية</h3>
-        <div id="loader" class="loading hidden">جاري المزامنة مع جوجل...</div>
-        <div id="itemsList" class="manage-grid"></div>
+    <div class="container">
+        <div id="orderPage">
+            <div class="card">
+                <input type="text" id="clientName" placeholder="اسم العميل...">
+                <div style="position: relative;">
+                    <input type="text" id="itemSearch" placeholder="ابحث عن مادة..." autocomplete="off">
+                    <div id="results" class="results-box hidden"></div>
+                </div>
+                <input type="number" id="qty" placeholder="الكمية المطلوبة" inputmode="numeric" onkeydown="if(event.key==='Enter') addItem()">
+                <button class="btn btn-main" onclick="addItem()">إضافة للجدول</button>
+
+                <table id="resultTable">
+                    <thead><tr><th>المادة</th><th>الكمية</th><th>حذف</th></tr></thead>
+                    <tbody></tbody>
+                </table>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px;">
+                    <button class="btn" style="background:#25D366; color:white; grid-column: span 2;" onclick="exportAsImage()">📸 تصدير واتساب</button>
+                    <button class="btn" style="background:var(--primary); color:white;" onclick="exportPDF()">📄 تصدير PDF</button>
+                    <button class="btn" style="background:#444; color:white;" onclick="clearTable()">🗑️ مسح الكل</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="browsePage" class="hidden">
+            <div class="card">
+                <h3>إدارة الأصناف (Google Sheets)</h3>
+                <input type="text" id="newItemName" placeholder="اسم صنف جديد...">
+                <button class="btn btn-main" onclick="addCloudItem()">إضافة لصيفة جوجل</button>
+                <hr style="border:0; border-top:1px solid var(--border); margin:15px 0;">
+                <div id="itemsGrid"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="finalExportContainer">
+    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 5px solid #b08d57; padding-bottom: 15px; margin-bottom: 25px;">
+        <img src="https://i.ibb.co/4R44srhj/image.jpg" crossOrigin="anonymous" style="width: 120px; height:120px; border-radius: 50%; object-fit: cover;">
+        <div style="text-align: left;">
+            <h1 style="margin: 0; color: #b08d57; font-size: 50px;">المحلاوي</h1>
+            <p style="margin: 5px 0; color: black; font-size: 22px; font-weight: bold;">كشف طلب بضاعة</p>
+        </div>
+    </div>
+    <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+        <div style="font-size: 24px; color: black;">العميل: <strong id="expClient"></strong></div>
+        <div style="font-size: 22px; color: black;">التاريخ: <span id="expDate"></span></div>
+    </div>
+    <table class="invoice-table">
+        <thead>
+            <tr style="background:#eeeeee !important;">
+                <th>م</th><th>الصنف</th><th>الكمية</th>
+            </tr>
+        </thead>
+        <tbody id="expBody"></tbody>
+    </table>
+    <div style="margin-top: 80px; text-align: right;">
+        <p style="font-weight: bold; font-size: 22px; color: black; border-bottom: 3px solid black; display: inline-block; padding-left: 80px;">توقيع المستلم</p>
     </div>
 </div>
 
 <script>
-    const GOOGLE_URL = 'https://script.google.com/macros/s/AKfycbwOAEcgkBdhKTclFaWuU1Dz43Y6GgZloEUpKz1sAimc0zYc1-INqJwNgFdIOLdlL8hD/exec';
+    const GOOGLE_URL = 'https://script.google.com/macros/s/AKfycby94J0O_uH3WIFzLoelLDAVMagTZEGbo0LAfbVaVR_52wgSoCtbqJ-6ZHjbnUBujlfc/exec';
+    let localItems = JSON.parse(localStorage.getItem("items")) || ["إسمنت", "حديد", "رمل"];
 
-    // جلب الأصناف عند فتح التطبيق
-    window.onload = fetchItems;
-
-    async function fetchItems() {
-        showLoader(true);
-        try {
-            // ملاحظة: الـ GET يحتاج دالة doGet في السكريبت، لكننا سنستخدم POST كأكشن للسهولة
-            const response = await fetch(GOOGLE_URL, {
-                method: 'POST',
-                body: JSON.stringify({ action: 'get' })
-            });
-            // إذا كان الـ mode no-cors لن نستطيع قراءة الاستجابة مباشرة، 
-            // لذا يفضل أن يكون doGet متاحاً، لكن سنعتمد على التحديث اليدوي هنا.
-        } catch(e) { console.log(e); }
-        
-        // لمحاكاة العرض وتجربة الواجهة (ستظهر الأصناف فور إضافتها)
-        renderLocalItems();
-        showLoader(false);
+    function checkPassword() {
+        if(document.getElementById("passInput").value === "123") {
+            document.getElementById("loginOverlay").classList.add("hidden");
+            document.getElementById("appContent").classList.remove("hidden");
+            renderCloudItems();
+        } else { alert("الرمز خطأ"); }
     }
 
-    function renderLocalItems() {
-        const list = document.getElementById("itemsList");
-        let items = JSON.parse(localStorage.getItem("cloud_items_backup")) || ["إسمنت", "حديد", "رمل"];
-        list.innerHTML = "";
-        items.forEach(item => {
+    // إدارة الأصناف
+    function renderCloudItems() {
+        const grid = document.getElementById("itemsGrid");
+        grid.innerHTML = "";
+        localItems.forEach(item => {
             const div = document.createElement("div");
             div.className = "item-card";
-            div.innerHTML = `
-                <span style="font-size:18px;">${item}</span>
+            div.innerHTML = `<span>${item}</span>
                 <div>
-                    <button class="btn-sm" style="background:var(--edit)" onclick="editItem('${item}')">✏️</button>
-                    <button class="btn-sm" style="background:var(--danger)" onclick="deleteItem('${item}')">🗑️</button>
-                </div>
-            `;
-            list.appendChild(div);
+                    <button class="btn-sm" style="background:var(--edit); color:white; border:none; padding:5px 10px; border-radius:4px; cursor:pointer;" onclick="editItem('${item}')">تعديل</button>
+                    <button class="btn-sm" style="background:var(--danger); color:white; border:none; padding:5px 10px; border-radius:4px; cursor:pointer; margin-right:5px;" onclick="deleteItem('${item}')">حذف</button>
+                </div>`;
+            grid.appendChild(div);
         });
+        localStorage.setItem("items", JSON.stringify(localItems));
     }
 
-    async function addItemToCloud() {
+    async function addCloudItem() {
         const name = document.getElementById("newItemName").value.trim();
         if(!name) return;
-
-        showLoader(true);
-        await fetch(GOOGLE_URL, {
-            method: 'POST',
-            mode: 'no-cors',
-            body: JSON.stringify({ action: 'add', item: name })
-        });
-
-        let items = JSON.parse(localStorage.getItem("cloud_items_backup")) || [];
-        items.push(name);
-        localStorage.setItem("cloud_items_backup", JSON.stringify(items));
-        
+        localItems.push(name);
+        renderCloudItems();
         document.getElementById("newItemName").value = "";
-        renderLocalItems();
-        showLoader(false);
+        
+        try {
+            fetch(GOOGLE_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: 'add', item: name }) });
+        } catch(e) { console.error("Cloud error"); }
     }
 
     async function deleteItem(name) {
-        if(!confirm(`هل تريد حذف ${name} من السحابة؟`)) return;
-        
-        showLoader(true);
-        await fetch(GOOGLE_URL, {
-            method: 'POST',
-            mode: 'no-cors',
-            body: JSON.stringify({ action: 'delete', item: name })
-        });
-
-        let items = JSON.parse(localStorage.getItem("cloud_items_backup")) || [];
-        items = items.filter(i => i !== name);
-        localStorage.setItem("cloud_items_backup", JSON.stringify(items));
-        
-        renderLocalItems();
-        showLoader(false);
+        if(!confirm("حذف من القائمة السحابية؟")) return;
+        localItems = localItems.filter(i => i !== name);
+        renderCloudItems();
+        fetch(GOOGLE_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: 'delete', item: name }) });
     }
 
     async function editItem(oldName) {
         const newName = prompt("الاسم الجديد للصنف:", oldName);
         if(!newName || newName === oldName) return;
+        localItems[localItems.indexOf(oldName)] = newName;
+        renderCloudItems();
+        fetch(GOOGLE_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: 'edit', item: oldName, newItemName: newName }) });
+    }
 
-        showLoader(true);
-        await fetch(GOOGLE_URL, {
-            method: 'POST',
-            mode: 'no-cors',
-            body: JSON.stringify({ action: 'edit', item: oldName, newItemName: newName })
+    // نظام البحث
+    document.getElementById("itemSearch").oninput = function() {
+        const val = this.value.toLowerCase();
+        const resDiv = document.getElementById("results");
+        resDiv.innerHTML = "";
+        if(!val) return resDiv.classList.add('hidden');
+        localItems.filter(i => i.toLowerCase().includes(val)).forEach(item => {
+            const d = document.createElement("div");
+            d.className = "result-item"; d.textContent = item;
+            d.onclick = () => { document.getElementById("itemSearch").value = item; resDiv.classList.add('hidden'); document.getElementById("qty").focus(); };
+            resDiv.appendChild(d);
         });
+        resDiv.classList.remove('hidden');
+    };
 
-        let items = JSON.parse(localStorage.getItem("cloud_items_backup")) || [];
-        const index = items.indexOf(oldName);
-        if(index !== -1) items[index] = newName;
-        localStorage.setItem("cloud_items_backup", JSON.stringify(items));
-        
-        renderLocalItems();
-        showLoader(false);
+    function addItem() {
+        const item = document.getElementById("itemSearch").value;
+        const qty = document.getElementById("qty").value;
+        if(!item || !qty) return;
+        const tbody = document.querySelector("#resultTable tbody");
+        const row = tbody.insertRow(0);
+        row.innerHTML = `<td style="text-align:right">${item}</td><td style="font-weight:bold">${qty}</td><td><button onclick="this.parentElement.parentElement.remove()" style="background:none; border:none; color:red; cursor:pointer; font-size:18px;">✖</button></td>`;
+        document.getElementById("itemSearch").value = ""; document.getElementById("qty").value = "";
+        document.getElementById("itemSearch").focus();
     }
 
-    function showLoader(show) {
-        document.getElementById("loader").classList.toggle("hidden", !show);
+    // تصدير
+    function prepareExport() {
+        document.getElementById("expClient").innerText = document.getElementById("clientName").value || "بدون اسم";
+        document.getElementById("expDate").innerText = new Date().toLocaleDateString('ar-EG');
+        const b = document.getElementById("expBody"); b.innerHTML = "";
+        document.querySelectorAll("#resultTable tbody tr").forEach((r, i) => {
+            b.innerHTML += `<tr><td>${i+1}</td><td style="text-align:right;">${r.cells[0].innerText}</td><td>${r.cells[1].innerText}</td></tr>`;
+        });
     }
+
+    function exportAsImage() {
+        prepareExport();
+        html2canvas(document.getElementById("finalExportContainer"), { scale: 3, useCORS: true }).then(canvas => {
+            const link = document.createElement('a');
+            link.download = `فاتورة_${document.getElementById("clientName").value}.png`;
+            link.href = canvas.toDataURL(); link.click();
+        });
+    }
+
+    function exportPDF() {
+        prepareExport();
+        html2canvas(document.getElementById("finalExportContainer"), { scale: 2, useCORS: true }).then(canvas => {
+            const pdf = new jspdf.jsPDF('p', 'mm', 'a4');
+            pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, 210, (canvas.height * 210) / canvas.width);
+            pdf.save(`فاتورة_${document.getElementById("clientName").value}.pdf`);
+        });
+    }
+
+    function switchPage(p) {
+        document.getElementById("orderPage").classList.toggle("hidden", p !== 'order');
+        document.getElementById("browsePage").classList.toggle("hidden", p !== 'browse');
+        document.getElementById("tab1").classList.toggle("active", p === 'order');
+        document.getElementById("tab2").classList.toggle("active", p === 'browse');
+    }
+    function clearTable() { if(confirm("مسح محتوى الجدول بالكامل؟")) document.querySelector("#resultTable tbody").innerHTML = ""; }
 </script>
 </body>
 </html>
