@@ -65,7 +65,7 @@
 <div id="loginOverlay">
     <div class="login-card">
         <img src="https://i.ibb.co/LzNfCzm/Untitled-design.jpg" alt="Logo" style="width: 120px; border-radius: 50%; border: 2px solid var(--primary); margin-bottom: 15px;">
-        <h2 style="color:var(--primary); margin: 0;">المحلاوي ستور</h2>
+        <h2 style="color:var(--primary); margin: 0;">المحلاوي </h2>
         <p style="font-size: 0.9em; color: #666;">نظام الإدارة المحمي</p>
         <input type="password" id="passInput" placeholder="أدخل الرمز (123)" style="text-align: center;">
         <button class="btn btn-main" onclick="checkPassword()">دخول</button>
@@ -77,7 +77,7 @@
     <header>
         <div style="display: flex; align-items: center; gap: 10px;">
             <img src="https://i.ibb.co/LzNfCzm/Untitled-design.jpg" alt="Logo" style="width: 45px; border-radius: 50%; border: 1px solid var(--primary);">
-            <div style="color: white; font-weight: bold; font-size: 1.1em;">المحلاوي ستور</div>
+            <div style="color: white; font-weight: bold; font-size: 1.1em;">المحلاوي </div>
         </div>
         <div style="display: flex; gap: 10px;">
             <button onclick="logout()" style="background:none; border:none; color:#ff4444; cursor:pointer; font-weight:bold;">خروج</button>
@@ -133,7 +133,7 @@
 <div id="finalExportContainer">
     <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 4px solid #b08d57; padding-bottom: 20px; margin-bottom: 20px;">
         <div style="text-align: right;">
-            <h1 style="margin: 0; color: #b08d57; font-size: 35px;">المحلاوي ستور</h1>
+            <h1 style="margin: 0; color: #b08d57; font-size: 35px;">المحلاوي </h1>
             <p style="margin: 5px 0; color: #555; font-size: 18px;">لإمدادات ومواد البناء</p>
         </div>
         <img src="https://i.ibb.co/LzNfCzm/Untitled-design.jpg" style="width: 120px; border-radius: 50%; border: 3px solid #b08d57;">
@@ -290,7 +290,7 @@
     }
 
     function exportExcel() {
-        const data = [["كشف طلب بضاعة - المحلاوي ستور"], ["العميل", document.getElementById("clientName").value], ["التاريخ", new Date().toLocaleDateString()], [""], ["الصنف", "الكمية"]];
+        const data = [["كشف طلب بضاعة - المحلاوي "], ["العميل", document.getElementById("clientName").value], ["التاريخ", new Date().toLocaleDateString()], [""], ["الصنف", "الكمية"]];
         document.querySelectorAll("#resultTable tbody tr").forEach(r => data.push([r.cells[0].innerText, r.cells[1].innerText]));
         const ws = XLSX.utils.aoa_to_sheet(data);
         const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "Order");
