@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>نظام المحلاوي لإمدادات البناء</title>
+
+<link rel="stylesheet" href="style.css">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+</head>
+
+<body>
+
+<header>
+المحلاوي لإمدادات البناء
+</header>
+
+<div class="card">
+
+<input id="clientName" placeholder="اسم العميل">
+
+<input id="itemName" placeholder="اسم الصنف">
+
+<input id="qty" type="number" placeholder="الكمية">
+
+<button class="btn-main" onclick="addItem()">إضافة</button>
+
+<table id="table">
+
+<thead>
+
+<tr>
+<th>الصنف</th>
+<th>الكمية</th>
+<th>حذف</th>
+</tr>
+
+</thead>
+
+<tbody></tbody>
+
+</table>
+
+<div class="actions">
+
+<button onclick="exportPDF()" class="pdf">
+PDF
+</button>
+
+<button onclick="sendWhatsApp()" class="wa">
+واتساب
+</button>
+
+<button onclick="exportExcel()" class="excel">
+Excel
+</button>
+
+<button onclick="exportImage()" class="img">
+صورة
+</button>
+
+<button onclick="clearTable()" class="clear">
+مسح
+</button>
+
+</div>
+
+</div>
+
+<div id="exportArea">
+
+<h2>كشف طلب بضاعة</h2>
+
+<div id="expClient"></div>
+
+<table id="expTable"></table>
+
+</div>
+
+<script src="script.js"></script>
+
+</body>
+
+</html>
