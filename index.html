@@ -52,7 +52,6 @@
         .hidden { display: none; }
         .status-bar { font-size: 0.8em; text-align: center; padding: 10px; font-weight: bold; color: var(--primary); }
 
-        /* ستايل البحث */
         .results-box { position: absolute; background: var(--card); border: 1px solid var(--border); width: 100%; z-index: 1100; max-height: 200px; overflow-y: auto; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
         .result-item { padding: 12px; cursor: pointer; border-bottom: 1px solid var(--border); text-align: right; }
         .result-item:hover { background: var(--primary); color: white; }
@@ -64,8 +63,8 @@
 
 <div id="loginOverlay">
     <div class="login-card">
-        <img src="https://i.ibb.co/LzNfCzm/Untitled-design.jpg" alt="Logo" style="width: 120px; border-radius: 50%; border: 2px solid var(--primary); margin-bottom: 15px;">
-        <h2 style="color:var(--primary); margin: 0;">المحلاوي </h2>
+        <img src="https://i.ibb.co/4R44srhj/image.jpg" alt="Logo" style="width: 120px; border-radius: 50%; border: 2px solid var(--primary); margin-bottom: 15px;">
+        <h2 style="color:var(--primary); margin: 0;">المحلاوي ستور</h2>
         <p style="font-size: 0.9em; color: #666;">نظام الإدارة المحمي</p>
         <input type="password" id="passInput" placeholder="أدخل الرمز (123)" style="text-align: center;">
         <button class="btn btn-main" onclick="checkPassword()">دخول</button>
@@ -76,8 +75,8 @@
 <div id="appContent" class="hidden">
     <header>
         <div style="display: flex; align-items: center; gap: 10px;">
-            <img src="https://i.ibb.co/LzNfCzm/Untitled-design.jpg" alt="Logo" style="width: 45px; border-radius: 50%; border: 1px solid var(--primary);">
-            <div style="color: white; font-weight: bold; font-size: 1.1em;">المحلاوي </div>
+            <img src="https://i.ibb.co/4R44srhj/image.jpg" alt="Logo" style="width: 45px; border-radius: 50%; border: 1px solid var(--primary);">
+            <div style="color: white; font-weight: bold; font-size: 1.1em;">المحلاوي ستور</div>
         </div>
         <div style="display: flex; gap: 10px;">
             <button onclick="logout()" style="background:none; border:none; color:#ff4444; cursor:pointer; font-weight:bold;">خروج</button>
@@ -119,7 +118,7 @@
 
         <div id="browsePage" class="hidden">
             <div class="card">
-                <h3>إضافة صنف جديد</h3>
+                <h3>إضافة صنف جديد للسيرفر</h3>
                 <div style="display: flex; gap: 8px;">
                     <input type="text" id="newItemName" placeholder="اسم الصنف..." style="margin:0">
                     <button class="btn" style="background:var(--success); color:white; width: 80px;" onclick="saveToSheet()">إضافة</button>
@@ -133,10 +132,10 @@
 <div id="finalExportContainer">
     <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 4px solid #b08d57; padding-bottom: 20px; margin-bottom: 20px;">
         <div style="text-align: right;">
-            <h1 style="margin: 0; color: #b08d57; font-size: 35px;">المحلاوي </h1>
+            <h1 style="margin: 0; color: #b08d57; font-size: 35px;">المحلاوي ستور</h1>
             <p style="margin: 5px 0; color: #555; font-size: 18px;">لإمدادات ومواد البناء</p>
         </div>
-        <img src="https://i.ibb.co/LzNfCzm/Untitled-design.jpg" style="width: 120px; border-radius: 50%; border: 3px solid #b08d57;">
+        <img src="https://i.ibb.co/4R44srhj/image.jpg" style="width: 120px; border-radius: 50%; border: 3px solid #b08d57;">
     </div>
 
     <div style="background: #fdfaf5; padding: 20px; border-radius: 10px; border: 1px solid #e2e8f0; margin-bottom: 20px; display: flex; justify-content: space-between;">
@@ -171,7 +170,6 @@
     const APP_PASSWORD = "123";
     const SHEET_URL = "https://script.google.com/macros/s/AKfycbwmEGycYRiyf1HWWuD0_idZcRdqgaHP_n3DeVlmmnzkwaPYTKTwLPEK6wUfxsJCjoE/exec";
     
-    // نظام الحماية
     function checkPassword() {
         if(document.getElementById("passInput").value === APP_PASSWORD) {
             sessionStorage.setItem("isLoggedIn", "true");
@@ -185,7 +183,6 @@
 
     function logout() { sessionStorage.removeItem("isLoggedIn"); location.reload(); }
 
-    // المزامنة والبيانات
     let items = JSON.parse(localStorage.getItem("items")) || [];
 
     async function syncData() {
@@ -242,7 +239,6 @@
         }
     }
 
-    // إدارة الجدول والتصدير
     function addItem() {
         const name = document.getElementById("itemSearch").value, qty = document.getElementById("qty").value;
         if(!name || !qty) return alert("أكمل البيانات");
@@ -290,14 +286,13 @@
     }
 
     function exportExcel() {
-        const data = [["كشف طلب بضاعة - المحلاوي "], ["العميل", document.getElementById("clientName").value], ["التاريخ", new Date().toLocaleDateString()], [""], ["الصنف", "الكمية"]];
+        const data = [["كشف طلب بضاعة - المحلاوي ستور"], ["العميل", document.getElementById("clientName").value], ["التاريخ", new Date().toLocaleDateString()], [""], ["الصنف", "الكمية"]];
         document.querySelectorAll("#resultTable tbody tr").forEach(r => data.push([r.cells[0].innerText, r.cells[1].innerText]));
         const ws = XLSX.utils.aoa_to_sheet(data);
         const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "Order");
         XLSX.writeFile(wb, `طلب_${document.getElementById("clientName").value}.xlsx`);
     }
 
-    // دوال مساعدة
     function saveCurrentTable() {
         const rows = [];
         document.querySelectorAll("#resultTable tbody tr").forEach(tr => rows.push({ name: tr.cells[0].innerText, qty: tr.cells[1].innerText }));
@@ -328,7 +323,6 @@
         const b = document.body; b.setAttribute("data-theme", b.getAttribute("data-theme") === "light" ? "dark" : "light");
     }
 
-    // البحث
     document.getElementById("itemSearch").oninput = (e) => {
         const val = e.target.value.toLowerCase();
         const resDiv = document.getElementById("results");
