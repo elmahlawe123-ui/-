@@ -40,15 +40,15 @@
         .item-actions { display: flex; gap: 5px; margin-top: 10px; }
         .btn-sm { flex: 1; padding: 6px; font-size: 12px; border-radius: 4px; border: none; cursor: pointer; color: white; }
 
-        /* ستايل الفاتورة الأصلية (تصدير فقط) */
+        /* ستايل الفاتورة الأصلية للتصدير */
         #finalExportContainer { 
-            display: block; direction: rtl; padding: 40px; background: #ffffff !important; 
-            width: 750px; color: #000000 !important; position: fixed; left: -9999px; top: 0; 
+            display: block; direction: rtl; padding: 40px; background: white !important; 
+            width: 750px; color: black !important; position: fixed; left: -9999px; top: 0; 
         }
-        .invoice-table { width: 100%; border-collapse: collapse; background: #ffffff !important; margin-top: 20px; }
+        .invoice-table { width: 100%; border-collapse: collapse; margin-top: 20px; background: white !important; }
         .invoice-table th, .invoice-table td { 
-            border: 1px solid #000000 !important; color: #000000 !important; 
-            background: #ffffff !important; padding: 12px; font-size: 18px; 
+            border: 2px solid black !important; color: black !important; 
+            padding: 12px; font-size: 20px; font-weight: bold; background: white !important;
         }
     </style>
 </head>
@@ -56,7 +56,7 @@
 
 <div id="loginOverlay" style="position:fixed; inset:0; background:var(--dark); z-index:9999; display:flex; align-items:center; justify-content:center; flex-direction:column;">
     <div class="card" style="width:320px; text-align:center; border: 2px solid var(--primary);">
-        <img src="https://i.ibb.co/4R44srhj/image.jpg" style="width: 100px; border-radius: 50%; border: 2px solid var(--primary); margin-bottom: 15px;">
+        <img src="https://i.ibb.co/4R44srhj/image.jpg" style="width: 100px; height:100px; border-radius: 50%; border: 2px solid var(--primary); margin-bottom: 15px; object-fit: cover;">
         <h2 style="color:var(--primary); margin:0;">المحلاوي</h2>
         <input type="password" id="passInput" placeholder="الرمز (123)" style="text-align:center; margin-top:15px;" onkeydown="if(event.key==='Enter') checkPassword()">
         <button class="btn btn-main" onclick="checkPassword()">دخول</button>
@@ -66,7 +66,7 @@
 <div id="appContent" class="hidden">
     <header>
         <div style="display: flex; align-items: center; gap: 10px;">
-            <img src="https://i.ibb.co/4R44srhj/image.jpg" style="width: 35px; border-radius: 50%;">
+            <img src="https://i.ibb.co/4R44srhj/image.jpg" style="width: 35px; height:35px; border-radius: 50%; object-fit: cover;">
             <div style="color: white; font-weight: bold;">المحلاوي</div>
         </div>
         <button onclick="toggleTheme()" style="background:none; border:none; cursor:pointer; font-size:1.2em;">🌓</button>
@@ -117,29 +117,29 @@
 </div>
 
 <div id="finalExportContainer">
-    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 4px solid #b08d57; padding-bottom: 15px; margin-bottom: 25px; background: white;">
-        <img src="https://i.ibb.co/4R44srhj/image.jpg" style="width: 110px; border-radius: 50%;">
-        <div style="text-align: left; background: white;">
-            <h1 style="margin: 0; color: #b08d57; font-size: 45px; background: white;">المحلاوي</h1>
-            <p style="margin: 5px 0; color: #000; font-size: 20px; font-weight: bold; background: white;">كشف طلب بضاعة</p>
+    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 5px solid #b08d57; padding-bottom: 15px; margin-bottom: 25px;">
+        <img id="logoImg" src="https://i.ibb.co/4R44srhj/image.jpg" crossOrigin="anonymous" style="width: 120px; height:120px; border-radius: 50%; object-fit: cover;">
+        <div style="text-align: left;">
+            <h1 style="margin: 0; color: #b08d57; font-size: 50px;">المحلاوي</h1>
+            <p style="margin: 5px 0; color: black; font-size: 22px; font-weight: bold;">كشف طلب بضاعة</p>
         </div>
     </div>
-    <div style="display: flex; justify-content: space-between; margin-bottom: 20px; background: white;">
-        <div style="font-size: 22px; background: white;">العميل: <strong id="expClient" style="background: white;"></strong></div>
-        <div style="font-size: 20px; background: white;">التاريخ: <span id="expDate" style="background: white;"></span></div>
+    <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+        <div style="font-size: 24px; color: black;">العميل: <strong id="expClient" style="color: black;"></strong></div>
+        <div style="font-size: 22px; color: black;">التاريخ: <span id="expDate" style="color: black;"></span></div>
     </div>
     <table class="invoice-table">
         <thead>
-            <tr style="background:#ffffff !important;">
-                <th style="width: 10%;">م</th>
-                <th style="width: 65%; text-align: right;">الصنف</th>
-                <th style="width: 25%;">الكمية</th>
+            <tr style="background:#eeeeee !important;">
+                <th style="width: 10%; color: black !important;">م</th>
+                <th style="width: 65%; text-align: right; color: black !important;">الصنف</th>
+                <th style="width: 25%; color: black !important;">الكمية</th>
             </tr>
         </thead>
         <tbody id="expBody"></tbody>
     </table>
-    <div style="margin-top: 80px; text-align: right; background: white;">
-        <p style="font-weight: bold; font-size: 20px; border-bottom: 2px solid #000; display: inline-block; padding-left: 60px; background: white;">توقيع المستلم</p>
+    <div style="margin-top: 80px; text-align: right;">
+        <p style="font-weight: bold; font-size: 22px; color: black; border-bottom: 3px solid black; display: inline-block; padding-left: 80px;">توقيع المستلم</p>
     </div>
 </div>
 
@@ -252,24 +252,42 @@
         document.getElementById("expClient").innerText = document.getElementById("clientName").value || "بدون اسم";
         document.getElementById("expDate").innerText = new Date().toLocaleDateString('ar-EG');
         const b = document.getElementById("expBody"); b.innerHTML = "";
+        
         document.querySelectorAll("#resultTable tbody tr").forEach((r, i) => {
-            b.innerHTML += `<tr><td>${i+1}</td><td style="text-align:right">${r.cells[0].innerText}</td><td>${r.cells[1].innerText}</td></tr>`;
+            b.innerHTML += `<tr>
+                <td style="color:black !important; background:white !important;">${i+1}</td>
+                <td style="text-align:right; color:black !important; background:white !important;">${r.cells[0].innerText}</td>
+                <td style="color:black !important; background:white !important;">${r.cells[1].innerText}</td>
+            </tr>`;
         });
     }
 
     function exportAsImage() {
         prepareExport();
-        html2canvas(document.getElementById("finalExportContainer"), { scale: 3 }).then(canvas => {
+        const container = document.getElementById("finalExportContainer");
+        
+        // التأكد من تحميل الصورة قبل التقاط اللقطة
+        html2canvas(container, { 
+            scale: 3,
+            backgroundColor: "#ffffff",
+            useCORS: true,
+            allowTaint: false,
+            logging: true
+        }).then(canvas => {
             const link = document.createElement('a');
             link.download = `المحلاوي_${document.getElementById("clientName").value}.png`;
-            link.href = canvas.toDataURL(); link.click();
+            link.href = canvas.toDataURL("image/png"); link.click();
         });
     }
 
     function exportPDF() {
         const { jsPDF } = window.jspdf;
         prepareExport();
-        html2canvas(document.getElementById("finalExportContainer"), { scale: 2 }).then(canvas => {
+        html2canvas(document.getElementById("finalExportContainer"), { 
+            scale: 2, 
+            backgroundColor: "#ffffff",
+            useCORS: true 
+        }).then(canvas => {
             const pdf = new jsPDF('p', 'mm', 'a4');
             pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, 210, (canvas.height * 210) / canvas.width);
             pdf.save(`المحلاوي_${document.getElementById("clientName").value}.pdf`);
