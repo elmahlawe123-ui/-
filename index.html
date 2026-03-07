@@ -86,8 +86,8 @@
     </header>
 
     <div class="nav-tabs">
-        <button id="tab1" class="active" onclick="switchPage('order')">تسجيل طلب</button>
-        <button id="tab2" onclick="switchPage('browse')">إدارة الأصناف</button>
+        <button id="tab1" class="active" onclick="switchPage('order')">تسجيل طلبية</button>
+        <button id="tab2" onclick="switchPage('browse')">مخذن الأصناف</button>
     </div>
 
     <div class="container">
@@ -107,7 +107,7 @@
                 </table>
 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px;">
-                    <button class="btn" style="background:#25D366; color:white; grid-column: span 2;" onclick="exportAsImage()">📸 تصدير واتساب</button>
+                    <button class="btn" style="background:#25D366; color:white; grid-column: span 2;" onclick="exportAsImage()">📸 تصدير صورة</button>
                     <button class="btn" style="background:var(--primary); color:white;" onclick="exportPDF()">📄 تصدير PDF</button>
                     <button class="btn" style="background:#444; color:white;" onclick="clearTable()">🗑️ مسح الكل</button>
                 </div>
@@ -131,11 +131,11 @@
         <img src="https://i.ibb.co/4R44srhj/image.jpg" crossOrigin="anonymous" style="width: 120px; height:120px; border-radius: 50%; object-fit: cover;">
         <div style="text-align: left;">
             <h1 style="margin: 0; color: #b08d57; font-size: 50px;">المحلاوي</h1>
-            <p style="margin: 5px 0; color: black; font-size: 22px; font-weight: bold;">كشف طلب بضاعة</p>
+            <p style="margin: 5px 0; color: black; font-size: 22px; font-weight: bold;">كشف طلب مواد</p>
         </div>
     </div>
     <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
-        <div style="font-size: 24px; color: black;">العميل: <strong id="expClient"></strong></div>
+        <div style="font-size: 24px; color: black;">استاذ: <strong id="expClient"></strong></div>
         <div style="font-size: 22px; color: black;">التاريخ: <span id="expDate"></span></div>
     </div>
     <table class="invoice-table">
