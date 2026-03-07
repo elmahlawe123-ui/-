@@ -11,8 +11,9 @@
     
     <style>
         :root {
-            --primary: #2563eb; --secondary: #64748b; --success: #16a34a; --danger: #ef4444; --warning: #f59e0b;
-            --bg: #f8fafc; --text: #1e293b; --card: #ffffff; --border: #e2e8f0;
+            --primary: #b08d57; /* لون ذهبي مستوحى من اللوجو */
+            --secondary: #64748b; --success: #16a34a; --danger: #ef4444; --warning: #f59e0b;
+            --bg: #f8fafc; --text: #1e293b; --card: #ffffff; --border: #e2e8f0; --dark: #000000;
         }
         [data-theme="dark"] {
             --bg: #0f172a; --text: #f1f5f9; --card: #1e293b; --border: #334155;
@@ -22,32 +23,39 @@
         /* شاشة القفل */
         #loginOverlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--bg); z-index: 9999; display: flex;
+            background: var(--dark); z-index: 9999; display: flex;
             align-items: center; justify-content: center; flex-direction: column;
         }
-        .login-card { background: var(--card); padding: 30px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: center; width: 90%; max-width: 350px; }
+        .login-card { background: var(--card); padding: 30px; border-radius: 15px; text-align: center; width: 90%; max-width: 350px; border: 2px solid var(--primary); }
 
-        header { background: var(--card); padding: 15px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 1000; }
-        .nav-tabs { display: flex; background: var(--card); border-bottom: 1px solid var(--border); position: sticky; top: 58px; z-index: 999; }
+        header { background: var(--dark); padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.3); position: sticky; top: 0; z-index: 1000; }
+        .nav-tabs { display: flex; background: var(--card); border-bottom: 1px solid var(--border); position: sticky; top: 65px; z-index: 999; }
         .nav-tabs button { flex: 1; padding: 15px; border: none; background: none; color: var(--secondary); font-weight: bold; cursor: pointer; border-bottom: 3px solid transparent; }
-        .nav-tabs button.active { color: var(--primary); border-bottom-color: var(--primary); background: rgba(37, 99, 235, 0.05); }
+        .nav-tabs button.active { color: var(--primary); border-bottom-color: var(--primary); background: rgba(176, 141, 87, 0.05); }
 
         .container { padding: 15px; max-width: 800px; margin: 0 auto; }
         .card { background: var(--card); padding: 20px; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 15px; }
         
         input { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid var(--border); border-radius: 8px; background: var(--bg); color: var(--text); box-sizing: border-box; font-size: 16px; outline: none; }
+        input:focus { border-color: var(--primary); }
         
         .btn { padding: 12px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s; font-size: 14px; }
         .btn-main { background: var(--primary); color: white; width: 100%; margin: 10px 0; }
         
         table { width: 100%; border-collapse: collapse; margin-top: 15px; background: var(--card); }
         th, td { padding: 12px; border: 1px solid var(--border); text-align: center; }
+        th { background: #f1f5f9; color: var(--dark); }
         
         .items-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; margin-top: 15px; }
-        .item-card { background: var(--card); border: 1px solid var(--border); padding: 12px; border-radius: 10px; text-align: center; }
+        .item-card { background: var(--card); border: 1px solid var(--border); padding: 12px; border-radius: 10px; text-align: center; border-top: 3px solid var(--primary); }
         
         .hidden { display: none; }
         .status-bar { font-size: 0.8em; text-align: center; padding: 10px; font-weight: bold; color: var(--primary); }
+
+        /* ستايل البحث */
+        .results-box { position: absolute; background: var(--card); border: 1px solid var(--border); width: 100%; z-index: 1100; max-height: 200px; overflow-y: auto; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .result-item { padding: 12px; cursor: pointer; border-bottom: 1px solid var(--border); text-align: right; }
+        .result-item:hover { background: var(--primary); color: white; }
 
         #finalExportContainer { display: none; direction: rtl; padding: 40px; background: white; width: 800px; color: black; }
     </style>
@@ -56,20 +64,24 @@
 
 <div id="loginOverlay">
     <div class="login-card">
-        <h2 style="color:var(--primary)">🏢 المحلاوي ستور</h2>
-        <p>يرجى إدخال رمز الدخول للمتابعة</p>
-        <input type="password" id="passInput" placeholder="أدخل الرقم السري..." style="text-align: center;">
-        <button class="btn btn-main" onclick="checkPassword()">دخول للنظام</button>
-        <p id="loginError" style="color:var(--danger); font-size: 0.9em; display: none;">الرمز غير صحيح!</p>
+        <img src="https://i.ibb.co/LzNfCzm/Untitled-design.jpg" alt="Logo" style="width: 120px; border-radius: 50%; border: 2px solid var(--primary); margin-bottom: 15px;">
+        <h2 style="color:var(--primary); margin: 0;">المحلاوي ستور</h2>
+        <p style="font-size: 0.9em; color: #666;">نظام الإدارة المحمي</p>
+        <input type="password" id="passInput" placeholder="أدخل الرمز (123)" style="text-align: center;">
+        <button class="btn btn-main" onclick="checkPassword()">دخول</button>
+        <p id="loginError" style="color:var(--danger); font-size: 0.8em; display: none; margin-top: 10px;">الرمز غير صحيح!</p>
     </div>
 </div>
 
 <div id="appContent" class="hidden">
     <header>
-        <div style="font-weight: bold; font-size: 1.2em;">🏢 المحلاوي ستور</div>
-        <div style="display: flex; gap: 10px; align-items: center;">
-            <button onclick="logout()" style="background:none; border:none; cursor:pointer; font-size:0.8em; color:var(--danger)">تسجيل خروج</button>
-            <button onclick="toggleTheme()" style="background:none; border:none; cursor:pointer; font-size:1.4em;">🌓</button>
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <img src="https://i.ibb.co/LzNfCzm/Untitled-design.jpg" alt="Logo" style="width: 45px; border-radius: 50%; border: 1px solid var(--primary);">
+            <div style="color: white; font-weight: bold; font-size: 1.1em;">المحلاوي ستور</div>
+        </div>
+        <div style="display: flex; gap: 10px;">
+            <button onclick="logout()" style="background:none; border:none; color:#ff4444; cursor:pointer; font-weight:bold;">خروج</button>
+            <button onclick="toggleTheme()" style="background:none; border:none; cursor:pointer; font-size:1.2em;">🌓</button>
         </div>
     </header>
 
@@ -86,7 +98,7 @@
                 <input type="text" id="clientName" placeholder="اسم العميل..." oninput="saveCurrentTable()">
                 <div style="position: relative;">
                     <input type="text" id="itemSearch" placeholder="ابحث عن مادة..." autocomplete="off">
-                    <div id="results" class="results-box hidden" style="position: absolute; background: var(--card); border: 1px solid var(--border); width: 100%; z-index: 1100; max-height: 200px; overflow-y: auto;"></div>
+                    <div id="results" class="results-box hidden"></div>
                 </div>
                 <input type="number" id="qty" placeholder="الكمية" inputmode="numeric">
                 <button class="btn btn-main" onclick="addItem()">+ إضافة للجدول</button>
@@ -98,7 +110,7 @@
 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px;">
                     <button class="btn" style="background:#000; color:white; grid-column: span 2;" onclick="exportAsImage()">📸 صورة للواتساب</button>
-                    <button class="btn" style="background:var(--danger); color:white;" onclick="exportPDF()">📄 تصدير PDF</button>
+                    <button class="btn" style="background:var(--primary); color:white;" onclick="exportPDF()">📄 تصدير PDF</button>
                     <button class="btn" style="background:var(--success); color:white;" onclick="exportExcel()">📊 ملف Excel</button>
                     <button class="btn" style="background:var(--secondary); color:white; grid-column: span 2;" onclick="clearTable()">🗑️ مسح الجدول</button>
                 </div>
@@ -119,66 +131,69 @@
 </div>
 
 <div id="finalExportContainer">
-    <div style="text-align: center; border-bottom: 5px solid #2563eb; padding-bottom: 20px; margin-bottom: 30px;">
-        <h1 style="margin:0; color:#2563eb; font-size: 35px;">كشف طلب بضاعة</h1>
-        <p style="font-size:20px; margin:5px 0;">المحلاوي لإمدادات البناء</p>
-        <div id="expClient" style="font-weight:bold; font-size:24px; margin:20px 0; background:#f1f5f9; padding:15px; border: 1px solid #cbd5e1; border-radius:8px;"></div>
-        <p id="expDate" style="color:#64748b; font-size: 18px;"></p>
+    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 4px solid #b08d57; padding-bottom: 20px; margin-bottom: 20px;">
+        <div style="text-align: right;">
+            <h1 style="margin: 0; color: #b08d57; font-size: 35px;">المحلاوي ستور</h1>
+            <p style="margin: 5px 0; color: #555; font-size: 18px;">لإمدادات ومواد البناء</p>
+        </div>
+        <img src="https://i.ibb.co/LzNfCzm/Untitled-design.jpg" style="width: 120px; border-radius: 50%; border: 3px solid #b08d57;">
     </div>
-    <table style="width: 100%; border: 2px solid #000; font-size: 20px; border-collapse: collapse;">
-        <thead><tr style="background:#e2e8f0"><th style="border:2px solid #000; padding:15px;">الصنف</th><th style="border:2px solid #000; padding:15px;">الكمية</th></tr></thead>
-        <tbody id="expBody"></tbody>
+
+    <div style="background: #fdfaf5; padding: 20px; border-radius: 10px; border: 1px solid #e2e8f0; margin-bottom: 20px; display: flex; justify-content: space-between;">
+        <div style="font-size: 20px;">العميل: <strong id="expClient"></strong></div>
+        <div style="font-size: 20px;">التاريخ: <strong id="expDate"></strong></div>
+    </div>
+
+    <table style="width: 100%; border-collapse: collapse; border: 2px solid #b08d57;">
+        <thead>
+            <tr style="background: #b08d57; color: white;">
+                <th style="padding: 15px; border: 1px solid white; width: 10%;">م</th>
+                <th style="padding: 15px; border: 1px solid white; width: 60%; text-align: right;">بيان الصنف</th>
+                <th style="padding: 15px; border: 1px solid white; width: 30%;">الكمية</th>
+            </tr>
+        </thead>
+        <tbody id="expBody" style="font-size: 18px;"></tbody>
     </table>
+
+    <div style="margin-top: 60px; display: flex; justify-content: space-between; text-align: center;">
+        <div>
+            <p style="margin-bottom: 50px;">توقيع المستلم</p>
+            <div style="border-top: 1px dashed #000; width: 150px;"></div>
+        </div>
+        <div>
+            <p style="margin-bottom: 50px;">ختم المؤسسة</p>
+            <div style="border: 2px solid #eee; width: 100px; height: 100px; border-radius: 50%; margin: 0 auto;"></div>
+        </div>
+    </div>
 </div>
 
 <script>
-    // --- إعدادات الحماية ---
-    const APP_PASSWORD = "7325"; // يمكنك تغيير الرقم السري من هنا
+    const APP_PASSWORD = "123";
     const SHEET_URL = "https://script.google.com/macros/s/AKfycbwmEGycYRiyf1HWWuD0_idZcRdqgaHP_n3DeVlmmnzkwaPYTKTwLPEK6wUfxsJCjoE/exec";
     
+    // نظام الحماية
     function checkPassword() {
-        const input = document.getElementById("passInput").value;
-        if (input === APP_PASSWORD) {
+        if(document.getElementById("passInput").value === APP_PASSWORD) {
             sessionStorage.setItem("isLoggedIn", "true");
             document.getElementById("loginOverlay").style.display = "none";
             document.getElementById("appContent").classList.remove("hidden");
-            syncData();
-            loadSavedTable();
+            syncData(); loadSavedTable();
         } else {
             document.getElementById("loginError").style.display = "block";
-            document.getElementById("passInput").value = "";
         }
     }
 
-    function logout() {
-        sessionStorage.removeItem("isLoggedIn");
-        location.reload();
-    }
+    function logout() { sessionStorage.removeItem("isLoggedIn"); location.reload(); }
 
-    // التحقق من الجلسة عند التحميل
-    window.onload = () => {
-        if (sessionStorage.getItem("isLoggedIn") === "true") {
-            document.getElementById("loginOverlay").style.display = "none";
-            document.getElementById("appContent").classList.remove("hidden");
-            syncData();
-            loadSavedTable();
-        }
-    };
-
-    // --- بقية أكواد النظام (المزامنة، الحذف، التعديل، التصدير) ---
+    // المزامنة والبيانات
     let items = JSON.parse(localStorage.getItem("items")) || [];
 
     async function syncData() {
         try {
             const res = await fetch(SHEET_URL);
             const data = await res.json();
-            if(data) { 
-                items = data; 
-                localStorage.setItem("items", JSON.stringify(items)); 
-                renderGallery(); 
-                document.getElementById("status").innerHTML = "✅ متصل بالسيرفر"; 
-            }
-        } catch (e) { document.getElementById("status").innerHTML = "📡 وضع الأوفلاين"; renderGallery(); }
+            if(data) { items = data; localStorage.setItem("items", JSON.stringify(items)); renderGallery(); document.getElementById("status").innerHTML = "✅ متصل"; }
+        } catch (e) { document.getElementById("status").innerHTML = "📡 أوفلاين"; renderGallery(); }
     }
 
     function renderGallery() {
@@ -189,8 +204,8 @@
             d.innerHTML = `
                 <span style="display:block;margin-bottom:10px;font-weight:bold;cursor:pointer" onclick="selectItem('${item}')">${item}</span>
                 <div style="display:flex;gap:5px">
-                    <button onclick="editItem(${index})" style="flex:1;background:var(--warning);color:white;border:none;padding:5px;border-radius:4px;cursor:pointer">تعديل</button>
-                    <button onclick="deleteItemFromServer(${index})" style="flex:1;background:var(--danger);color:white;border:none;padding:5px;border-radius:4px;cursor:pointer">حذف</button>
+                    <button onclick="editItem(${index})" style="flex:1;background:var(--warning);color:white;border:none;padding:5px;border-radius:4px;cursor:pointer">✏️</button>
+                    <button onclick="deleteItemFromServer(${index})" style="flex:1;background:var(--danger);color:white;border:none;padding:5px;border-radius:4px;cursor:pointer">🗑️</button>
                 </div>`;
             grid.appendChild(d);
         });
@@ -214,41 +229,36 @@
     async function editItem(index) {
         const oldName = items[index];
         const newName = prompt("تعديل اسم الصنف:", oldName);
-        if (newName && newName.trim() !== "" && newName !== oldName) {
-            document.getElementById("status").innerHTML = "⏳ جاري التعديل...";
+        if (newName && newName !== oldName) {
             await fetch(SHEET_URL, { method: "POST", mode: "no-cors", body: JSON.stringify({ action: "edit", oldName: oldName, newName: newName }) });
             setTimeout(syncData, 1500);
         }
     }
 
     async function deleteItemFromServer(index) {
-        const itemName = items[index];
-        if (confirm(`حذف "${itemName}" من السيرفر؟`)) {
-            document.getElementById("status").innerHTML = "⏳ جاري الحذف...";
-            await fetch(SHEET_URL, { method: "POST", mode: "no-cors", body: JSON.stringify({ action: "delete", itemName: itemName }) });
+        if (confirm(`حذف "${items[index]}" نهائياً؟`)) {
+            await fetch(SHEET_URL, { method: "POST", mode: "no-cors", body: JSON.stringify({ action: "delete", itemName: items[index] }) });
             setTimeout(syncData, 1500);
         }
     }
 
+    // إدارة الجدول والتصدير
     function addItem() {
         const name = document.getElementById("itemSearch").value, qty = document.getElementById("qty").value;
         if(!name || !qty) return alert("أكمل البيانات");
         const tbody = document.querySelector("#resultTable tbody");
         const row = tbody.insertRow();
-        row.innerHTML = `<td>${name}</td><td style="font-weight:bold">${qty}</td><td><button onclick="this.parentElement.parentElement.remove();saveCurrentTable();" style="background:var(--danger);color:white;border:none;padding:5px 10px;border-radius:5px;">X</button></td>`;
+        row.innerHTML = `<td style="text-align:right">${name}</td><td style="font-weight:bold">${qty}</td><td><button onclick="this.parentElement.parentElement.remove();saveCurrentTable();" style="background:var(--danger);color:white;border:none;padding:5px;border-radius:4px;">X</button></td>`;
         saveCurrentTable();
         document.getElementById("itemSearch").value = ""; document.getElementById("qty").value = "";
     }
 
-    // --- وظائف التصدير ---
     function prepareExportData() {
-        const client = document.getElementById("clientName").value || "عميل بدون اسم";
-        const rows = document.querySelectorAll("#resultTable tbody tr");
-        document.getElementById("expClient").innerText = "المستلم: " + client;
-        document.getElementById("expDate").innerText = "تاريخ: " + new Date().toLocaleDateString('ar-EG');
+        document.getElementById("expClient").innerText = document.getElementById("clientName").value || "عميل عام";
+        document.getElementById("expDate").innerText = new Date().toLocaleDateString('ar-EG');
         const b = document.getElementById("expBody"); b.innerHTML = "";
-        rows.forEach(r => { 
-            b.innerHTML += `<tr><td style="border:2px solid #000; padding:15px; text-align:right;">${r.cells[0].innerText}</td><td style="border:2px solid #000; padding:15px; font-weight:bold;">${r.cells[1].innerText}</td></tr>`; 
+        document.querySelectorAll("#resultTable tbody tr").forEach((r, i) => {
+            b.innerHTML += `<tr><td style="border:1px solid #b08d57;padding:10px;">${i+1}</td><td style="border:1px solid #b08d57;padding:10px;text-align:right;">${r.cells[0].innerText}</td><td style="border:1px solid #b08d57;padding:10px;font-weight:bold;">${r.cells[1].innerText}</td></tr>`;
         });
     }
 
@@ -258,10 +268,9 @@
         const target = document.getElementById("finalExportContainer");
         target.style.display = "block";
         html2canvas(target, { scale: 2 }).then(canvas => {
-            const imgData = canvas.toDataURL('image/png');
             const pdf = new jsPDF('p', 'mm', 'a4');
             const pdfWidth = pdf.internal.pageSize.getWidth();
-            pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, (canvas.height * pdfWidth) / canvas.width);
+            pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, pdfWidth, (canvas.height * pdfWidth) / canvas.width);
             pdf.save(`طلب_${document.getElementById("clientName").value}.pdf`);
             target.style.display = "none";
         });
@@ -281,16 +290,14 @@
     }
 
     function exportExcel() {
-        const client = document.getElementById("clientName").value || "عميل";
-        const rows = document.querySelectorAll("#resultTable tbody tr");
-        let data = [["كشف بضاعة"], ["العميل:", client], ["التاريخ:", new Date().toLocaleDateString('ar-EG')], [""], ["الصنف", "الكمية"]];
-        rows.forEach(r => data.push([r.cells[0].innerText, r.cells[1].innerText]));
+        const data = [["كشف طلب بضاعة - المحلاوي ستور"], ["العميل", document.getElementById("clientName").value], ["التاريخ", new Date().toLocaleDateString()], [""], ["الصنف", "الكمية"]];
+        document.querySelectorAll("#resultTable tbody tr").forEach(r => data.push([r.cells[0].innerText, r.cells[1].innerText]));
         const ws = XLSX.utils.aoa_to_sheet(data);
-        const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, "Order");
-        XLSX.writeFile(wb, `طلب_${client}.xlsx`);
+        const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "Order");
+        XLSX.writeFile(wb, `طلب_${document.getElementById("clientName").value}.xlsx`);
     }
 
+    // دوال مساعدة
     function saveCurrentTable() {
         const rows = [];
         document.querySelectorAll("#resultTable tbody tr").forEach(tr => rows.push({ name: tr.cells[0].innerText, qty: tr.cells[1].innerText }));
@@ -299,18 +306,17 @@
     }
 
     function loadSavedTable() {
-        const savedRows = JSON.parse(localStorage.getItem("draftOrder") || "[]");
         document.getElementById("clientName").value = localStorage.getItem("draftClient") || "";
+        const saved = JSON.parse(localStorage.getItem("draftOrder") || "[]");
         const tbody = document.querySelector("#resultTable tbody");
-        tbody.innerHTML = "";
-        savedRows.forEach(item => {
+        saved.forEach(item => {
             const row = tbody.insertRow();
-            row.innerHTML = `<td>${item.name}</td><td style="font-weight:bold">${item.qty}</td><td><button onclick="this.parentElement.parentElement.remove();saveCurrentTable();" style="background:var(--danger);color:white;border:none;padding:5px 10px;border-radius:5px;">X</button></td>`;
+            row.innerHTML = `<td style="text-align:right">${item.name}</td><td style="font-weight:bold">${item.qty}</td><td><button onclick="this.parentElement.parentElement.remove();saveCurrentTable();" style="background:var(--danger);color:white;border:none;padding:5px;border-radius:4px;">X</button></td>`;
         });
     }
 
     function clearTable() { if(confirm("مسح الجدول؟")) { document.querySelector("#resultTable tbody").innerHTML = ""; localStorage.removeItem("draftOrder"); } }
-    
+
     function switchPage(page) {
         document.getElementById("orderPage").classList.toggle("hidden", page !== 'order');
         document.getElementById("browsePage").classList.toggle("hidden", page !== 'browse');
@@ -325,16 +331,24 @@
     // البحث
     document.getElementById("itemSearch").oninput = (e) => {
         const val = e.target.value.toLowerCase();
-        const resultsDiv = document.getElementById("results");
-        resultsDiv.innerHTML = "";
-        if(!val) return resultsDiv.classList.add('hidden');
+        const resDiv = document.getElementById("results");
+        resDiv.innerHTML = "";
+        if(!val) return resDiv.classList.add('hidden');
         const filtered = items.filter(i => i.toLowerCase().includes(val)).slice(0, 8);
         filtered.forEach(item => {
             const d = document.createElement("div"); d.className = "result-item"; d.textContent = item;
-            d.onclick = () => { document.getElementById("itemSearch").value = item; resultsDiv.classList.add('hidden'); document.getElementById("qty").focus(); };
-            resultsDiv.appendChild(d);
+            d.onclick = () => { document.getElementById("itemSearch").value = item; resDiv.classList.add('hidden'); document.getElementById("qty").focus(); };
+            resDiv.appendChild(d);
         });
-        resultsDiv.classList.toggle('hidden', filtered.length === 0);
+        resDiv.classList.toggle('hidden', filtered.length === 0);
+    };
+
+    window.onload = () => {
+        if (sessionStorage.getItem("isLoggedIn") === "true") {
+            document.getElementById("loginOverlay").style.display = "none";
+            document.getElementById("appContent").classList.remove("hidden");
+            syncData(); loadSavedTable();
+        }
     };
 </script>
 
