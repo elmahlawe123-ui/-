@@ -40,24 +40,35 @@
         .item-actions { display: flex; gap: 5px; margin-top: 10px; }
         .btn-sm { flex: 1; padding: 6px; font-size: 12px; border-radius: 4px; border: none; cursor: pointer; color: white; }
 
-        #finalExportContainer { display: block; direction: rtl; padding: 40px; background: #fff !important; width: 750px; color: #000 !important; position: fixed; left: -9999px; top: 0; }
-        .invoice-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        .invoice-table th, .invoice-table td { border: 1px solid #000; padding: 10px; text-align: center; color: #000; }
+        /* ستايل الفاتورة الأصلية (تصدير فقط) */
+        #finalExportContainer { 
+            display: block; direction: rtl; padding: 40px; background: #ffffff !important; 
+            width: 750px; color: #000000 !important; position: fixed; left: -9999px; top: 0; 
+        }
+        .invoice-table { width: 100%; border-collapse: collapse; background: #ffffff !important; margin-top: 20px; }
+        .invoice-table th, .invoice-table td { 
+            border: 1px solid #000000 !important; color: #000000 !important; 
+            background: #ffffff !important; padding: 12px; font-size: 18px; 
+        }
     </style>
 </head>
 <body data-theme="dark">
 
-<div id="loginOverlay" style="position:fixed; inset:0; background:var(--dark); z-index:9999; display:flex; align-items:center; justify-content:center;">
-    <div class="card" style="width:300px; text-align:center; border: 2px solid var(--primary);">
-        <h2 style="color:var(--primary)">المحلاوي</h2>
-        <input type="password" id="passInput" placeholder="الرمز (123)" style="text-align:center;" onkeydown="if(event.key==='Enter') checkPassword()">
+<div id="loginOverlay" style="position:fixed; inset:0; background:var(--dark); z-index:9999; display:flex; align-items:center; justify-content:center; flex-direction:column;">
+    <div class="card" style="width:320px; text-align:center; border: 2px solid var(--primary);">
+        <img src="https://i.ibb.co/4R44srhj/image.jpg" style="width: 100px; border-radius: 50%; border: 2px solid var(--primary); margin-bottom: 15px;">
+        <h2 style="color:var(--primary); margin:0;">المحلاوي</h2>
+        <input type="password" id="passInput" placeholder="الرمز (123)" style="text-align:center; margin-top:15px;" onkeydown="if(event.key==='Enter') checkPassword()">
         <button class="btn btn-main" onclick="checkPassword()">دخول</button>
     </div>
 </div>
 
 <div id="appContent" class="hidden">
     <header>
-        <div style="color:white; font-weight:bold;">نظام المحلاوي لطلب المواد</div>
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <img src="https://i.ibb.co/4R44srhj/image.jpg" style="width: 35px; border-radius: 50%;">
+            <div style="color: white; font-weight: bold;">المحلاوي</div>
+        </div>
         <button onclick="toggleTheme()" style="background:none; border:none; cursor:pointer; font-size:1.2em;">🌓</button>
     </header>
 
@@ -75,7 +86,7 @@
                     <div id="results" class="results-box hidden"></div>
                 </div>
                 <input type="number" id="qty" placeholder="الكمية المطلوبة" inputmode="numeric" onkeydown="if(event.key==='Enter') addItem()">
-                <button class="btn btn-main" onclick="addItem()">إضافة للجدول (Enter)</button>
+                <button class="btn btn-main" onclick="addItem()">ترحيل للجدول (Enter)</button>
 
                 <table id="resultTable">
                     <thead><tr><th>المادة</th><th>الكمية</th><th>حذف</th></tr></thead>
@@ -98,7 +109,7 @@
                     <button class="btn btn-main" style="width: 100px; margin: 8px 0;" onclick="saveToSheet()">إضافة</button>
                 </div>
                 <hr style="border:0; border-top:1px solid var(--border); margin:15px 0;">
-                <input type="text" placeholder="بحث سريع في الأصناف..." oninput="renderGallery(this.value)">
+                <input type="text" placeholder="بحث سريع..." oninput="renderGallery(this.value)">
             </div>
             <div id="itemsGrid" class="manage-grid"></div>
         </div>
@@ -106,22 +117,35 @@
 </div>
 
 <div id="finalExportContainer">
-    <div style="text-align:center; border-bottom:4px solid #b08d57; padding-bottom:10px; margin-bottom:20px;">
-        <h1 style="color:#b08d57; margin:0;">المحلاوي لطلب المواد</h1>
+    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 4px solid #b08d57; padding-bottom: 15px; margin-bottom: 25px; background: white;">
+        <img src="https://i.ibb.co/4R44srhj/image.jpg" style="width: 110px; border-radius: 50%;">
+        <div style="text-align: left; background: white;">
+            <h1 style="margin: 0; color: #b08d57; font-size: 45px; background: white;">المحلاوي</h1>
+            <p style="margin: 5px 0; color: #000; font-size: 20px; font-weight: bold; background: white;">كشف طلب بضاعة</p>
+        </div>
     </div>
-    <div style="display:flex; justify-content: space-between; margin-bottom:15px; font-size:18px;">
-        <div>العميل: <strong id="expClient"></strong></div>
-        <div>التاريخ: <span id="expDate"></span></div>
+    <div style="display: flex; justify-content: space-between; margin-bottom: 20px; background: white;">
+        <div style="font-size: 22px; background: white;">العميل: <strong id="expClient" style="background: white;"></strong></div>
+        <div style="font-size: 20px; background: white;">التاريخ: <span id="expDate" style="background: white;"></span></div>
     </div>
     <table class="invoice-table">
-        <thead><tr style="background:#f2f2f2;"><th>م</th><th>المادة</th><th>الكمية</th></tr></thead>
+        <thead>
+            <tr style="background:#ffffff !important;">
+                <th style="width: 10%;">م</th>
+                <th style="width: 65%; text-align: right;">الصنف</th>
+                <th style="width: 25%;">الكمية</th>
+            </tr>
+        </thead>
         <tbody id="expBody"></tbody>
     </table>
+    <div style="margin-top: 80px; text-align: right; background: white;">
+        <p style="font-weight: bold; font-size: 20px; border-bottom: 2px solid #000; display: inline-block; padding-left: 60px; background: white;">توقيع المستلم</p>
+    </div>
 </div>
 
 <script>
     const APP_PASSWORD = "123";
-    let items = JSON.parse(localStorage.getItem("items")) || ["رمل", "إسمنت", "حديد"];
+    let items = JSON.parse(localStorage.getItem("items")) || ["إسمنت", "حديد", "رمل"];
 
     function checkPassword() {
         if(document.getElementById("passInput").value === APP_PASSWORD) {
@@ -252,7 +276,7 @@
         });
     }
 
-    function clearTable() { if(confirm("مسح؟")) { document.querySelector("#resultTable tbody").innerHTML = ""; saveCurrentTable(); } }
+    function clearTable() { if(confirm("مسح الكل؟")) { document.querySelector("#resultTable tbody").innerHTML = ""; saveCurrentTable(); } }
     
     function switchPage(p) {
         document.getElementById("orderPage").classList.toggle("hidden", p !== 'order');
