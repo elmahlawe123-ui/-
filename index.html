@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>نظام المحلاوي - النسخة المستقرة والمعدلة</title>
+    <title>نظام المحلاوي - النسخة المستقرة</title>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -36,15 +36,34 @@
         .hidden { display: none !important; }
         .item-card { background: var(--card); border: 1px solid var(--border); padding: 12px; border-radius: 8px; text-align: center; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
 
-        /* ستايل الفاتورة الاحترافية للتصدير - معدل */
+        /* --- تعديل ستايل الفاتورة للاستخراج بلون أبيض --- */
         #finalExportContainer { 
             display: block; direction: rtl; padding: 40px; background: white !important; 
             width: 750px; color: black !important; position: fixed; left: -9999px; top: 0; 
         }
         .invoice-table { width: 100%; border-collapse: collapse; margin-top: 20px; border: 2px solid black; }
-        .invoice-table th { background: #f2f2f2 !important; color: black !important; padding: 12px; font-size: 20px; font-weight: bold; text-align: center; border: 1px solid black; }
-        /* تم تغيير لون خلفية الصفوف هنا من الغامق للابيض ولون النص للاسود */
-        .invoice-table td { background: white !important; color: black !important; padding: 12px; font-size: 20px; font-weight: bold; text-align: center; border: 1px solid black; }
+        
+        /* عناوين الجدول (الرأس) */
+        .invoice-table th { 
+            background: #ffffff !important; /* تغيير من رمادي إلى أبيض */
+            color: black !important; 
+            padding: 12px; 
+            font-size: 20px; 
+            font-weight: bold; 
+            text-align: center; 
+            border: 1px solid black; 
+        }
+        
+        /* صفوف الجدول */
+        .invoice-table td { 
+            background: white !important; 
+            color: black !important; 
+            padding: 12px; 
+            font-size: 20px; 
+            font-weight: bold; 
+            text-align: center; 
+            border: 1px solid black; 
+        }
     </style>
 </head>
 <body data-theme="dark">
@@ -99,7 +118,7 @@
             <div class="card">
                 <h3>إدارة الأصناف (Google Sheets)</h3>
                 <input type="text" id="newItemName" placeholder="اسم صنف جديد...">
-                <button class="btn btn-main" onclick="addCloudItem()">إضافة لصيفة جوجل</button>
+                <button class="btn btn-main" onclick="addCloudItem()">إضافة لقائمة جوجل</button>
                 <hr style="border:0; border-top:1px solid var(--border); margin:15px 0;">
                 <div id="itemsGrid"></div>
             </div>
@@ -147,7 +166,6 @@
         } else { alert("الرمز خطأ"); }
     }
 
-    // إدارة الأصناف
     function renderCloudItems() {
         const grid = document.getElementById("itemsGrid");
         grid.innerHTML = "";
@@ -170,28 +188,24 @@
         localItems.push(name);
         renderCloudItems();
         document.getElementById("newItemName").value = "";
-        
-        try {
-            fetch(GOOGLE_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: 'add', item: name }) });
-        } catch(e) { console.error("Cloud error"); }
+        try { fetch(GOOGLE_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: 'add', item: name }) }); } catch(e) {}
     }
 
     async function deleteItem(name) {
-        if(!confirm("حذف من القائمة السحابية؟")) return;
+        if(!confirm("حذف؟")) return;
         localItems = localItems.filter(i => i !== name);
         renderCloudItems();
         fetch(GOOGLE_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: 'delete', item: name }) });
     }
 
     async function editItem(oldName) {
-        const newName = prompt("الاسم الجديد للصنف:", oldName);
+        const newName = prompt("الاسم الجديد:", oldName);
         if(!newName || newName === oldName) return;
         localItems[localItems.indexOf(oldName)] = newName;
         renderCloudItems();
         fetch(GOOGLE_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: 'edit', item: oldName, newItemName: newName }) });
     }
 
-    // نظام البحث
     document.getElementById("itemSearch").oninput = function() {
         const val = this.value.toLowerCase();
         const resDiv = document.getElementById("results");
@@ -217,16 +231,15 @@
         document.getElementById("itemSearch").focus();
     }
 
-    // تصدير
     function prepareExport() {
         document.getElementById("expClient").innerText = document.getElementById("clientName").value || "بدون اسم";
         document.getElementById("expDate").innerText = new Date().toLocaleDateString('ar-EG');
         const b = document.getElementById("expBody"); b.innerHTML = "";
         document.querySelectorAll("#resultTable tbody tr").forEach((r, i) => {
             b.innerHTML += `<tr>
-                <td style="color:black; background:white;">${i+1}</td>
-                <td style="text-align:right; color:black; background:white;">${r.cells[0].innerText}</td>
-                <td style="color:black; background:white;">${r.cells[1].innerText}</td>
+                <td style="color:black !important; background:white !important;">${i+1}</td>
+                <td style="text-align:right; color:black !important; background:white !important;">${r.cells[0].innerText}</td>
+                <td style="color:black !important; background:white !important;">${r.cells[1].innerText}</td>
             </tr>`;
         });
     }
@@ -255,7 +268,7 @@
         document.getElementById("tab1").classList.toggle("active", p === 'order');
         document.getElementById("tab2").classList.toggle("active", p === 'browse');
     }
-    function clearTable() { if(confirm("مسح محتوى الجدول بالكامل؟")) document.querySelector("#resultTable tbody").innerHTML = ""; }
+    function clearTable() { if(confirm("مسح الكل؟")) document.querySelector("#resultTable tbody").innerHTML = ""; }
 </script>
 </body>
 </html>
