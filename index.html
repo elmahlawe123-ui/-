@@ -10,19 +10,12 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     
     <style>
-        :root {
-            --primary: #b08d57; --bg: #0f172a; --text: #f1f5f9; --card: #1e293b; --border: #334155; --dark: #000000;
-        }
-        [data-theme="light"] {
-            --bg: #f8fafc; --text: #1e293b; --card: #ffffff; --border: #e2e8f0;
-        }
+        :root { --primary: #b08d57; --bg: #0f172a; --text: #f1f5f9; --card: #1e293b; --border: #334155; --dark: #000000; }
+        [data-theme="light"] { --bg: #f8fafc; --text: #1e293b; --card: #ffffff; --border: #e2e8f0; }
         body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding-bottom: 30px; }
         
-        #loginOverlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--dark); z-index: 9999; display: flex;
-            align-items: center; justify-content: center; flex-direction: column;
-        }
+        /* شاشة الدخول */
+        #loginOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--dark); z-index: 9999; display: flex; align-items: center; justify-content: center; flex-direction: column; }
         .login-card { background: var(--card); padding: 30px; border-radius: 15px; text-align: center; width: 90%; max-width: 350px; border: 2px solid var(--primary); }
 
         header { background: var(--dark); padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; }
@@ -47,40 +40,41 @@
 
         .hidden { display: none !important; }
         
-        /* تصميم الفاتورة الأبيض بالكامل */
+        /* الفاتورة - بيضاء بالكامل ولا تتأثر بأي ثيم */
         #finalExportContainer { 
             display: block; 
             direction: rtl; 
             padding: 40px; 
             background: #ffffff !important; 
-            width: 800px; 
-            color: #000 !important; 
+            width: 750px; 
+            color: #000000 !important; 
             position: fixed; 
-            left: -5000px; 
+            left: -9999px; 
             top: 0; 
         }
-        #finalExportContainer table { background: #fff !important; color: #000 !important; border: 1px solid #000; }
-        #finalExportContainer th, #finalExportContainer td { border: 1px solid #000 !important; color: #000 !important; padding: 10px; }
+        .invoice-table { width: 100%; border-collapse: collapse; background: #ffffff !important; }
+        .invoice-table th, .invoice-table td { 
+            border: 1px solid #000000 !important; 
+            color: #000000 !important; 
+            background: #ffffff !important; 
+            padding: 12px;
+            font-size: 18px;
+        }
     </style>
 </head>
 <body data-theme="dark">
 
 <div id="loginOverlay">
     <div class="login-card">
-        <img src="https://i.ibb.co/4R44srhj/image.jpg" alt="المحلاوي" style="width: 140px; border-radius: 50%; border: 2px solid var(--primary); margin-bottom: 15px;">
         <h1 style="color:var(--primary); margin: 0; font-size: 2.5em;">المحلاوي</h1>
         <input type="password" id="passInput" placeholder="أدخل الرمز (123)" style="text-align: center; margin-top: 20px;" onkeydown="if(event.key==='Enter') checkPassword()">
         <button class="btn btn-main" onclick="checkPassword()">دخول</button>
-        <p id="loginError" style="color:#ef4444; font-size: 0.9em; margin-top: 10px; display: none;">الرقم السري خطأ!</p>
     </div>
 </div>
 
 <div id="appContent" class="hidden">
     <header>
-        <div style="display: flex; align-items: center; gap: 10px;">
-            <img src="https://i.ibb.co/4R44srhj/image.jpg" style="width: 40px; border-radius: 50%;">
-            <div style="color: white; font-weight: bold; font-size: 1.3em;">المحلاوي</div>
-        </div>
+        <div style="color: white; font-weight: bold; font-size: 1.3em;">نظام المحلاوي</div>
         <div style="display: flex; gap: 15px;">
             <button onclick="logout()" style="background:none; border:none; color:#ff4444; cursor:pointer; font-weight:bold;">خروج</button>
             <button onclick="toggleTheme()" style="background:none; border:none; cursor:pointer; font-size:1.2em;">🌓</button>
@@ -101,7 +95,7 @@
                     <div id="results" class="results-box hidden"></div>
                 </div>
                 <input type="number" id="qty" placeholder="الكمية" inputmode="numeric" onkeydown="if(event.key==='Enter') addItem()">
-                <button class="btn btn-main" onclick="addItem()">إضافة للجدول (Enter)</button>
+                <button class="btn btn-main" onclick="addItem()">إضافة (Enter)</button>
 
                 <table id="resultTable">
                     <thead><tr><th>المادة</th><th>الكمية</th><th>حذف</th></tr></thead>
@@ -123,29 +117,32 @@
 </div>
 
 <div id="finalExportContainer">
-    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid #b08d57; padding-bottom: 15px; margin-bottom: 20px; background: white;">
-        <div style="text-align: right; background: white;">
-            <h1 style="margin: 0; color: #b08d57; font-size: 40px; background: white;">المحلاوي</h1>
-            <p style="margin: 5px 0; color: #333; font-size: 16px; background: white;">كشف طلب بضاعة</p>
+    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 4px solid #b08d57; padding-bottom: 15px; margin-bottom: 25px;">
+        <div style="text-align: right;">
+            <h1 style="margin: 0; color: #b08d57; font-size: 45px;">المحلاوي</h1>
+            <p style="margin: 5px 0; color: #000; font-size: 20px; font-weight: bold;">كشف طلب بضاعة</p>
         </div>
-        <img src="https://i.ibb.co/4R44srhj/image.jpg" style="width: 100px; border-radius: 50%; background: white;">
+        <div style="font-size: 40px; color: #b08d57;">M</div>
     </div>
-    <div style="display: flex; justify-content: space-between; margin-bottom: 20px; background: white;">
-        <div style="font-size: 18px; background: white;">العميل: <strong id="expClient"></strong></div>
-        <div style="font-size: 18px; background: white;">التاريخ: <span id="expDate"></span></div>
+
+    <div style="display: flex; justify-content: space-between; margin-bottom: 30px;">
+        <div style="font-size: 22px;">العميل: <strong id="expClient"></strong></div>
+        <div style="font-size: 20px;">التاريخ: <span id="expDate"></span></div>
     </div>
-    <table style="width: 100%; border-collapse: collapse; background: white;">
+
+    <table class="invoice-table">
         <thead>
-            <tr style="background:#ffffff;">
+            <tr>
                 <th style="width: 10%;">م</th>
-                <th style="width: 65%; text-align: right;">الصنف / البيان</th>
+                <th style="width: 65%; text-align: right;">الصنف</th>
                 <th style="width: 25%;">الكمية</th>
             </tr>
         </thead>
-        <tbody id="expBody" style="background: white;"></tbody>
+        <tbody id="expBody"></tbody>
     </table>
-    <div style="margin-top: 80px; text-align: right; background: white;">
-        <p style="font-weight: bold; font-size: 18px; border-bottom: 1px solid #000; display: inline-block; padding-left: 50px; background: white;">توقيع المستلم</p>
+
+    <div style="margin-top: 100px; text-align: right;">
+        <p style="font-weight: bold; font-size: 20px; border-bottom: 2px solid #000; display: inline-block; padding-left: 60px;">توقيع المستلم</p>
     </div>
 </div>
 
@@ -154,22 +151,17 @@
     const SHEET_URL = "https://script.google.com/macros/s/AKfycbwmEGycYRiyf1HWWuD0_idZcRdqgaHP_n3DeVlmmnzkwaPYTKTwLPEK6wUfxsJCjoE/exec";
     let items = JSON.parse(localStorage.getItem("items")) || [];
 
-    // --- نظام الدخول المستمر ---
     function checkPassword() {
-        const input = document.getElementById("passInput").value;
-        if(input === APP_PASSWORD) {
+        if(document.getElementById("passInput").value === APP_PASSWORD) {
             localStorage.setItem("appAuth", "true");
             document.getElementById("loginOverlay").classList.add("hidden");
             document.getElementById("appContent").classList.remove("hidden");
             syncData(); loadSavedTable();
-        } else {
-            document.getElementById("loginError").style.display = "block";
         }
     }
 
     function logout() { localStorage.removeItem("appAuth"); location.reload(); }
 
-    // --- محرك البحث والترحيل ---
     async function syncData() {
         try {
             const res = await fetch(SHEET_URL);
@@ -198,8 +190,7 @@
     };
 
     function addItem() {
-        const name = document.getElementById("itemSearch").value;
-        const qty = document.getElementById("qty").value;
+        const name = document.getElementById("itemSearch").value, qty = document.getElementById("qty").value;
         if(!name || !qty) return;
         const tbody = document.querySelector("#resultTable tbody");
         const row = tbody.insertRow(0);
@@ -210,7 +201,6 @@
         document.getElementById("itemSearch").focus();
     }
 
-    // --- حفظ الجلسة محلياً ---
     function saveCurrentTable() {
         const rows = [];
         document.querySelectorAll("#resultTable tbody tr").forEach(tr => rows.push({ n: tr.cells[0].innerText, q: tr.cells[1].innerText }));
@@ -228,30 +218,34 @@
         });
     }
 
-    // --- التصدير ---
     function exportAsImage() {
         document.getElementById("expClient").innerText = document.getElementById("clientName").value || "بدون اسم";
         document.getElementById("expDate").innerText = new Date().toLocaleDateString('ar-EG');
         const b = document.getElementById("expBody"); b.innerHTML = "";
         document.querySelectorAll("#resultTable tbody tr").forEach((r, i) => {
-            b.innerHTML += `<tr style="background:white;"><td style="border:1px solid #000;padding:8px;">${i+1}</td><td style="border:1px solid #000;padding:8px;text-align:right;">${r.cells[0].innerText}</td><td style="border:1px solid #000;padding:8px;font-weight:bold;">${r.cells[1].innerText}</td></tr>`;
+            const tr = document.createElement("tr");
+            tr.innerHTML = `<td>${i+1}</td><td style="text-align:right;">${r.cells[0].innerText}</td><td style="font-weight:bold;">${r.cells[1].innerText}</td>`;
+            b.appendChild(tr);
         });
+        
         const target = document.getElementById("finalExportContainer");
-        html2canvas(target, { scale: 3, backgroundColor: "#ffffff" }).then(canvas => {
+        // نستخدم خيارات صارمة هنا لضمان الخلفية البيضاء
+        html2canvas(target, { 
+            scale: 3, 
+            backgroundColor: "#ffffff",
+            logging: false,
+            useCORS: true
+        }).then(canvas => {
             const link = document.createElement('a');
             link.download = `المحلاوي_${document.getElementById("clientName").value}.png`;
-            link.href = canvas.toDataURL("image/png"); link.click();
+            link.href = canvas.toDataURL("image/png");
+            link.click();
         });
     }
 
     function exportPDF() {
         const { jsPDF } = window.jspdf;
-        document.getElementById("expClient").innerText = document.getElementById("clientName").value || "بدون اسم";
-        document.getElementById("expDate").innerText = new Date().toLocaleDateString('ar-EG');
-        const b = document.getElementById("expBody"); b.innerHTML = "";
-        document.querySelectorAll("#resultTable tbody tr").forEach((r, i) => {
-            b.innerHTML += `<tr style="background:white;"><td style="border:1px solid #000;padding:8px;">${i+1}</td><td style="border:1px solid #000;padding:8px;text-align:right;">${r.cells[0].innerText}</td><td style="border:1px solid #000;padding:8px;font-weight:bold;">${r.cells[1].innerText}</td></tr>`;
-        });
+        exportAsImage(); // لتحديث البيانات فقط
         const target = document.getElementById("finalExportContainer");
         html2canvas(target, { scale: 2, backgroundColor: "#ffffff" }).then(canvas => {
             const pdf = new jsPDF('p', 'mm', 'a4');
@@ -272,13 +266,7 @@
         b.setAttribute("data-theme", b.getAttribute("data-theme") === "dark" ? "light" : "dark");
     }
 
-    window.onload = () => {
-        if (localStorage.getItem("appAuth") === "true") {
-            document.getElementById("loginOverlay").classList.add("hidden");
-            document.getElementById("appContent").classList.remove("hidden");
-            syncData(); loadSavedTable();
-        }
-    };
+    window.onload = () => { if (localStorage.getItem("appAuth") === "true") { document.getElementById("loginOverlay").classList.add("hidden"); document.getElementById("appContent").classList.remove("hidden"); syncData(); loadSavedTable(); } };
 </script>
 
 </body>
