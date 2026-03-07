@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>نظام المحلاوي المتكامل</title>
+    <title>نظام المحلاوي السحابي المتكامل</title>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -13,8 +13,8 @@
         [data-theme="light"] { --bg: #f8fafc; --text: #1e293b; --card: #ffffff; --border: #e2e8f0; }
         body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding-bottom: 30px; overflow-x: hidden; }
         
-        header { background: var(--dark); padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; }
-        .nav-tabs { display: flex; background: var(--card); border-bottom: 1px solid var(--border); position: sticky; top: 60px; z-index: 999; }
+        header { background: var(--dark); padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; border-bottom: 2px solid var(--primary); }
+        .nav-tabs { display: flex; background: var(--card); border-bottom: 1px solid var(--border); position: sticky; top: 58px; z-index: 999; }
         .nav-tabs button { flex: 1; padding: 15px; border: none; background: none; color: #94a3b8; font-weight: bold; cursor: pointer; font-size: 16px; }
         .nav-tabs button.active { color: var(--primary); border-bottom: 3px solid var(--primary); background: rgba(176, 141, 87, 0.1); }
 
@@ -35,11 +35,6 @@
 
         .hidden { display: none !important; }
 
-        .manage-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; margin-top: 10px; }
-        .item-card { background: var(--card); border: 1px solid var(--border); padding: 12px; border-radius: 8px; text-align: center; }
-        .item-actions { display: flex; gap: 5px; margin-top: 10px; }
-        .btn-sm { flex: 1; padding: 6px; font-size: 12px; border-radius: 4px; border: none; cursor: pointer; color: white; }
-
         /* ستايل الفاتورة الأصلية للتصدير */
         #finalExportContainer { 
             display: block; direction: rtl; padding: 40px; background: white !important; 
@@ -50,6 +45,10 @@
             border: 2px solid black !important; color: black !important; 
             padding: 12px; font-size: 20px; font-weight: bold; background: white !important;
         }
+        .manage-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; margin-top: 10px; }
+        .item-card { background: var(--card); border: 1px solid var(--border); padding: 12px; border-radius: 8px; text-align: center; }
+        .item-actions { display: flex; gap: 5px; margin-top: 10px; }
+        .btn-sm { flex: 1; padding: 6px; font-size: 12px; border-radius: 4px; border: none; cursor: pointer; color: white; }
     </style>
 </head>
 <body data-theme="dark">
@@ -86,10 +85,10 @@
                     <div id="results" class="results-box hidden"></div>
                 </div>
                 <input type="number" id="qty" placeholder="الكمية المطلوبة" inputmode="numeric" onkeydown="if(event.key==='Enter') addItem()">
-                <button class="btn btn-main" onclick="addItem()">ترحيل للجدول (Enter)</button>
+                <button class="btn btn-main" onclick="addItem()">ترحيل (Enter) ومزامنة سحابية</button>
 
                 <table id="resultTable">
-                    <thead><tr><th>المادة</th><th>الكمية</th><th>حذف</th></tr></thead>
+                    <thead><tr><th>المادة</th><th>الكمية</th><th>إجراء</th></tr></thead>
                     <tbody></tbody>
                 </table>
 
@@ -103,10 +102,10 @@
 
         <div id="browsePage" class="hidden">
             <div class="card">
-                <h3>إدارة الأصناف</h3>
+                <h3>إدارة القائمة المحلية</h3>
                 <div style="display: flex; gap: 8px;">
-                    <input type="text" id="newItemName" placeholder="اسم صنف جديد...">
-                    <button class="btn btn-main" style="width: 100px; margin: 8px 0;" onclick="saveToSheet()">إضافة</button>
+                    <input type="text" id="newItemName" placeholder="إضافة صنف جديد للقائمة...">
+                    <button class="btn btn-main" style="width: 100px; margin: 8px 0;" onclick="saveToLocalList()">إضافة</button>
                 </div>
                 <hr style="border:0; border-top:1px solid var(--border); margin:15px 0;">
                 <input type="text" placeholder="بحث سريع..." oninput="renderGallery(this.value)">
@@ -118,22 +117,22 @@
 
 <div id="finalExportContainer">
     <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 5px solid #b08d57; padding-bottom: 15px; margin-bottom: 25px;">
-        <img id="logoImg" src="https://i.ibb.co/4R44srhj/image.jpg" crossOrigin="anonymous" style="width: 120px; height:120px; border-radius: 50%; object-fit: cover;">
+        <img src="https://i.ibb.co/4R44srhj/image.jpg" crossOrigin="anonymous" style="width: 120px; height:120px; border-radius: 50%; object-fit: cover;">
         <div style="text-align: left;">
             <h1 style="margin: 0; color: #b08d57; font-size: 50px;">المحلاوي</h1>
             <p style="margin: 5px 0; color: black; font-size: 22px; font-weight: bold;">كشف طلب بضاعة</p>
         </div>
     </div>
     <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
-        <div style="font-size: 24px; color: black;">العميل: <strong id="expClient" style="color: black;"></strong></div>
-        <div style="font-size: 22px; color: black;">التاريخ: <span id="expDate" style="color: black;"></span></div>
+        <div style="font-size: 24px; color: black;">العميل: <strong id="expClient"></strong></div>
+        <div style="font-size: 22px; color: black;">التاريخ: <span id="expDate"></span></div>
     </div>
     <table class="invoice-table">
         <thead>
             <tr style="background:#eeeeee !important;">
-                <th style="width: 10%; color: black !important;">م</th>
-                <th style="width: 65%; text-align: right; color: black !important;">الصنف</th>
-                <th style="width: 25%; color: black !important;">الكمية</th>
+                <th style="width: 10%;">م</th>
+                <th style="width: 65%; text-align: right;">الصنف</th>
+                <th style="width: 25%;">الكمية</th>
             </tr>
         </thead>
         <tbody id="expBody"></tbody>
@@ -144,6 +143,7 @@
 </div>
 
 <script>
+    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwOAEcgkBdhKTclFaWuU1Dz43Y6GgZloEUpKz1sAimc0zYc1-INqJwNgFdIOLdlL8hD/exec';
     const APP_PASSWORD = "123";
     let items = JSON.parse(localStorage.getItem("items")) || ["إسمنت", "حديد", "رمل"];
 
@@ -155,49 +155,34 @@
         } else { alert("الرمز خطأ"); }
     }
 
+    async function cloudSync(action, client, item, qty) {
+        try {
+            await fetch(GOOGLE_SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                body: JSON.stringify({ action: action, client: client, item: item, qty: qty })
+            });
+        } catch(e) { console.error("Cloud Error"); }
+    }
+
     function renderGallery(filter = "") {
         const grid = document.getElementById("itemsGrid");
         grid.innerHTML = "";
-        items.filter(i => i.toLowerCase().includes(filter.toLowerCase())).forEach((item, index) => {
+        items.filter(i => i.toLowerCase().includes(filter.toLowerCase())).forEach(item => {
             const div = document.createElement("div");
             div.className = "item-card";
-            div.innerHTML = `
-                <div style="font-weight:bold;">${item}</div>
-                <div class="item-actions">
-                    <button class="btn-sm" style="background:var(--edit)" onclick="editItem('${item}')">تعديل</button>
-                    <button class="btn-sm" style="background:var(--danger)" onclick="deleteItem('${item}')">حذف</button>
-                </div>
-            `;
+            div.innerHTML = `<div>${item}</div><div class="item-actions">
+                <button class="btn-sm" style="background:var(--edit)" onclick="editLocalItem('${item}')">تعديل</button>
+                <button class="btn-sm" style="background:var(--danger)" onclick="deleteLocalItem('${item}')">حذف</button>
+            </div>`;
             grid.appendChild(div);
         });
     }
 
-    function deleteItem(name) {
-        if(confirm(`حذف ${name}؟`)) {
-            items = items.filter(i => i !== name);
-            saveItems(); renderGallery();
-        }
-    }
-
-    function editItem(oldName) {
-        const newName = prompt("الاسم الجديد:", oldName);
-        if(newName && newName !== oldName) {
-            const idx = items.indexOf(oldName);
-            items[idx] = newName;
-            saveItems(); renderGallery();
-        }
-    }
-
-    function saveToSheet() {
+    function saveToLocalList() {
         const val = document.getElementById("newItemName").value.trim();
-        if(val && !items.includes(val)) {
-            items.push(val);
-            saveItems(); renderGallery();
-            document.getElementById("newItemName").value = "";
-        }
+        if(val && !items.includes(val)) { items.push(val); localStorage.setItem("items", JSON.stringify(items)); renderGallery(); document.getElementById("newItemName").value = ""; }
     }
-
-    function saveItems() { localStorage.setItem("items", JSON.stringify(items)); }
 
     document.getElementById("itemSearch").oninput = function() {
         const val = this.value.toLowerCase();
@@ -207,28 +192,52 @@
         items.filter(i => i.toLowerCase().includes(val)).slice(0, 10).forEach(item => {
             const d = document.createElement("div");
             d.className = "result-item"; d.textContent = item;
-            d.onclick = () => {
-                document.getElementById("itemSearch").value = item;
-                resDiv.classList.add('hidden');
-                document.getElementById("qty").focus();
-            };
+            d.onclick = () => { document.getElementById("itemSearch").value = item; resDiv.classList.add('hidden'); document.getElementById("qty").focus(); };
             resDiv.appendChild(d);
         });
         resDiv.classList.remove('hidden');
     };
 
     function addItem() {
-        const nameInput = document.getElementById("itemSearch");
-        const qtyInput = document.getElementById("qty");
-        if(!nameInput.value || !qtyInput.value) return;
+        const name = document.getElementById("itemSearch").value;
+        const qty = document.getElementById("qty").value;
+        const client = document.getElementById("clientName").value || "غير محدد";
+        if(!name || !qty) return;
 
         const tbody = document.querySelector("#resultTable tbody");
+        const rowId = "id-" + Date.now();
         const row = tbody.insertRow(0);
-        row.innerHTML = `<td style="text-align:right">${nameInput.value}</td><td style="font-weight:bold">${qtyInput.value}</td><td><button onclick="this.parentElement.parentElement.remove();saveCurrentTable();" style="background:none; border:none; color:red; cursor:pointer;">✖</button></td>`;
+        row.id = rowId;
+        row.innerHTML = `
+            <td style="text-align:right">${name}</td>
+            <td class="qty-cell" style="font-weight:bold">${qty}</td>
+            <td>
+                <button onclick="editCloudRow('${client}', '${name}', '${rowId}')" style="background:none; border:none; color:var(--edit); cursor:pointer; font-size:18px;">✏️</button>
+                <button onclick="deleteCloudRow('${client}', '${name}', '${rowId}')" style="background:none; border:none; color:var(--danger); cursor:pointer; font-size:18px; margin-right:10px;">🗑️</button>
+            </td>`;
         
         saveCurrentTable();
-        nameInput.value = ""; qtyInput.value = "";
-        nameInput.focus();
+        cloudSync('add', client, name, qty);
+        document.getElementById("itemSearch").value = ""; 
+        document.getElementById("qty").value = "";
+        document.getElementById("itemSearch").focus();
+    }
+
+    async function editCloudRow(client, item, rId) {
+        const newQty = prompt("تعديل الكمية:", "");
+        if(newQty) {
+            document.getElementById(rId).querySelector('.qty-cell').innerText = newQty;
+            saveCurrentTable();
+            cloudSync('edit', client, item, newQty);
+        }
+    }
+
+    async function deleteCloudRow(client, item, rId) {
+        if(confirm("حذف من الجدول والـ Cloud؟")) {
+            document.getElementById(rId).remove();
+            saveCurrentTable();
+            cloudSync('delete', client, item, 0);
+        }
     }
 
     function saveCurrentTable() {
@@ -241,10 +250,11 @@
     function loadSavedTable() {
         document.getElementById("clientName").value = localStorage.getItem("draftClient") || "";
         const saved = JSON.parse(localStorage.getItem("draftOrder") || "[]");
-        const tbody = document.querySelector("#resultTable tbody");
         saved.forEach(item => {
-            const row = tbody.insertRow();
-            row.innerHTML = `<td style="text-align:right">${item.n}</td><td style="font-weight:bold">${item.q}</td><td><button onclick="this.parentElement.parentElement.remove();saveCurrentTable();" style="background:none; border:none; color:red; cursor:pointer;">✖</button></td>`;
+            const row = document.querySelector("#resultTable tbody").insertRow();
+            const rId = "id-" + Math.random(); row.id = rId;
+            row.innerHTML = `<td style="text-align:right">${item.n}</td><td class="qty-cell" style="font-weight:bold">${item.q}</td>
+            <td><button onclick="deleteCloudRow('${document.getElementById("clientName").value}', '${item.n}', '${rId}')" style="background:none; border:none; color:red; cursor:pointer;">🗑️</button></td>`;
         });
     }
 
@@ -252,28 +262,14 @@
         document.getElementById("expClient").innerText = document.getElementById("clientName").value || "بدون اسم";
         document.getElementById("expDate").innerText = new Date().toLocaleDateString('ar-EG');
         const b = document.getElementById("expBody"); b.innerHTML = "";
-        
         document.querySelectorAll("#resultTable tbody tr").forEach((r, i) => {
-            b.innerHTML += `<tr>
-                <td style="color:black !important; background:white !important;">${i+1}</td>
-                <td style="text-align:right; color:black !important; background:white !important;">${r.cells[0].innerText}</td>
-                <td style="color:black !important; background:white !important;">${r.cells[1].innerText}</td>
-            </tr>`;
+            b.innerHTML += `<tr><td style="color:black; background:white;">${i+1}</td><td style="text-align:right; color:black; background:white;">${r.cells[0].innerText}</td><td style="color:black; background:white;">${r.cells[1].innerText}</td></tr>`;
         });
     }
 
     function exportAsImage() {
         prepareExport();
-        const container = document.getElementById("finalExportContainer");
-        
-        // التأكد من تحميل الصورة قبل التقاط اللقطة
-        html2canvas(container, { 
-            scale: 3,
-            backgroundColor: "#ffffff",
-            useCORS: true,
-            allowTaint: false,
-            logging: true
-        }).then(canvas => {
+        html2canvas(document.getElementById("finalExportContainer"), { scale: 3, backgroundColor: "#ffffff", useCORS: true }).then(canvas => {
             const link = document.createElement('a');
             link.download = `المحلاوي_${document.getElementById("clientName").value}.png`;
             link.href = canvas.toDataURL("image/png"); link.click();
@@ -281,32 +277,22 @@
     }
 
     function exportPDF() {
-        const { jsPDF } = window.jspdf;
         prepareExport();
-        html2canvas(document.getElementById("finalExportContainer"), { 
-            scale: 2, 
-            backgroundColor: "#ffffff",
-            useCORS: true 
-        }).then(canvas => {
-            const pdf = new jsPDF('p', 'mm', 'a4');
+        html2canvas(document.getElementById("finalExportContainer"), { scale: 2, backgroundColor: "#ffffff", useCORS: true }).then(canvas => {
+            const pdf = new jspdf.jsPDF('p', 'mm', 'a4');
             pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, 210, (canvas.height * 210) / canvas.width);
             pdf.save(`المحلاوي_${document.getElementById("clientName").value}.pdf`);
         });
     }
 
     function clearTable() { if(confirm("مسح الكل؟")) { document.querySelector("#resultTable tbody").innerHTML = ""; saveCurrentTable(); } }
-    
     function switchPage(p) {
         document.getElementById("orderPage").classList.toggle("hidden", p !== 'order');
         document.getElementById("browsePage").classList.toggle("hidden", p !== 'browse');
         document.getElementById("tab1").classList.toggle("active", p === 'order');
         document.getElementById("tab2").classList.toggle("active", p === 'browse');
     }
-
-    function toggleTheme() {
-        const b = document.body;
-        b.setAttribute("data-theme", b.getAttribute("data-theme") === "dark" ? "light" : "dark");
-    }
+    function toggleTheme() { document.body.setAttribute("data-theme", document.body.getAttribute("data-theme") === "dark" ? "light" : "dark"); }
 </script>
 </body>
 </html>
