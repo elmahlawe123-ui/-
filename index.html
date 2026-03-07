@@ -5,28 +5,72 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>نظام المحلاوي - النسخة المستقرة</title>
 
+    <link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@700&family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     
     <style>
-        :root { --primary: #b08d57; --bg: #0f172a; --text: #f1f5f9; --card: #1e293b; --border: #334155; --dark: #000000; --danger: #ef4444; --edit: #3b82f6; }
-        [data-theme="light"] { --bg: #f8fafc; --text: #1e293b; --card: #ffffff; --border: #e2e8f0; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding-bottom: 30px; }
+        :root { 
+            --primary: #b08d57; 
+            --gold-gradient: linear-gradient(to bottom, #f1c40f, #b08d57);
+            --bg: #0f172a; 
+            --text: #f1f5f9; 
+            --card: #1e293b; 
+            --border: #334155; 
+            --dark: #000000; 
+            --danger: #ef4444; 
+            --edit: #3b82f6; 
+            --share: #8b5cf6;
+        }
+
+        body { 
+            font-family: 'Cairo', sans-serif; 
+            background: var(--bg); 
+            color: var(--text); 
+            margin: 0; 
+            padding-bottom: 30px; 
+        }
         
-        header { background: var(--dark); padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--primary); position: sticky; top: 0; z-index: 1000; }
+        .brand-name {
+            font-family: 'Aref Ruqaa', serif;
+            font-size: 32px;
+            font-weight: bold;
+            background: var(--gold-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0px 2px 2px rgba(0,0,0,0.5));
+            display: inline-block;
+        }
+
+        header { 
+            background: linear-gradient(145deg, #000, #1a1a1a); 
+            padding: 12px 20px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            border-bottom: 3px solid var(--primary); 
+            position: sticky; 
+            top: 0; 
+            z-index: 1000;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+
         .nav-tabs { display: flex; background: var(--card); border-bottom: 1px solid var(--border); }
-        .nav-tabs button { flex: 1; padding: 15px; border: none; background: none; color: #94a3b8; font-weight: bold; cursor: pointer; }
+        .nav-tabs button { flex: 1; padding: 15px; border: none; background: none; color: #94a3b8; font-weight: bold; cursor: pointer; font-family: 'Cairo'; }
         .nav-tabs button.active { color: var(--primary); border-bottom: 3px solid var(--primary); background: rgba(176, 141, 87, 0.1); }
 
         .container { padding: 15px; max-width: 800px; margin: 0 auto; }
         .card { background: var(--card); padding: 20px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 15px; }
         
-        input { width: 100%; padding: 14px; margin: 8px 0; border: 1px solid var(--border); border-radius: 8px; background: rgba(255,255,255,0.05); color: var(--text); box-sizing: border-box; font-size: 16px; outline: none; }
-        [data-theme="light"] input { background: #fff; color: #000; }
+        input { width: 100%; padding: 14px; margin: 8px 0; border: 1px solid var(--border); border-radius: 8px; background: rgba(255,255,255,0.05); color: var(--text); box-sizing: border-box; font-size: 16px; outline: none; font-family: 'Cairo'; }
         
-        .btn { padding: 12px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.3s; }
+        .btn { padding: 12px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.3s; font-family: 'Cairo'; font-size: 14px; }
         .btn-main { background: var(--primary); color: white; width: 100%; margin: 10px 0; font-size: 18px; }
         
+        .grid-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
+        .full-width { grid-column: span 2; }
+
         table { width: 100%; border-collapse: collapse; margin-top: 15px; background: var(--card); border-radius: 8px; overflow: hidden; }
         th, td { padding: 12px; border: 1px solid var(--border); text-align: center; }
 
@@ -36,58 +80,36 @@
         .hidden { display: none !important; }
         .item-card { background: var(--card); border: 1px solid var(--border); padding: 12px; border-radius: 8px; text-align: center; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
 
-        /* --- تعديل ستايل الفاتورة للاستخراج بلون أبيض --- */
         #finalExportContainer { 
             display: block; direction: rtl; padding: 40px; background: white !important; 
             width: 750px; color: black !important; position: fixed; left: -9999px; top: 0; 
         }
         .invoice-table { width: 100%; border-collapse: collapse; margin-top: 20px; border: 2px solid black; }
-        
-        /* عناوين الجدول (الرأس) */
-        .invoice-table th { 
-            background: #ffffff !important; /* تغيير من رمادي إلى أبيض */
-            color: black !important; 
-            padding: 12px; 
-            font-size: 20px; 
-            font-weight: bold; 
-            text-align: center; 
-            border: 1px solid black; 
-        }
-        
-        /* صفوف الجدول */
-        .invoice-table td { 
-            background: white !important; 
-            color: black !important; 
-            padding: 12px; 
-            font-size: 20px; 
-            font-weight: bold; 
-            text-align: center; 
-            border: 1px solid black; 
-        }
+        .invoice-table th, .invoice-table td { padding: 12px; font-size: 20px; font-weight: bold; text-align: center; border: 1px solid black; color: black !important; background: white !important; }
     </style>
 </head>
-<body data-theme="dark">
+<body>
 
 <div id="loginOverlay" style="position:fixed; inset:0; background:var(--dark); z-index:9999; display:flex; align-items:center; justify-content:center; flex-direction:column;">
-    <div class="card" style="width:320px; text-align:center; border: 2px solid var(--primary);">
-        <img src="https://i.ibb.co/4R44srhj/image.jpg" style="width: 100px; height:100px; border-radius: 50%; border: 2px solid var(--primary); margin-bottom: 15px; object-fit: cover;">
-        <h2 style="color:var(--primary); margin:0;">المحلاوي</h2>
-        <input type="password" id="passInput" placeholder="الرمز (123)" style="text-align:center; margin-top:15px;" onkeydown="if(event.key==='Enter') checkPassword()">
-        <button class="btn btn-main" onclick="checkPassword()">دخول</button>
+    <div class="card" style="width:320px; text-align:center; border: 2px solid var(--primary); background: #111;">
+        <img src="https://i.ibb.co/4R44srhj/image.jpg" style="width: 110px; height:110px; border-radius: 50%; border: 3px solid var(--primary); margin-bottom: 15px; object-fit: cover;">
+        <div class="brand-name" style="font-size: 40px; margin-bottom: 10px;">المحلاوي</div>
+        <input type="password" id="passInput" placeholder="الرمز (123)" style="text-align:center;" onkeydown="if(event.key==='Enter') checkPassword()">
+        <button class="btn btn-main" onclick="checkPassword()">دخول للنظام</button>
     </div>
 </div>
 
 <div id="appContent" class="hidden">
     <header>
-        <div style="display: flex; align-items: center; gap: 10px;">
-            <img src="https://i.ibb.co/4R44srhj/image.jpg" style="width: 35px; height:35px; border-radius: 50%; object-fit: cover;">
-            <div style="color: white; font-weight: bold;">المحلاوي</div>
+        <div style="display: flex; align-items: center; gap: 12px;">
+            <img src="https://i.ibb.co/4R44srhj/image.jpg" style="width: 45px; height:45px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary);">
+            <div class="brand-name">المحلاوي</div>
         </div>
     </header>
 
     <div class="nav-tabs">
         <button id="tab1" class="active" onclick="switchPage('order')">تسجيل طلبية</button>
-        <button id="tab2" onclick="switchPage('browse')">مخذن الأصناف</button>
+        <button id="tab2" onclick="switchPage('browse')">مخزن الأصناف</button>
     </div>
 
     <div class="container">
@@ -99,26 +121,27 @@
                     <div id="results" class="results-box hidden"></div>
                 </div>
                 <input type="number" id="qty" placeholder="الكمية المطلوبة" inputmode="numeric" onkeydown="if(event.key==='Enter') addItem()">
-                <button class="btn btn-main" onclick="addItem()">إضافة للجدول</button>
+                <button class="btn btn-main" onclick="addItem()">➕ إضافة للجدول</button>
 
                 <table id="resultTable">
                     <thead><tr><th>المادة</th><th>الكمية</th><th>حذف</th></tr></thead>
                     <tbody></tbody>
                 </table>
 
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px;">
-                    <button class="btn" style="background:#25D366; color:white; grid-column: span 2;" onclick="exportAsImage()">📸 تصدير صورة</button>
+                <div class="grid-buttons">
+                    <button class="btn full-width" style="background:var(--share); color:white;" onclick="shareAsImage()">🔗 مشاركة مباشرة (واتساب/تليجرام)</button>
+                    <button class="btn" style="background:#25D366; color:white;" onclick="exportAsImage()">📸 حفظ كصورة</button>
                     <button class="btn" style="background:var(--primary); color:white;" onclick="exportPDF()">📄 تصدير PDF</button>
-                    <button class="btn" style="background:#444; color:white;" onclick="clearTable()">🗑️ مسح الكل</button>
+                    <button class="btn full-width" style="background:#444; color:white;" onclick="clearTable()">🗑️ مسح الجدول</button>
                 </div>
             </div>
         </div>
 
         <div id="browsePage" class="hidden">
             <div class="card">
-                <h3>إدارة الأصناف (Google Sheets)</h3>
+                <h3 style="color:var(--primary)">إدارة الأصناف</h3>
                 <input type="text" id="newItemName" placeholder="اسم صنف جديد...">
-                <button class="btn btn-main" onclick="addCloudItem()">إضافة لقائمة جوجل</button>
+                <button class="btn btn-main" onclick="addCloudItem()">إضافة صنف جديد</button>
                 <hr style="border:0; border-top:1px solid var(--border); margin:15px 0;">
                 <div id="itemsGrid"></div>
             </div>
@@ -130,12 +153,12 @@
     <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 5px solid #b08d57; padding-bottom: 15px; margin-bottom: 25px;">
         <img src="https://i.ibb.co/4R44srhj/image.jpg" crossOrigin="anonymous" style="width: 120px; height:120px; border-radius: 50%; object-fit: cover;">
         <div style="text-align: left;">
-            <h1 style="margin: 0; color: #b08d57; font-size: 50px;">المحلاوي</h1>
-            <p style="margin: 5px 0; color: black; font-size: 22px; font-weight: bold;">كشف طلب مواد</p>
+            <h1 style="margin: 0; color: #b08d57; font-size: 55px; font-family: 'Aref Ruqaa', serif;">المحلاوي</h1>
+            <p style="margin: 5px 0; color: black; font-size: 22px; font-weight: bold;">كشف طلب مواد بناء</p>
         </div>
     </div>
     <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
-        <div style="font-size: 24px; color: black;">استاذ: <strong id="expClient"></strong></div>
+        <div style="font-size: 24px; color: black;">السيد: <strong id="expClient"></strong></div>
         <div style="font-size: 22px; color: black;">التاريخ: <span id="expDate"></span></div>
     </div>
     <table class="invoice-table">
@@ -155,12 +178,11 @@
 
 <script>
     const GOOGLE_URL = 'https://script.google.com/macros/s/AKfycby94J0O_uH3WIFzLoelLDAVMagTZEGbo0LAfbVaVR_52wgSoCtbqJ-6ZHjbnUBujlfc/exec';
-    const APP_PASSWORD = "123";
     let localItems = JSON.parse(localStorage.getItem("items")) || ["إسمنت", "حديد", "رمل"];
 
     function checkPassword() {
         if(document.getElementById("passInput").value === "123") {
-            document.getElementById("loginOverlay").classList.add("hidden");
+            document.getElementById("loginOverlay").style.display = "none";
             document.getElementById("appContent").classList.remove("hidden");
             renderCloudItems();
         } else { alert("الرمز خطأ"); }
@@ -174,12 +196,42 @@
             div.className = "item-card";
             div.innerHTML = `<span>${item}</span>
                 <div>
-                    <button class="btn-sm" style="background:var(--edit); color:white; border:none; padding:5px 10px; border-radius:4px; cursor:pointer;" onclick="editItem('${item}')">تعديل</button>
-                    <button class="btn-sm" style="background:var(--danger); color:white; border:none; padding:5px 10px; border-radius:4px; cursor:pointer; margin-right:5px;" onclick="deleteItem('${item}')">حذف</button>
+                    <button style="background:var(--edit); color:white; border:none; padding:5px 10px; border-radius:4px; cursor:pointer;" onclick="editItem('${item}')">تعديل</button>
+                    <button style="background:var(--danger); color:white; border:none; padding:5px 10px; border-radius:4px; cursor:pointer; margin-right:5px;" onclick="deleteItem('${item}')">حذف</button>
                 </div>`;
             grid.appendChild(div);
         });
         localStorage.setItem("items", JSON.stringify(localItems));
+    }
+
+    // وظيفة المشاركة المباشرة الجديدة
+    async function shareAsImage() {
+        if (document.querySelectorAll("#resultTable tbody tr").length === 0) {
+            alert("الجدول فارغ!");
+            return;
+        }
+        
+        prepareExport();
+        const client = document.getElementById("clientName").value || "عميل";
+        
+        try {
+            const canvas = await html2canvas(document.getElementById("finalExportContainer"), { scale: 3, useCORS: true });
+            const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+            const file = new File([blob], `فاتورة_${client}.png`, { type: 'image/png' });
+
+            if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                await navigator.share({
+                    files: [file],
+                    title: 'فاتورة المحلاوي',
+                    text: `فاتورة العميل: ${client}`
+                });
+            } else {
+                alert("متصفحك لا يدعم المشاركة المباشرة. سيتم تحميل الصورة بدلاً من ذلك.");
+                exportAsImage();
+            }
+        } catch (err) {
+            console.error("Error sharing:", err);
+        }
     }
 
     async function addCloudItem() {
@@ -188,11 +240,11 @@
         localItems.push(name);
         renderCloudItems();
         document.getElementById("newItemName").value = "";
-        try { fetch(GOOGLE_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: 'add', item: name }) }); } catch(e) {}
+        fetch(GOOGLE_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: 'add', item: name }) });
     }
 
     async function deleteItem(name) {
-        if(!confirm("حذف؟")) return;
+        if(!confirm("هل أنت متأكد من الحذف؟")) return;
         localItems = localItems.filter(i => i !== name);
         renderCloudItems();
         fetch(GOOGLE_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: 'delete', item: name }) });
@@ -236,11 +288,7 @@
         document.getElementById("expDate").innerText = new Date().toLocaleDateString('ar-EG');
         const b = document.getElementById("expBody"); b.innerHTML = "";
         document.querySelectorAll("#resultTable tbody tr").forEach((r, i) => {
-            b.innerHTML += `<tr>
-                <td style="color:black !important; background:white !important;">${i+1}</td>
-                <td style="text-align:right; color:black !important; background:white !important;">${r.cells[0].innerText}</td>
-                <td style="color:black !important; background:white !important;">${r.cells[1].innerText}</td>
-            </tr>`;
+            b.innerHTML += `<tr><td>${i+1}</td><td style="text-align:right;">${r.cells[0].innerText}</td><td>${r.cells[1].innerText}</td></tr>`;
         });
     }
 
@@ -268,7 +316,10 @@
         document.getElementById("tab1").classList.toggle("active", p === 'order');
         document.getElementById("tab2").classList.toggle("active", p === 'browse');
     }
-    function clearTable() { if(confirm("مسح الكل؟")) document.querySelector("#resultTable tbody").innerHTML = ""; }
+
+    function clearTable() { if(confirm("مسح الجدول بالكامل؟")) document.querySelector("#resultTable tbody").innerHTML = ""; }
+    window.onclick = function(event) { if (!event.target.matches('#itemSearch')) { document.getElementById("results").classList.add('hidden'); } };
 </script>
+
 </body>
 </html>
