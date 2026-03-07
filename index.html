@@ -18,35 +18,34 @@
             --bg: #0f172a; --text: #f1f5f9; --card: #1e293b; --border: #334155;
         }
         body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding-bottom: 30px; }
+        
+        /* شاشة القفل */
+        #loginOverlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg); z-index: 9999; display: flex;
+            align-items: center; justify-content: center; flex-direction: column;
+        }
+        .login-card { background: var(--card); padding: 30px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: center; width: 90%; max-width: 350px; }
+
         header { background: var(--card); padding: 15px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 1000; }
         .nav-tabs { display: flex; background: var(--card); border-bottom: 1px solid var(--border); position: sticky; top: 58px; z-index: 999; }
-        .nav-tabs button { flex: 1; padding: 15px; border: none; background: none; color: var(--secondary); font-weight: bold; cursor: pointer; border-bottom: 3px solid transparent; transition: 0.3s; }
+        .nav-tabs button { flex: 1; padding: 15px; border: none; background: none; color: var(--secondary); font-weight: bold; cursor: pointer; border-bottom: 3px solid transparent; }
         .nav-tabs button.active { color: var(--primary); border-bottom-color: var(--primary); background: rgba(37, 99, 235, 0.05); }
 
         .container { padding: 15px; max-width: 800px; margin: 0 auto; }
         .card { background: var(--card); padding: 20px; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 15px; }
         
         input { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid var(--border); border-radius: 8px; background: var(--bg); color: var(--text); box-sizing: border-box; font-size: 16px; outline: none; }
-        input:focus { border-color: var(--primary); }
-
+        
         .btn { padding: 12px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s; font-size: 14px; }
-        .btn:active { transform: scale(0.95); }
         .btn-main { background: var(--primary); color: white; width: 100%; margin: 10px 0; }
         
         table { width: 100%; border-collapse: collapse; margin-top: 15px; background: var(--card); }
         th, td { padding: 12px; border: 1px solid var(--border); text-align: center; }
-        th { background: rgba(0,0,0,0.02); }
         
-        .results-box { position: absolute; background: var(--card); border: 1px solid var(--border); width: 100%; z-index: 1100; max-height: 200px; overflow-y: auto; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-        .result-item { padding: 12px; cursor: pointer; border-bottom: 1px solid var(--border); text-align: right; }
-        .result-item:hover { background: var(--primary); color: white; }
-
         .items-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; margin-top: 15px; }
         .item-card { background: var(--card); border: 1px solid var(--border); padding: 12px; border-radius: 10px; text-align: center; }
-        .item-card span { display: block; margin-bottom: 10px; font-weight: bold; cursor: pointer; color: var(--text); }
-        .item-ops { display: flex; gap: 5px; justify-content: center; }
-        .btn-op { padding: 6px; border-radius: 5px; border: none; cursor: pointer; font-size: 12px; color: white; flex: 1; }
-
+        
         .hidden { display: none; }
         .status-bar { font-size: 0.8em; text-align: center; padding: 10px; font-weight: bold; color: var(--primary); }
 
@@ -55,52 +54,67 @@
 </head>
 <body data-theme="light">
 
-<header>
-    <div style="font-weight: bold; font-size: 1.2em;">🏢 المحلاوي ستور</div>
-    <button onclick="toggleTheme()" style="background:none; border:none; cursor:pointer; font-size:1.4em;">🌓</button>
-</header>
-
-<div class="nav-tabs">
-    <button id="tab1" class="active" onclick="switchPage('order')">تسجيل طلب</button>
-    <button id="tab2" onclick="switchPage('browse')">الأصناف</button>
+<div id="loginOverlay">
+    <div class="login-card">
+        <h2 style="color:var(--primary)">🏢 المحلاوي ستور</h2>
+        <p>يرجى إدخال رمز الدخول للمتابعة</p>
+        <input type="password" id="passInput" placeholder="أدخل الرقم السري..." style="text-align: center;">
+        <button class="btn btn-main" onclick="checkPassword()">دخول للنظام</button>
+        <p id="loginError" style="color:var(--danger); font-size: 0.9em; display: none;">الرمز غير صحيح!</p>
+    </div>
 </div>
 
-<div class="container">
-    <div id="status" class="status-bar">جاري المزامنة...</div>
-
-    <div id="orderPage">
-        <div class="card">
-            <input type="text" id="clientName" placeholder="اسم العميل..." oninput="saveCurrentTable()">
-            <div style="position: relative;">
-                <input type="text" id="itemSearch" placeholder="ابحث عن مادة..." autocomplete="off">
-                <div id="results" class="results-box hidden"></div>
-            </div>
-            <input type="number" id="qty" placeholder="الكمية" inputmode="numeric">
-            <button class="btn btn-main" onclick="addItem()">+ إضافة للجدول</button>
-
-            <table id="resultTable">
-                <thead><tr><th>المادة</th><th>الكمية</th><th>حذف</th></tr></thead>
-                <tbody></tbody>
-            </table>
-
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px;">
-                <button class="btn" style="background:#000; color:white; grid-column: span 2;" onclick="exportAsImage()">📸 صورة للواتساب</button>
-                <button class="btn" style="background:var(--danger); color:white;" onclick="exportPDF()">📄 تصدير PDF</button>
-                <button class="btn" style="background:var(--success); color:white;" onclick="exportExcel()">📊 ملف Excel</button>
-                <button class="btn" style="background:var(--secondary); color:white; grid-column: span 2;" onclick="clearTable()">🗑️ مسح الجدول</button>
-            </div>
+<div id="appContent" class="hidden">
+    <header>
+        <div style="font-weight: bold; font-size: 1.2em;">🏢 المحلاوي ستور</div>
+        <div style="display: flex; gap: 10px; align-items: center;">
+            <button onclick="logout()" style="background:none; border:none; cursor:pointer; font-size:0.8em; color:var(--danger)">تسجيل خروج</button>
+            <button onclick="toggleTheme()" style="background:none; border:none; cursor:pointer; font-size:1.4em;">🌓</button>
         </div>
+    </header>
+
+    <div class="nav-tabs">
+        <button id="tab1" class="active" onclick="switchPage('order')">تسجيل طلب</button>
+        <button id="tab2" onclick="switchPage('browse')">الأصناف</button>
     </div>
 
-    <div id="browsePage" class="hidden">
-        <div class="card">
-            <h3>إضافة صنف جديد للسيرفر</h3>
-            <div style="display: flex; gap: 8px;">
-                <input type="text" id="newItemName" placeholder="اسم الصنف..." style="margin:0">
-                <button class="btn" style="background:var(--success); color:white; width: 80px;" onclick="saveToSheet()">إضافة</button>
+    <div class="container">
+        <div id="status" class="status-bar">جاري المزامنة...</div>
+
+        <div id="orderPage">
+            <div class="card">
+                <input type="text" id="clientName" placeholder="اسم العميل..." oninput="saveCurrentTable()">
+                <div style="position: relative;">
+                    <input type="text" id="itemSearch" placeholder="ابحث عن مادة..." autocomplete="off">
+                    <div id="results" class="results-box hidden" style="position: absolute; background: var(--card); border: 1px solid var(--border); width: 100%; z-index: 1100; max-height: 200px; overflow-y: auto;"></div>
+                </div>
+                <input type="number" id="qty" placeholder="الكمية" inputmode="numeric">
+                <button class="btn btn-main" onclick="addItem()">+ إضافة للجدول</button>
+
+                <table id="resultTable">
+                    <thead><tr><th>المادة</th><th>الكمية</th><th>حذف</th></tr></thead>
+                    <tbody></tbody>
+                </table>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px;">
+                    <button class="btn" style="background:#000; color:white; grid-column: span 2;" onclick="exportAsImage()">📸 صورة للواتساب</button>
+                    <button class="btn" style="background:var(--danger); color:white;" onclick="exportPDF()">📄 تصدير PDF</button>
+                    <button class="btn" style="background:var(--success); color:white;" onclick="exportExcel()">📊 ملف Excel</button>
+                    <button class="btn" style="background:var(--secondary); color:white; grid-column: span 2;" onclick="clearTable()">🗑️ مسح الجدول</button>
+                </div>
             </div>
         </div>
-        <div id="itemsGrid" class="items-grid"></div>
+
+        <div id="browsePage" class="hidden">
+            <div class="card">
+                <h3>إضافة صنف جديد</h3>
+                <div style="display: flex; gap: 8px;">
+                    <input type="text" id="newItemName" placeholder="اسم الصنف..." style="margin:0">
+                    <button class="btn" style="background:var(--success); color:white; width: 80px;" onclick="saveToSheet()">إضافة</button>
+                </div>
+            </div>
+            <div id="itemsGrid" class="items-grid"></div>
+        </div>
     </div>
 </div>
 
@@ -115,17 +129,45 @@
         <thead><tr style="background:#e2e8f0"><th style="border:2px solid #000; padding:15px;">الصنف</th><th style="border:2px solid #000; padding:15px;">الكمية</th></tr></thead>
         <tbody id="expBody"></tbody>
     </table>
-    <div style="display:flex; justify-content:space-between; margin-top:80px; font-weight:bold; font-size: 18px;">
-        <div>توقيع المستلم: ____________</div>
-        <div>الختم: ____________</div>
-    </div>
 </div>
 
 <script>
+    // --- إعدادات الحماية ---
+    const APP_PASSWORD = "7325"; // يمكنك تغيير الرقم السري من هنا
     const SHEET_URL = "https://script.google.com/macros/s/AKfycbwmEGycYRiyf1HWWuD0_idZcRdqgaHP_n3DeVlmmnzkwaPYTKTwLPEK6wUfxsJCjoE/exec";
+    
+    function checkPassword() {
+        const input = document.getElementById("passInput").value;
+        if (input === APP_PASSWORD) {
+            sessionStorage.setItem("isLoggedIn", "true");
+            document.getElementById("loginOverlay").style.display = "none";
+            document.getElementById("appContent").classList.remove("hidden");
+            syncData();
+            loadSavedTable();
+        } else {
+            document.getElementById("loginError").style.display = "block";
+            document.getElementById("passInput").value = "";
+        }
+    }
+
+    function logout() {
+        sessionStorage.removeItem("isLoggedIn");
+        location.reload();
+    }
+
+    // التحقق من الجلسة عند التحميل
+    window.onload = () => {
+        if (sessionStorage.getItem("isLoggedIn") === "true") {
+            document.getElementById("loginOverlay").style.display = "none";
+            document.getElementById("appContent").classList.remove("hidden");
+            syncData();
+            loadSavedTable();
+        }
+    };
+
+    // --- بقية أكواد النظام (المزامنة، الحذف، التعديل، التصدير) ---
     let items = JSON.parse(localStorage.getItem("items")) || [];
 
-    // --- مزامنة البيانات ---
     async function syncData() {
         try {
             const res = await fetch(SHEET_URL);
@@ -136,10 +178,7 @@
                 renderGallery(); 
                 document.getElementById("status").innerHTML = "✅ متصل بالسيرفر"; 
             }
-        } catch (e) { 
-            document.getElementById("status").innerHTML = "📡 وضع الأوفلاين"; 
-            renderGallery(); 
-        }
+        } catch (e) { document.getElementById("status").innerHTML = "📡 وضع الأوفلاين"; renderGallery(); }
     }
 
     function renderGallery() {
@@ -148,12 +187,11 @@
             const d = document.createElement("div");
             d.className = "item-card";
             d.innerHTML = `
-                <span onclick="selectItem('${item}')">${item}</span>
-                <div class="item-ops">
-                    <button class="btn-op" style="background:var(--warning)" onclick="editItem(${index})">تعديل</button>
-                    <button class="btn-op" style="background:var(--danger)" onclick="deleteItemFromServer(${index})">حذف</button>
-                </div>
-            `;
+                <span style="display:block;margin-bottom:10px;font-weight:bold;cursor:pointer" onclick="selectItem('${item}')">${item}</span>
+                <div style="display:flex;gap:5px">
+                    <button onclick="editItem(${index})" style="flex:1;background:var(--warning);color:white;border:none;padding:5px;border-radius:4px;cursor:pointer">تعديل</button>
+                    <button onclick="deleteItemFromServer(${index})" style="flex:1;background:var(--danger);color:white;border:none;padding:5px;border-radius:4px;cursor:pointer">حذف</button>
+                </div>`;
             grid.appendChild(d);
         });
     }
@@ -164,7 +202,6 @@
         document.getElementById("qty").focus();
     }
 
-    // --- العمليات على السيرفر ---
     async function saveToSheet() {
         const name = document.getElementById("newItemName").value.trim();
         if(!name) return;
@@ -186,14 +223,13 @@
 
     async function deleteItemFromServer(index) {
         const itemName = items[index];
-        if (confirm(`هل أنت متأكد من حذف "${itemName}" نهائياً من السيرفر؟`)) {
+        if (confirm(`حذف "${itemName}" من السيرفر؟`)) {
             document.getElementById("status").innerHTML = "⏳ جاري الحذف...";
             await fetch(SHEET_URL, { method: "POST", mode: "no-cors", body: JSON.stringify({ action: "delete", itemName: itemName }) });
             setTimeout(syncData, 1500);
         }
     }
 
-    // --- نظام الطلبات والتصدير ---
     function addItem() {
         const name = document.getElementById("itemSearch").value, qty = document.getElementById("qty").value;
         if(!name || !qty) return alert("أكمل البيانات");
@@ -204,23 +240,7 @@
         document.getElementById("itemSearch").value = ""; document.getElementById("qty").value = "";
     }
 
-    function exportPDF() {
-        const { jsPDF } = window.jspdf;
-        prepareExportData();
-        const target = document.getElementById("finalExportContainer");
-        target.style.display = "block";
-
-        html2canvas(target, { scale: 2 }).then(canvas => {
-            const imgData = canvas.toDataURL('image/png');
-            const pdf = new jsPDF('p', 'mm', 'a4');
-            const pdfWidth = pdf.internal.pageSize.getWidth();
-            const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-            pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-            pdf.save(`طلب_${document.getElementById("clientName").value || 'عميل'}.pdf`);
-            target.style.display = "none";
-        });
-    }
-
+    // --- وظائف التصدير ---
     function prepareExportData() {
         const client = document.getElementById("clientName").value || "عميل بدون اسم";
         const rows = document.querySelectorAll("#resultTable tbody tr");
@@ -229,6 +249,21 @@
         const b = document.getElementById("expBody"); b.innerHTML = "";
         rows.forEach(r => { 
             b.innerHTML += `<tr><td style="border:2px solid #000; padding:15px; text-align:right;">${r.cells[0].innerText}</td><td style="border:2px solid #000; padding:15px; font-weight:bold;">${r.cells[1].innerText}</td></tr>`; 
+        });
+    }
+
+    function exportPDF() {
+        const { jsPDF } = window.jspdf;
+        prepareExportData();
+        const target = document.getElementById("finalExportContainer");
+        target.style.display = "block";
+        html2canvas(target, { scale: 2 }).then(canvas => {
+            const imgData = canvas.toDataURL('image/png');
+            const pdf = new jsPDF('p', 'mm', 'a4');
+            const pdfWidth = pdf.internal.pageSize.getWidth();
+            pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, (canvas.height * pdfWidth) / canvas.width);
+            pdf.save(`طلب_${document.getElementById("clientName").value}.pdf`);
+            target.style.display = "none";
         });
     }
 
@@ -248,7 +283,7 @@
     function exportExcel() {
         const client = document.getElementById("clientName").value || "عميل";
         const rows = document.querySelectorAll("#resultTable tbody tr");
-        let data = [["طلب بضاعة"], ["العميل:", client], ["التاريخ:", new Date().toLocaleDateString('ar-EG')], [""], ["الصنف", "الكمية"]];
+        let data = [["كشف بضاعة"], ["العميل:", client], ["التاريخ:", new Date().toLocaleDateString('ar-EG')], [""], ["الصنف", "الكمية"]];
         rows.forEach(r => data.push([r.cells[0].innerText, r.cells[1].innerText]));
         const ws = XLSX.utils.aoa_to_sheet(data);
         const wb = XLSX.utils.book_new();
@@ -256,7 +291,6 @@
         XLSX.writeFile(wb, `طلب_${client}.xlsx`);
     }
 
-    // --- وظائف مساعدة ---
     function saveCurrentTable() {
         const rows = [];
         document.querySelectorAll("#resultTable tbody tr").forEach(tr => rows.push({ name: tr.cells[0].innerText, qty: tr.cells[1].innerText }));
@@ -268,6 +302,7 @@
         const savedRows = JSON.parse(localStorage.getItem("draftOrder") || "[]");
         document.getElementById("clientName").value = localStorage.getItem("draftClient") || "";
         const tbody = document.querySelector("#resultTable tbody");
+        tbody.innerHTML = "";
         savedRows.forEach(item => {
             const row = tbody.insertRow();
             row.innerHTML = `<td>${item.name}</td><td style="font-weight:bold">${item.qty}</td><td><button onclick="this.parentElement.parentElement.remove();saveCurrentTable();" style="background:var(--danger);color:white;border:none;padding:5px 10px;border-radius:5px;">X</button></td>`;
@@ -287,7 +322,7 @@
         const b = document.body; b.setAttribute("data-theme", b.getAttribute("data-theme") === "light" ? "dark" : "light");
     }
 
-    // البحث التلقائي
+    // البحث
     document.getElementById("itemSearch").oninput = (e) => {
         const val = e.target.value.toLowerCase();
         const resultsDiv = document.getElementById("results");
@@ -301,8 +336,6 @@
         });
         resultsDiv.classList.toggle('hidden', filtered.length === 0);
     };
-
-    window.onload = () => { syncData(); loadSavedTable(); };
 </script>
 
 </body>
