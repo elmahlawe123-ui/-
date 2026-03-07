@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>نظام المحلاوي - الإصدار المستقر</title>
+    <title>نظام المحلاوي - النسخة المستقرة والمعدلة</title>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -36,13 +36,15 @@
         .hidden { display: none !important; }
         .item-card { background: var(--card); border: 1px solid var(--border); padding: 12px; border-radius: 8px; text-align: center; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
 
-        /* ستايل الفاتورة الاحترافية للتصدير */
+        /* ستايل الفاتورة الاحترافية للتصدير - معدل */
         #finalExportContainer { 
             display: block; direction: rtl; padding: 40px; background: white !important; 
             width: 750px; color: black !important; position: fixed; left: -9999px; top: 0; 
         }
-        .invoice-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        .invoice-table th, .invoice-table td { border: 2px solid black; color: black; padding: 12px; font-size: 20px; font-weight: bold; text-align: center; }
+        .invoice-table { width: 100%; border-collapse: collapse; margin-top: 20px; border: 2px solid black; }
+        .invoice-table th { background: #f2f2f2 !important; color: black !important; padding: 12px; font-size: 20px; font-weight: bold; text-align: center; border: 1px solid black; }
+        /* تم تغيير لون خلفية الصفوف هنا من الغامق للابيض ولون النص للاسود */
+        .invoice-table td { background: white !important; color: black !important; padding: 12px; font-size: 20px; font-weight: bold; text-align: center; border: 1px solid black; }
     </style>
 </head>
 <body data-theme="dark">
@@ -119,8 +121,10 @@
     </div>
     <table class="invoice-table">
         <thead>
-            <tr style="background:#eeeeee !important;">
-                <th>م</th><th>الصنف</th><th>الكمية</th>
+            <tr>
+                <th style="width: 10%;">م</th>
+                <th style="width: 65%; text-align: right;">الصنف</th>
+                <th style="width: 25%;">الكمية</th>
             </tr>
         </thead>
         <tbody id="expBody"></tbody>
@@ -132,6 +136,7 @@
 
 <script>
     const GOOGLE_URL = 'https://script.google.com/macros/s/AKfycby94J0O_uH3WIFzLoelLDAVMagTZEGbo0LAfbVaVR_52wgSoCtbqJ-6ZHjbnUBujlfc/exec';
+    const APP_PASSWORD = "123";
     let localItems = JSON.parse(localStorage.getItem("items")) || ["إسمنت", "حديد", "رمل"];
 
     function checkPassword() {
@@ -218,7 +223,11 @@
         document.getElementById("expDate").innerText = new Date().toLocaleDateString('ar-EG');
         const b = document.getElementById("expBody"); b.innerHTML = "";
         document.querySelectorAll("#resultTable tbody tr").forEach((r, i) => {
-            b.innerHTML += `<tr><td>${i+1}</td><td style="text-align:right;">${r.cells[0].innerText}</td><td>${r.cells[1].innerText}</td></tr>`;
+            b.innerHTML += `<tr>
+                <td style="color:black; background:white;">${i+1}</td>
+                <td style="text-align:right; color:black; background:white;">${r.cells[0].innerText}</td>
+                <td style="color:black; background:white;">${r.cells[1].innerText}</td>
+            </tr>`;
         });
     }
 
