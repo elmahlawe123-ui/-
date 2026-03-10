@@ -28,7 +28,7 @@
         .brand-name { font-family: 'Aref Ruqaa', serif; font-size: 32px; font-weight: bold; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block; }
         header { background: linear-gradient(145deg, #000, #1a1a1a); padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid var(--primary); position: sticky; top: 0; z-index: 1000; }
         .nav-tabs { display: flex; background: var(--card); border-bottom: 1px solid var(--border); }
-        .nav-tabs button { flex: 1; padding: 15px; border: none; background: none; color: #94a3b8; font-weight: bold; cursor: pointer; font-family: 'Cairo'; }
+        .nav-tabs button { flex: 1; padding: 15px; border: none; background: none; color: #94a3b8; font-weight: bold; cursor: pointer; }
         .nav-tabs button.active { color: var(--primary); border-bottom: 3px solid var(--primary); background: rgba(176, 141, 87, 0.1); }
         .container { padding: 15px; max-width: 800px; margin: 0 auto; }
         .card { background: var(--card); padding: 25px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 20px; }
@@ -42,9 +42,8 @@
         .results-box { position: absolute; background: var(--card); border: 1px solid var(--primary); width: 100%; z-index: 1100; max-height: 250px; overflow-y: auto; border-radius: 8px; }
         .result-item { padding: 15px; cursor: pointer; border-bottom: 1px solid var(--border); text-align: right; }
         .hidden { display: none !important; }
-        .item-card { background: var(--card); border: 1px solid var(--border); padding: 12px; border-radius: 8px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
 
-        /* تعديلات حاوية التصدير لتناسب الأعداد الكبيرة */
+        /* حاوية التصدير - خلفية بيضاء وتصميم مطبوع */
         #finalExportContainer { 
             display: block; 
             direction: rtl; 
@@ -55,11 +54,22 @@
             position: fixed; 
             left: -9999px; 
             top: 0; 
-            height: auto; /* يتمدد حسب المحتوى */
+            height: auto; 
         }
-        .invoice-table { width: 100%; border-collapse: collapse; margin-top: 20px; border: 2px solid black; }
-        .invoice-table th { background: #f0f0f0 !important; color: black !important; padding: 15px; font-size: 22px; border: 2px solid black; }
-        .invoice-table td { padding: 12px; font-size: 20px; font-weight: bold; border: 1px solid black; color: black !important; }
+        .invoice-table { width: 100%; border-collapse: collapse; margin-top: 20px; border: 2px solid black; background: white !important; }
+        .invoice-table th { background: #f2f2f2 !important; color: black !important; padding: 15px; font-size: 22px; border: 2px solid black; }
+        .invoice-table td { padding: 12px; font-size: 20px; font-weight: bold; border: 1px solid black; color: black !important; background: white !important; }
+        
+        .total-box { 
+            margin-top: 15px; 
+            padding: 10px 20px; 
+            background: #f9f9f9; 
+            border: 2px solid black; 
+            display: inline-block; 
+            font-size: 22px; 
+            font-weight: bold; 
+            color: black;
+        }
     </style>
 </head>
 <body>
@@ -148,6 +158,11 @@
         </thead>
         <tbody id="expBody"></tbody>
     </table>
+    
+    <div style="text-align: right; margin-top: 10px;">
+        <div class="total-box">إجمالي عدد الأصناف: <span id="totalItemsCount">0</span></div>
+    </div>
+
     <div style="margin-top: 50px; display: flex; justify-content: space-between; padding: 20px;">
         <p style="font-weight: bold; font-size: 24px; color: black; border-bottom: 2px solid black;">توقيع المستلم</p>
         <p style="font-weight: bold; font-size: 24px; color: black; border-bottom: 2px solid black;">الختم</p>
@@ -171,7 +186,8 @@
         grid.innerHTML = "";
         localItems.forEach(item => {
             const div = document.createElement("div");
-            div.className = "item-card";
+            div.className = "item-card" + (item === "" ? " hidden" : "");
+            div.style = "background:var(--card); border:1px solid var(--border); padding:12px; border-radius:8px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center;";
             div.innerHTML = `<span>${item}</span>
                 <div>
                     <button style="background:var(--edit); color:white; border:none; padding:5px 10px; border-radius:4px; cursor:pointer;" onclick="editItem('${item}')">تعديل</button>
@@ -182,7 +198,7 @@
         localStorage.setItem("items", JSON.stringify(localItems));
     }
 
-    // ميزة البحث في صفحة الإدارة
+    // بحث الأصناف في صفحة الإدارة لمنع التكرار
     document.getElementById("newItemName").oninput = function() {
         const val = this.value.toLowerCase().trim();
         const resDiv = document.getElementById("browseResults");
@@ -240,25 +256,24 @@
         document.getElementById("expClient").innerText = document.getElementById("clientName").value || "بدون اسم";
         document.getElementById("expDate").innerText = new Date().toLocaleDateString('ar-EG');
         const b = document.getElementById("expBody"); b.innerHTML = "";
-        document.querySelectorAll("#resultTable tbody tr").forEach((r, i) => {
+        const rows = document.querySelectorAll("#resultTable tbody tr");
+        rows.forEach((r, i) => {
             const row = `<tr><td>${i+1}</td><td style="text-align:right;">${r.cells[0].innerText}</td><td>${r.cells[1].innerText}</td></tr>`;
             b.insertAdjacentHTML('beforeend', row);
         });
+        // تحديث إجمالي عدد الأصناف
+        document.getElementById("totalItemsCount").innerText = rows.length;
     }
 
-    // تصدير PDF يدعم الصفحات المتعددة للأعداد الكبيرة
     async function exportPDF() {
         if (document.querySelectorAll("#resultTable tbody tr").length === 0) { alert("الجدول فارغ!"); return; }
         prepareExport();
         const element = document.getElementById("finalExportContainer");
-        
         const canvas = await html2canvas(element, { scale: 2, useCORS: true });
         const imgData = canvas.toDataURL('image/png');
-        
         const pdf = new jspdf.jsPDF('p', 'mm', 'a4');
-        const imgProps = pdf.getImageProperties(imgData);
         const pdfWidth = pdf.internal.pageSize.getWidth();
-        const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+        const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
         
         let heightLeft = pdfHeight;
         let position = 0;
@@ -266,21 +281,18 @@
 
         pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, pdfHeight);
         heightLeft -= pageHeight;
-
         while (heightLeft >= 0) {
             position = heightLeft - pdfHeight;
             pdf.addPage();
             pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, pdfHeight);
             heightLeft -= pageHeight;
         }
-        
         pdf.save(`فاتورة_${document.getElementById("clientName").value}.pdf`);
     }
 
     async function exportAsImage() {
         prepareExport();
-        const element = document.getElementById("finalExportContainer");
-        const canvas = await html2canvas(element, { scale: 2, useCORS: true });
+        const canvas = await html2canvas(document.getElementById("finalExportContainer"), { scale: 2, useCORS: true });
         const link = document.createElement('a');
         link.download = `طلب_${document.getElementById("clientName").value}.png`;
         link.href = canvas.toDataURL(); link.click();
@@ -298,6 +310,19 @@
         });
     }
 
+    async function deleteItem(name) {
+        if(!confirm("حذف الصنف نهائياً؟")) return;
+        localItems = localItems.filter(i => i !== name); renderCloudItems();
+        fetch(GOOGLE_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: 'delete', item: name }) });
+    }
+
+    async function editItem(oldName) {
+        const newName = prompt("الاسم الجديد:", oldName);
+        if(!newName || newName === oldName) return;
+        localItems[localItems.indexOf(oldName)] = newName; renderCloudItems();
+        fetch(GOOGLE_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: 'edit', item: oldName, newItemName: newName }) });
+    }
+
     function switchPage(p) {
         document.getElementById("orderPage").classList.toggle("hidden", p !== 'order');
         document.getElementById("browsePage").classList.toggle("hidden", p !== 'browse');
@@ -305,7 +330,7 @@
         document.getElementById("tab2").classList.toggle("active", p === 'browse');
     }
 
-    function clearTable() { if(confirm("مسح الجدول؟")) document.querySelector("#resultTable tbody").innerHTML = ""; }
+    function clearTable() { if(confirm("مسح الجدول؟")) { document.querySelector("#resultTable tbody").innerHTML = ""; } }
     window.onclick = e => { 
         if (!e.target.matches('#itemSearch')) document.getElementById("results").classList.add('hidden'); 
         if (!e.target.matches('#newItemName')) document.getElementById("browseResults").classList.add('hidden'); 
