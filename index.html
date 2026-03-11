@@ -90,7 +90,7 @@
 <div id="loginOverlay" style="position:fixed; inset:0; background:var(--dark); z-index:9999; display:flex; align-items:center; justify-content:center; flex-direction:column;">
     <div class="card" style="width:320px; text-align:center; border: 2px solid var(--primary); background: #111;">
         <img src="https://i.ibb.co/4R44srhj/image.jpg" style="width: 110px; height:110px; border-radius: 50%; border: 3px solid var(--primary); margin-bottom: 15px; object-fit: cover;">
-        <div class="brand-name" style="font-size: 40px; margin-bottom: 10px;">المحلاوي</div>
+        <div class="brand-name" style="font-size: 40px; margin-bottom: 10px;">ال وحيد</div>
         <input type="password" id="passInput" placeholder="الرمز (123)" style="text-align:center;" onkeydown="if(event.key==='Enter') checkPassword()">
         <button class="btn btn-main" onclick="checkPassword()">دخول للنظام</button>
     </div>
@@ -100,7 +100,7 @@
     <header>
         <div style="display: flex; align-items: center; gap: 12px;">
             <img src="https://i.ibb.co/4R44srhj/image.jpg" style="width: 45px; height:45px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary);">
-            <div class="brand-name">المحلاوي</div>
+            <div class="brand-name">ال وحيد</div>
         </div>
     </header>
 
@@ -153,7 +153,7 @@
     <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 5px solid #b08d57; padding-bottom: 15px; margin-bottom: 25px; background: white;">
         <img src="https://i.ibb.co/4R44srhj/image.jpg" crossOrigin="anonymous" style="width: 120px; height:120px; border-radius: 50%; object-fit: cover;">
         <div style="text-align: left;">
-            <h1 style="margin: 0; color: #b08d57 !important; font-size: 55px; font-family: 'Aref Ruqaa', serif;">المحلاوي</h1>
+            <h1 style="margin: 0; color: #b08d57 !important; font-size: 55px; font-family: 'Aref Ruqaa', serif;">ال وحيد</h1>
             <p style="margin: 5px 0; font-size: 22px; font-weight: bold;">كشف طلب مواد </p>
         </div>
     </div>
@@ -295,7 +295,7 @@
         const blob = await new Promise(res => canvas.toBlob(res, 'image/png'));
         const file = new File([blob], `فاتورة.png`, { type: 'image/png' });
         if (navigator.canShare && navigator.canShare({ files: [file] })) {
-            await navigator.share({ files: [file], title: 'فاتورة المحلاوي' });
+            await navigator.share({ files: [file], title: 'فاتورة ال وحيد' });
         } else { exportAsImage(); }
     }
 
