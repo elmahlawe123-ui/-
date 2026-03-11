@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>نظام المحلاوي - النسخة المستقرة</title>
+    <title>نظام ال وحيد - النسخة المطورة</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@700&family=Cairo:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -64,7 +64,7 @@
         .hidden { display: none !important; }
         .item-card { background: var(--card); border: 1px solid var(--border); padding: 12px; border-radius: 8px; text-align: right; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
 
-        /* تعديل حاوية التصدير لتكون بيضاء دائماً */
+        /* حاوية التصدير المخفية */
         #finalExportContainer { 
             display: block; 
             direction: rtl; 
@@ -76,7 +76,7 @@
             left: -9999px; 
             top: 0; 
         }
-        #finalExportContainer * { color: #000000 !important; } /* إجبار كل النصوص بالداخل على اللون الأسود */
+        #finalExportContainer * { color: #000000 !important; }
 
         .invoice-table { width: 100%; border-collapse: collapse; margin-top: 20px; border: 2px solid #000; }
         .invoice-table th, .invoice-table td { 
@@ -142,7 +142,7 @@
                     <input type="text" id="newItemName" placeholder="اكتب للبحث أو إضافة صنف جديد..." oninput="renderCloudItems(this.value)">
                     <button class="voice-btn" onclick="startVoice('newItemName', () => renderCloudItems(document.getElementById('newItemName').value))">🎤</button>
                 </div>
-                <button class="btn btn-main" onclick="addCloudItem()">حفظ كصنف جديد ✅</button>
+                <button class="btn btn-main" onclick="addCloudItemManual()">حفظ كصنف جديد ✅</button>
                 <div id="itemsGrid" style="margin-top: 20px;"></div>
             </div>
         </div>
@@ -174,19 +174,9 @@
 
 <script>
     const GOOGLE_URL = 'https://script.google.com/macros/s/AKfycby94J0O_uH3WIFzLoelLDAVMagTZEGbo0LAfbVaVR_52wgSoCtbqJ-6ZHjbnUBujlfc/exec';
+    
+    // تحميل البيانات من localStorage
     let localItems = JSON.parse(localStorage.getItem("items")) || ["إسمنت", "حديد", "رمل"];
-
-    function startVoice(inputId, callback = null) {
-        const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-        recognition.lang = 'ar-SA';
-        recognition.start();
-        recognition.onresult = function(event) {
-            const transcript = event.results[0][0].transcript;
-            document.getElementById(inputId).value = transcript;
-            if(callback) callback();
-            else if(inputId === 'itemSearch') document.getElementById(inputId).dispatchEvent(new Event('input'));
-        };
-    }
 
     function checkPassword() {
         if(document.getElementById("passInput").value === "123") {
@@ -213,26 +203,55 @@
         localStorage.setItem("items", JSON.stringify(localItems));
     }
 
-    async function addCloudItem() {
+    // إضافة صنف جديد يدوياً من صفحة المخزن
+    function addCloudItemManual() {
         const input = document.getElementById("newItemName");
-        const name = input.value.trim();
-        if(!name) return;
-        if(localItems.some(i => i.toLowerCase() === name.toLowerCase())) {
-            alert("⚠️ هذا الصنف موجود بالفعل!");
-            return;
-        }
-        localItems.push(name);
+        saveItemToCloud(input.value);
         input.value = "";
-        renderCloudItems();
-        fetch(GOOGLE_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: 'add', item: name }) });
     }
 
+    // الوظيفة الأساسية لحفظ الصنف في الذاكرة والسيرفر
+    function saveItemToCloud(name) {
+        name = name.trim();
+        if(!name) return;
+        if(!localItems.some(i => i.toLowerCase() === name.toLowerCase())) {
+            localItems.push(name);
+            renderCloudItems();
+            fetch(GOOGLE_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: 'add', item: name }) });
+            return true;
+        }
+        return false;
+    }
+
+    // --- تعديل وظيفة الإضافة للجدول لتشمل الحفظ التلقائي ---
+    function addItem() {
+        const itemInput = document.getElementById("itemSearch");
+        const item = itemInput.value.trim();
+        const qty = document.getElementById("qty").value;
+
+        if(!item || !qty) return;
+
+        // حفظ تلقائي في المخزن إذا كان الصنف جديداً
+        saveItemToCloud(item);
+
+        const tbody = document.querySelector("#resultTable tbody");
+        const row = tbody.insertRow(0);
+        row.innerHTML = `<td style="text-align:right">${item}</td><td style="font-weight:bold">${qty}</td><td><button onclick="this.parentElement.parentElement.remove()" style="background:none; border:none; color:red; cursor:pointer; font-size:18px;">✖</button></td>`;
+        
+        itemInput.value = ""; 
+        document.getElementById("qty").value = ""; 
+        itemInput.focus();
+    }
+
+    // البحث والاقتراحات
     document.getElementById("itemSearch").oninput = function() {
         const val = this.value.toLowerCase();
         const resDiv = document.getElementById("results");
         resDiv.innerHTML = "";
         if(!val) return resDiv.classList.add('hidden');
-        localItems.filter(i => i.toLowerCase().includes(val)).forEach(item => {
+        
+        const matches = localItems.filter(i => i.toLowerCase().includes(val));
+        matches.forEach(item => {
             const d = document.createElement("div");
             d.className = "result-item"; d.textContent = item;
             d.onclick = () => { document.getElementById("itemSearch").value = item; resDiv.classList.add('hidden'); document.getElementById("qty").focus(); };
@@ -241,16 +260,7 @@
         resDiv.classList.remove('hidden');
     };
 
-    function addItem() {
-        const item = document.getElementById("itemSearch").value;
-        const qty = document.getElementById("qty").value;
-        if(!item || !qty) return;
-        const tbody = document.querySelector("#resultTable tbody");
-        const row = tbody.insertRow(0);
-        row.innerHTML = `<td style="text-align:right">${item}</td><td style="font-weight:bold">${qty}</td><td><button onclick="this.parentElement.parentElement.remove()" style="background:none; border:none; color:red; cursor:pointer; font-size:18px;">✖</button></td>`;
-        document.getElementById("itemSearch").value = ""; document.getElementById("qty").value = ""; document.getElementById("itemSearch").focus();
-    }
-
+    // وظائف التصدير والمشاركة
     function prepareExport() {
         document.getElementById("expClient").innerText = document.getElementById("clientName").value || "بدون اسم";
         document.getElementById("expDate").innerText = new Date().toLocaleDateString('ar-EG');
@@ -261,13 +271,9 @@
     }
 
     function exportAsImage() {
+        if (document.querySelectorAll("#resultTable tbody tr").length === 0) return alert("الجدول فارغ!");
         prepareExport();
-        // إعدادات html2canvas لضمان خلفية بيضاء
-        html2canvas(document.getElementById("finalExportContainer"), { 
-            scale: 3, 
-            useCORS: true,
-            backgroundColor: "#ffffff" 
-        }).then(canvas => {
+        html2canvas(document.getElementById("finalExportContainer"), { scale: 3, useCORS: true, backgroundColor: "#ffffff" }).then(canvas => {
             const link = document.createElement('a');
             link.download = `فاتورة_${document.getElementById("clientName").value}.png`;
             link.href = canvas.toDataURL("image/png"); link.click();
@@ -275,13 +281,11 @@
     }
 
     function exportPDF() {
+        if (document.querySelectorAll("#resultTable tbody tr").length === 0) return alert("الجدول فارغ!");
         prepareExport();
-        html2canvas(document.getElementById("finalExportContainer"), { 
-            scale: 2, 
-            useCORS: true,
-            backgroundColor: "#ffffff"
-        }).then(canvas => {
-            const pdf = new jspdf.jsPDF('p', 'mm', 'a4');
+        html2canvas(document.getElementById("finalExportContainer"), { scale: 2, useCORS: true, backgroundColor: "#ffffff" }).then(canvas => {
+            const { jsPDF } = window.jspdf;
+            const pdf = new jsPDF('p', 'mm', 'a4');
             const imgData = canvas.toDataURL('image/png');
             pdf.addImage(imgData, 'PNG', 0, 0, 210, (canvas.height * 210) / canvas.width);
             pdf.save(`فاتورة_${document.getElementById("clientName").value}.pdf`);
@@ -289,7 +293,7 @@
     }
 
     async function shareAsImage() {
-        if (document.querySelectorAll("#resultTable tbody tr").length === 0) { alert("الجدول فارغ!"); return; }
+        if (document.querySelectorAll("#resultTable tbody tr").length === 0) return alert("الجدول فارغ!");
         prepareExport();
         const canvas = await html2canvas(document.getElementById("finalExportContainer"), { scale: 3, useCORS: true, backgroundColor: "#ffffff" });
         const blob = await new Promise(res => canvas.toBlob(res, 'image/png'));
@@ -299,17 +303,29 @@
         } else { exportAsImage(); }
     }
 
-    // وظائف المساعدة الأخرى
-    async function deleteItem(name) { if(!confirm("حذف؟")) return; localItems = localItems.filter(i => i !== name); renderCloudItems(); }
-    async function editItem(oldName) { const newName = prompt("الجديد:", oldName); if(newName) { localItems[localItems.indexOf(oldName)] = newName; renderCloudItems(); } }
+    // ميزات إضافية
+    function startVoice(inputId, callback = null) {
+        const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+        recognition.lang = 'ar-SA';
+        recognition.start();
+        recognition.onresult = (e) => {
+            document.getElementById(inputId).value = e.results[0][0].transcript;
+            if(callback) callback();
+            else document.getElementById(inputId).dispatchEvent(new Event('input'));
+        };
+    }
+
     function switchPage(p) { 
         document.getElementById("orderPage").classList.toggle("hidden", p !== 'order');
         document.getElementById("browsePage").classList.toggle("hidden", p !== 'browse');
         document.getElementById("tab1").classList.toggle("active", p === 'order');
         document.getElementById("tab2").classList.toggle("active", p === 'browse');
     }
-    function clearTable() { if(confirm("مسح؟")) document.querySelector("#resultTable tbody").innerHTML = ""; }
-    window.onclick = function(event) { if (!event.target.matches('#itemSearch')) document.getElementById("results").classList.add('hidden'); };
+
+    function deleteItem(name) { if(confirm("حذف الصنف نهائياً؟")) { localItems = localItems.filter(i => i !== name); renderCloudItems(); } }
+    function editItem(oldName) { const newName = prompt("تعديل اسم الصنف:", oldName); if(newName) { localItems[localItems.indexOf(oldName)] = newName; renderCloudItems(); } }
+    function clearTable() { if(confirm("مسح محتويات الجدول؟")) document.querySelector("#resultTable tbody").innerHTML = ""; }
+    window.onclick = (e) => { if (!e.target.matches('#itemSearch')) document.getElementById("results").classList.add('hidden'); };
 </script>
 
 </body>
