@@ -15,6 +15,7 @@
             --gold-gradient: linear-gradient(to bottom, #f1c40f, #b08d57);
             --bg: #0f172a; --text: #f1f5f9; --card: #1e293b; --border: #334155; 
             --dark: #000000; --danger: #ef4444; --edit: #3b82f6; --share: #8b5cf6;
+            --success: #10b981;
         }
 
         body { font-family: 'Cairo', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding-bottom: 30px; }
@@ -64,7 +65,6 @@
         .hidden { display: none !important; }
         .item-card { background: var(--card); border: 1px solid var(--border); padding: 12px; border-radius: 8px; text-align: right; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
 
-        /* حاوية التصدير المخفية */
         #finalExportContainer { 
             display: block; 
             direction: rtl; 
@@ -137,7 +137,12 @@
 
         <div id="browsePage" class="hidden">
             <div class="card">
-                <h3 style="color:var(--primary)">إدارة وبحث الأصناف</h3>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                    <h3 style="color:var(--primary); margin:0;">إدارة الأصناف</h3>
+                    <button id="syncBtn" class="btn" style="background:var(--success); color:white; padding: 6px 12px; font-size: 13px;" onclick="syncFromCloud()">
+                        🔄 مزامنة السحاب
+                    </button>
+                </div>
                 <div class="search-wrapper">
                     <input type="text" id="newItemName" placeholder="اكتب للبحث أو إضافة صنف جديد..." oninput="renderCloudItems(this.value)">
                     <button class="voice-btn" onclick="startVoice('newItemName', () => renderCloudItems(document.getElementById('newItemName').value))">🎤</button>
@@ -175,7 +180,6 @@
 <script>
     const GOOGLE_URL = 'https://script.google.com/macros/s/AKfycby94J0O_uH3WIFzLoelLDAVMagTZEGbo0LAfbVaVR_52wgSoCtbqJ-6ZHjbnUBujlfc/exec';
     
-    // تحميل البيانات من localStorage
     let localItems = JSON.parse(localStorage.getItem("items")) || ["إسمنت", "حديد", "رمل"];
 
     function checkPassword() {
@@ -184,6 +188,38 @@
             document.getElementById("appContent").classList.remove("hidden");
             renderCloudItems();
         } else { alert("الرمز خطأ"); }
+    }
+
+    // --- وظيفة المزامنة الجديدة من جوجل شيت ---
+    async function syncFromCloud() {
+        const btn = document.getElementById("syncBtn");
+        const originalText = btn.innerHTML;
+        
+        try {
+            btn.innerHTML = "جاري التحميل...";
+            btn.disabled = true;
+
+            // جلب البيانات من Google Apps Script (يجب أن يدعم doGet)
+            const response = await fetch(GOOGLE_URL);
+            if (!response.ok) throw new Error("Network error");
+            
+            const cloudData = await response.json();
+
+            if (Array.isArray(cloudData)) {
+                // دمج البيانات السحابية مع المحلية مع منع التكرار
+                const combined = [...new Set([...localItems, ...cloudData])];
+                localItems = combined;
+                localStorage.setItem("items", JSON.stringify(localItems));
+                renderCloudItems();
+                alert("تمت المزامنة بنجاح! تم تحديث قائمة الأصناف.");
+            }
+        } catch (error) {
+            console.error(error);
+            alert("حدث خطأ أثناء المزامنة. تأكد من إعدادات الرابط السحابي.");
+        } finally {
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+        }
     }
 
     function renderCloudItems(filter = "") {
@@ -203,17 +239,14 @@
         localStorage.setItem("items", JSON.stringify(localItems));
     }
 
-    // إضافة صنف جديد يدوياً من صفحة المخزن
     function addCloudItemManual() {
         const input = document.getElementById("newItemName");
-        saveItemToCloud(input.value);
-        input.value = "";
+        if(saveItemToCloud(input.value)) input.value = "";
     }
 
-    // الوظيفة الأساسية لحفظ الصنف في الذاكرة والسيرفر
     function saveItemToCloud(name) {
         name = name.trim();
-        if(!name) return;
+        if(!name) return false;
         if(!localItems.some(i => i.toLowerCase() === name.toLowerCase())) {
             localItems.push(name);
             renderCloudItems();
@@ -223,7 +256,6 @@
         return false;
     }
 
-    // --- تعديل وظيفة الإضافة للجدول لتشمل الحفظ التلقائي ---
     function addItem() {
         const itemInput = document.getElementById("itemSearch");
         const item = itemInput.value.trim();
@@ -231,7 +263,6 @@
 
         if(!item || !qty) return;
 
-        // حفظ تلقائي في المخزن إذا كان الصنف جديداً
         saveItemToCloud(item);
 
         const tbody = document.querySelector("#resultTable tbody");
@@ -243,7 +274,6 @@
         itemInput.focus();
     }
 
-    // البحث والاقتراحات
     document.getElementById("itemSearch").oninput = function() {
         const val = this.value.toLowerCase();
         const resDiv = document.getElementById("results");
@@ -254,13 +284,16 @@
         matches.forEach(item => {
             const d = document.createElement("div");
             d.className = "result-item"; d.textContent = item;
-            d.onclick = () => { document.getElementById("itemSearch").value = item; resDiv.classList.add('hidden'); document.getElementById("qty").focus(); };
+            d.onclick = () => { 
+                document.getElementById("itemSearch").value = item; 
+                resDiv.classList.add('hidden'); 
+                document.getElementById("qty").focus(); 
+            };
             resDiv.appendChild(d);
         });
         resDiv.classList.remove('hidden');
     };
 
-    // وظائف التصدير والمشاركة
     function prepareExport() {
         document.getElementById("expClient").innerText = document.getElementById("clientName").value || "بدون اسم";
         document.getElementById("expDate").innerText = new Date().toLocaleDateString('ar-EG');
@@ -303,7 +336,6 @@
         } else { exportAsImage(); }
     }
 
-    // ميزات إضافية
     function startVoice(inputId, callback = null) {
         const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
         recognition.lang = 'ar-SA';
