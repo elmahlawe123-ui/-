@@ -22,6 +22,12 @@
             --danger: #ef4444; 
             --edit: #3b82f6; 
             --share: #8b5cf6;
+            .lightMode{
+--bg:#f1f5f9;
+--text:#000;
+--card:#ffffff;
+--border:#ddd;
+}
         }
 
         body { 
@@ -220,7 +226,7 @@
 
 <div id="loginOverlay" style="position:fixed; inset:0; background:var(--dark); z-index:9999; display:flex; align-items:center; justify-content:center; flex-direction:column;">
     <div class="card" style="width:320px; text-align:center; border: 2px solid var(--primary); background: #111;">
-        <img src="https://i.ibb.co/4R44srhj/image.jpg" style="width: 110px; height:110px; border-radius: 50%; border: 3px solid var(--primary); margin-bottom: 15px; object-fit: cover;">
+        <img id="logoImg" src="https://i.ibb.co/4R44srhj/image.jpg" style="width: 110px; height:110px; border-radius: 50%; border: 3px solid var(--primary); margin-bottom: 15px; object-fit: cover;">
         <div class="brand-name" style="font-size: 40px; margin-bottom: 10px;">المحلاوي</div>
         <input type="password" id="passInput" placeholder="الرمز (123)" style="text-align:center;" onkeydown="if(event.key==='Enter') checkPassword()">
         <button class="btn btn-main" onclick="checkPassword()">دخول للنظام</button>
@@ -308,7 +314,9 @@
         <tbody id="expBody"></tbody>
     </table>
     <div style="margin-top: 80px; text-align: right;">
-        <p style="font-weight: bold; font-size: 22px; color: black; border-bottom: 3px solid black; display: inline-block; padding-left: 80px;">توقيع المستلم</p>
+      <p id="signatureBox" style="font-weight:bold;font-size:22px;color:black;border-bottom:3px solid black;display:inline-block;padding-left:80px;">
+توقيع المستلم
+</p>
     </div>
 </div>
 
@@ -463,6 +471,95 @@
             document.getElementById("results").classList.add('hidden'); 
         } 
     };
+    /* ===== إعدادات النظام ===== */
+
+document.getElementById("settingsMenu").onchange=function(){
+
+if(this.value==="theme"){
+toggleTheme()
+}
+
+if(this.value==="logo"){
+changeLogo()
+}
+
+if(this.value==="signature"){
+toggleSignature()
+}
+
+this.value=""
+}
+
+
+/* تغيير الوضع */
+
+function toggleTheme(){
+
+document.body.classList.toggle("lightMode")
+
+localStorage.setItem(
+"theme",
+document.body.classList.contains("lightMode")?"light":"dark"
+)
+
+}
+
+
+/* تغيير اللوجو */
+
+function changeLogo(){
+
+let url=prompt("ضع رابط اللوجو الجديد")
+
+if(!url)return
+
+document.querySelectorAll("#logoImg").forEach(img=>{
+img.src=url
+})
+
+localStorage.setItem("logo",url)
+
+}
+
+
+/* إخفاء التوقيع */
+
+function toggleSignature(){
+
+let sig=document.getElementById("signatureBox")
+
+if(sig.style.display==="none"){
+sig.style.display="inline-block"
+localStorage.setItem("signature","show")
+}else{
+sig.style.display="none"
+localStorage.setItem("signature","hide")
+}
+
+}
+
+
+/* تحميل الإعدادات */
+
+window.addEventListener("load",()=>{
+
+if(localStorage.getItem("theme")==="light"){
+document.body.classList.add("lightMode")
+}
+
+let logo=localStorage.getItem("logo")
+
+if(logo){
+document.querySelectorAll("#logoImg").forEach(img=>{
+img.src=logo
+})
+}
+
+if(localStorage.getItem("signature")==="hide"){
+document.getElementById("signatureBox").style.display="none"
+}
+
+})
 </script>
 
 </body>
