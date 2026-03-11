@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>نظام المحلاوى - النسخة المستقرة</title>
+    <title>نظام ال وحيد - النسخة الاحترافية</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@700&family=Cairo:wght@400;700&display=swap" rel="stylesheet">
     
@@ -22,12 +22,13 @@
             --danger: #ef4444; 
             --edit: #3b82f6; 
             --share: #8b5cf6;
-            .lightMode{
---bg:#f1f5f9;
---text:#000;
---card:#ffffff;
---border:#ddd;
-}
+        }
+
+        .lightMode {
+            --bg: #f1f5f9;
+            --text: #000;
+            --card: #ffffff;
+            --border: #ddd;
         }
 
         body { 
@@ -36,7 +37,7 @@
             color: var(--text); 
             margin: 0; 
             padding-bottom: 30px; 
-            font-size: 16px; /* حجم نص موحد */
+            font-size: 16px;
         }
         
         .brand-name {
@@ -63,163 +64,57 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.5);
         }
 
+        #settingsMenu {
+            background: rgba(30, 41, 59, 0.8);
+            color: var(--primary);
+            border: 1px solid var(--primary);
+            padding: 8px 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-family: 'Cairo', sans-serif;
+            font-size: 14px;
+            font-weight: bold;
+            outline: none;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23b08d57' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: left 10px center;
+            padding-left: 30px;
+        }
+
         .nav-tabs { display: flex; background: var(--card); border-bottom: 1px solid var(--border); }
-        .nav-tabs button { 
-            flex: 1; 
-            padding: 15px; 
-            border: none; 
-            background: none; 
-            color: #94a3b8; 
-            font-weight: bold; 
-            cursor: pointer; 
-            font-family: 'Cairo'; 
-        }
-        .nav-tabs button.active { 
-            color: var(--primary); 
-            border-bottom: 3px solid var(--primary); 
-            background: rgba(176, 141, 87, 0.1); 
-        }
+        .nav-tabs button { flex: 1; padding: 15px; border: none; background: none; color: #94a3b8; font-weight: bold; cursor: pointer; font-family: 'Cairo'; }
+        .nav-tabs button.active { color: var(--primary); border-bottom: 3px solid var(--primary); background: rgba(176, 141, 87, 0.1); }
 
         .container { padding: 15px; max-width: 800px; margin: 0 auto; }
-        .card { 
-            background: var(--card); 
-            padding: 25px; /* زيادة padding */
-            border-radius: 12px; 
-            border: 1px solid var(--border); 
-            margin-bottom: 20px; /* زيادة المسافة السفلية */
-        }
+        .card { background: var(--card); padding: 25px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 20px; }
         
-        input { 
-            width: 100%; 
-            padding: 14px; 
-            margin: 8px 0; 
-            border: 1px solid var(--border); 
-            border-radius: 8px; 
-            background: rgba(255,255,255,0.05); 
-            color: var(--text); 
-            box-sizing: border-box; 
-            font-size: 16px; 
-            outline: none; 
-            font-family: 'Cairo'; 
-        }
+        .input-group { position: relative; margin: 8px 0; }
+        input { width: 100%; padding: 14px; border: 1px solid var(--border); border-radius: 8px; background: rgba(255,255,255,0.05); color: var(--text); box-sizing: border-box; font-size: 16px; outline: none; font-family: 'Cairo'; }
+        input:focus { border-color: var(--primary); background: rgba(255, 255, 255, 0.1); }
+
+        .mic-btn { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; font-size: 20px; color: var(--primary); }
+
+        .btn { padding: 12px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.3s; font-family: 'Cairo'; }
+        .btn-main { background: var(--primary); color: white; width: 100%; margin: 10px 0; font-size: 18px; }
         
-        input:focus {
-            border-color: var(--primary);
-            background: rgba(255, 255, 255, 0.1);
-        }
+        .grid-buttons { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 20px; }
+        .full-width { grid-column: span 2; }
 
-        .btn { 
-            padding: 12px; 
-            border: none; 
-            border-radius: 8px; 
-            cursor: pointer; 
-            font-weight: bold; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            gap: 8px; 
-            transition: 0.3s; 
-            font-family: 'Cairo'; 
-            font-size: 14px; 
-        }
-        .btn:hover {
-            background: rgba(255, 255, 255, 0.1);
-            transform: scale(1.05);
-            transition: 0.3s;
-        }
-        .btn-main { 
-            background: var(--primary); 
-            color: white; 
-            width: 100%; 
-            margin: 10px 0; 
-            font-size: 18px; 
-        }
-        
-        .grid-buttons { 
-            display: grid; 
-            grid-template-columns: repeat(2, 1fr); 
-            gap: 15px; 
-            margin-top: 20px; 
-        }
-        .full-width { 
-            grid-column: span 2; 
-        }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; background: var(--card); border-radius: 8px; overflow: hidden; }
+        th, td { padding: 12px; border: 1px solid var(--border); text-align: center; }
 
-        table { 
-            width: 100%; 
-            border-collapse: collapse; 
-            margin-top: 15px; 
-            background: var(--card); 
-            border-radius: 8px; 
-            overflow: hidden; 
-        }
-        th, td { 
-            padding: 12px; 
-            border: 1px solid var(--border); 
-            text-align: center; 
-        }
-        tr:nth-child(even) {
-            background: rgba(255, 255, 255, 0.05);
-        }
+        .results-box { position: absolute; background: var(--card); border: 1px solid var(--primary); width: 100%; z-index: 1100; max-height: 250px; overflow-y: auto; border-radius: 8px; }
+        .result-item { padding: 12px 15px; cursor: pointer; border-bottom: 1px solid var(--border); text-align: right; }
+        .result-item:hover { background: rgba(176, 141, 87, 0.2); }
 
-        .results-box { 
-            position: absolute; 
-            background: var(--card); 
-            border: 1px solid var(--primary); 
-            width: 100%; 
-            z-index: 1100; 
-            max-height: 250px; 
-            overflow-y: auto; 
-            border-radius: 8px; 
-        }
-        .result-item { 
-            padding: 15px; 
-            cursor: pointer; 
-            border-bottom: 1px solid var(--border); 
-            text-align: right; 
-        }
+        .hidden { display: none !important; }
+        .item-card { background: var(--card); border: 1px solid var(--border); padding: 12px; border-radius: 8px; text-align: center; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
 
-        .hidden { 
-            display: none !important; 
-        }
-        .item-card { 
-            background: var(--card); 
-            border: 1px solid var(--border); 
-            padding: 12px; 
-            border-radius: 8px; 
-            text-align: center; 
-            margin-bottom: 10px; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-        }
-
-        #finalExportContainer { 
-            display: block; 
-            direction: rtl; 
-            padding: 40px; 
-            background: white !important; 
-            width: 750px; 
-            color: black !important; 
-            position: fixed; 
-            left: -9999px; 
-            top: 0; 
-        }
-        .invoice-table { 
-            width: 100%; 
-            border-collapse: collapse; 
-            margin-top: 20px; 
-            border: 2px solid black; 
-        }
-        .invoice-table th, .invoice-table td { 
-            padding: 12px; 
-            font-size: 20px; 
-            font-weight: bold; 
-            text-align: center; 
-            border: 1px solid black; 
-            color: black !important; 
-            background: white !important; 
-        }
+        /* حاوية التصدير المخفية */
+        #finalExportContainer { display: block; direction: rtl; padding: 40px; background: white !important; width: 750px; color: black !important; position: fixed; left: -9999px; top: 0; }
+        .invoice-table { width: 100%; border-collapse: collapse; margin-top: 20px; border: 2px solid black; }
+        .invoice-table th, .invoice-table td { padding: 12px; font-size: 20px; font-weight: bold; text-align: center; border: 1px solid black; color: black !important; }
     </style>
 </head>
 <body>
@@ -236,17 +131,15 @@
 <div id="appContent" class="hidden">
     <header>
         <div style="display: flex; align-items: center; gap: 12px;">
-            <img src="https://i.ibb.co/4R44srhj/image.jpg" style="width: 45px; height:45px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary);">
+            <img id="logoImgNav" src="https://i.ibb.co/4R44srhj/image.jpg" style="width: 45px; height:45px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary);">
             <div class="brand-name">ال وحيد</div>
         </div>
-        <div style="position:absolute;left:15px;">
-<select id="settingsMenu" style="background:#111;color:white;border:1px solid #555;padding:6px;border-radius:6px;cursor:pointer;">
-<option value="">⚙️ الإعدادات</option>
-<option value="theme">تغيير الوضع</option>
-<option value="logo">تغيير اللوجو</option>
-<option value="signature">إخفاء / إظهار التوقيع</option>
-</select>
-</div>
+        <select id="settingsMenu">
+            <option value="">⚙️ الإعدادات</option>
+            <option value="theme">🌓 تغيير الوضع</option>
+            <option value="logo">🖼️ تغيير اللوجو</option>
+            <option value="signature">✍️ التوقيع</option>
+        </select>
     </header>
 
     <div class="nav-tabs">
@@ -258,11 +151,12 @@
         <div id="orderPage">
             <div class="card">
                 <input type="text" id="clientName" placeholder="اسم العميل...">
-                <div style="position: relative;">
-                    <input type="text" id="itemSearch" placeholder="ابحث عن مادة..." autocomplete="off">
+                <div class="input-group">
+                    <input type="text" id="itemSearch" placeholder="ابحث عن صنف..." autocomplete="off" oninput="showSuggestions(this.value, 'results')">
+                    <button class="mic-btn" onclick="startVoice('itemSearch')">🎙️</button>
                     <div id="results" class="results-box hidden"></div>
                 </div>
-                <input type="number" id="qty" placeholder="الكمية المطلوبة" inputmode="numeric" onkeydown="if(event.key==='Enter') addItem()">
+                <input type="number" id="qty" placeholder="الكمية" inputmode="numeric" onkeydown="if(event.key==='Enter') addItem()">
                 <button class="btn btn-main" onclick="addItem()">➕ إضافة للجدول</button>
 
                 <table id="resultTable">
@@ -271,7 +165,7 @@
                 </table>
 
                 <div class="grid-buttons">
-                    <button class="btn full-width" style="background:var(--share); color:white;" onclick="shareAsImage()">🔗 مشاركة مباشرة (واتساب/تليجرام)</button>
+                    <button class="btn full-width" style="background:var(--share); color:white;" onclick="shareDirectly()">🔗 مشاركة مباشرة (PDF)</button>
                     <button class="btn" style="background:#25D366; color:white;" onclick="exportAsImage()">📸 حفظ كصورة</button>
                     <button class="btn" style="background:var(--primary); color:white;" onclick="exportPDF()">📄 تصدير PDF</button>
                     <button class="btn full-width" style="background:#444; color:white;" onclick="clearTable()">🗑️ مسح الجدول</button>
@@ -281,11 +175,13 @@
 
         <div id="browsePage" class="hidden">
             <div class="card">
-                <h3 style="color:var(--primary)">إدارة الأصناف</h3>
-                <input type="text" id="newItemName" placeholder="اسم صنف جديد...">
-                <button class="btn btn-main" onclick="addCloudItem()">إضافة صنف جديد</button>
-                <hr style="border:0; border-top:1px solid var(--border); margin:15px 0;">
-                <div id="itemsGrid"></div>
+                <h3 style="color:var(--primary)">إدارة المخزن</h3>
+                <div class="input-group">
+                    <input type="text" id="newItemName" placeholder="أضف صنف جديد..." oninput="showSuggestions(this.value, 'browseResults')">
+                    <div id="browseResults" class="results-box hidden"></div>
+                </div>
+                <button class="btn btn-main" onclick="addCloudItem()">✅ إضافة للمخزن</button>
+                <div id="itemsGrid" style="margin-top:20px;"></div>
             </div>
         </div>
     </div>
@@ -293,10 +189,10 @@
 
 <div id="finalExportContainer">
     <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 5px solid #b08d57; padding-bottom: 15px; margin-bottom: 25px;">
-        <img src="https://i.ibb.co/4R44srhj/image.jpg" crossOrigin="anonymous" style="width: 120px; height:120px; border-radius: 50%; object-fit: cover;">
+        <img src="https://i.ibb.co/4R44srhj/image.jpg" crossOrigin="anonymous" id="exportLogo" style="width: 120px; height:120px; border-radius: 50%; object-fit: cover;">
         <div style="text-align: left;">
             <h1 style="margin: 0; color: #b08d57; font-size: 55px; font-family: 'Aref Ruqaa', serif;">ال وحيد</h1>
-            <p style="margin: 5px 0; color: black; font-size: 22px; font-weight: bold;">كشف طلب مواد </p>
+            <p style="margin: 5px 0; color: black; font-size: 22px; font-weight: bold;">كشف طلب مواد</p>
         </div>
     </div>
     <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
@@ -304,24 +200,16 @@
         <div style="font-size: 22px; color: black;">التاريخ: <span id="expDate"></span></div>
     </div>
     <table class="invoice-table">
-        <thead>
-            <tr>
-                <th style="width: 10%;">م</th>
-                <th style="width: 65%; text-align: right;">الصنف</th>
-                <th style="width: 25%;">الكمية</th>
-            </tr>
-        </thead>
+        <thead><tr><th>م</th><th>الصنف</th><th>الكمية</th></tr></thead>
         <tbody id="expBody"></tbody>
     </table>
     <div style="margin-top: 80px; text-align: right;">
-      <p id="signatureBox" style="font-weight:bold;font-size:22px;color:black;border-bottom:3px solid black;display:inline-block;padding-left:80px;">
-توقيع المستلم
-</p>
+      <p id="signatureBox" style="font-weight:bold;font-size:22px;color:black;border-bottom:3px solid black;display:inline-block;padding-left:80px;">توقيع المستلم</p>
     </div>
 </div>
 
 <script>
-    const GOOGLE_URL = 'https://script.google.com/macros/s/AKfycby94J0O_uH3WIFzLoelLDAVMagTZEGbo0LAfbVaVR_52wgSoCtbqJ-6ZHjbnUBujlfc/exec';
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxGdwunfcXsKEFSU7N7_qnuRbuRbjzScJnepJPYPb8zlzE3F8vEAeohJwVfR5TwQVwU/exec";
     let localItems = JSON.parse(localStorage.getItem("items")) || ["إسمنت", "حديد", "رمل"];
 
     function checkPassword() {
@@ -332,6 +220,23 @@
         } else { alert("الرمز خطأ"); }
     }
 
+    function showSuggestions(query, targetId) {
+        const box = document.getElementById(targetId);
+        if (!query) { box.classList.add("hidden"); return; }
+        const filtered = localItems.filter(i => i.includes(query));
+        if (filtered.length > 0) {
+            box.innerHTML = filtered.map(item => `<div class="result-item" onclick="selectItem('${item}', '${targetId}')">${item}</div>`).join('');
+            box.classList.remove("hidden");
+        } else { box.classList.add("hidden"); }
+    }
+
+    function selectItem(name, targetId) {
+        const inputId = targetId === 'results' ? 'itemSearch' : 'newItemName';
+        document.getElementById(inputId).value = name;
+        document.getElementById(targetId).classList.add("hidden");
+        if(targetId === 'results') document.getElementById("qty").focus();
+    }
+
     function renderCloudItems() {
         const grid = document.getElementById("itemsGrid");
         grid.innerHTML = "";
@@ -340,81 +245,26 @@
             div.className = "item-card";
             div.innerHTML = `<span>${item}</span>
                 <div>
-                    <button style="background:var(--edit); color:white; border:none; padding:5px 10px; border-radius:4px; cursor:pointer;" onclick="editItem('${item}')">تعديل</button>
-                    <button style="background:var(--danger); color:white; border:none; padding:5px 10px; border-radius:4px; cursor:pointer; margin-right:5px;" onclick="deleteItem('${item}')">حذف</button>
+                    <button onclick="deleteItem('${item}')" style="background:red; color:white; border:none; padding:5px; border-radius:4px;">حذف</button>
                 </div>`;
             grid.appendChild(div);
         });
         localStorage.setItem("items", JSON.stringify(localItems));
     }
 
-    // وظيفة المشاركة المباشرة الجديدة
-    async function shareAsImage() {
-        if (document.querySelectorAll("#resultTable tbody tr").length === 0) {
-            alert("الجدول فارغ!");
-            return;
-        }
-        
-        prepareExport();
-        const client = document.getElementById("clientName").value || "عميل";
-        
-        try {
-            const canvas = await html2canvas(document.getElementById("finalExportContainer"), { scale: 3, useCORS: true });
-            const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
-            const file = new File([blob], `فاتورة_${client}.png`, { type: 'image/png' });
-
-            if (navigator.canShare && navigator.canShare({ files: [file] })) {
-                await navigator.share({
-                    files: [file],
-                    title: 'فاتورة ال وحيد',
-                    text: `فاتورة العميل: ${client}`
-                });
-            } else {
-                alert("متصفحك لا يدعم المشاركة المباشرة. سيتم تحميل الصورة بدلاً من ذلك.");
-                exportAsImage();
-            }
-        } catch (err) {
-            console.error("Error sharing:", err);
+    function addCloudItem() {
+        const val = document.getElementById("newItemName").value.trim();
+        if(val && !localItems.includes(val)) {
+            localItems.push(val);
+            renderCloudItems();
+            document.getElementById("newItemName").value = "";
         }
     }
 
-    async function addCloudItem() {
-        const name = document.getElementById("newItemName").value.trim();
-        if(!name) return;
-        localItems.push(name);
-        renderCloudItems();
-        document.getElementById("newItemName").value = "";
-        fetch(GOOGLE_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: 'add', item: name }) });
-    }
-
-    async function deleteItem(name) {
-        if(!confirm("هل أنت متأكد من الحذف؟")) return;
+    function deleteItem(name) {
         localItems = localItems.filter(i => i !== name);
         renderCloudItems();
-        fetch(GOOGLE_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: 'delete', item: name }) });
     }
-
-    async function editItem(oldName) {
-        const newName = prompt("الاسم الجديد:", oldName);
-        if(!newName || newName === oldName) return;
-        localItems[localItems.indexOf(oldName)] = newName;
-        renderCloudItems();
-        fetch(GOOGLE_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: 'edit', item: oldName, newItemName: newName }) });
-    }
-
-    document.getElementById("itemSearch").oninput = function() {
-        const val = this.value.toLowerCase();
-        const resDiv = document.getElementById("results");
-        resDiv.innerHTML = "";
-        if(!val) return resDiv.classList.add('hidden');
-        localItems.filter(i => i.toLowerCase().includes(val)).forEach(item => {
-            const d = document.createElement("div");
-            d.className = "result-item"; d.textContent = item;
-            d.onclick = () => { document.getElementById("itemSearch").value = item; resDiv.classList.add('hidden'); document.getElementById("qty").focus(); };
-            resDiv.appendChild(d);
-        });
-        resDiv.classList.remove('hidden');
-    };
 
     function addItem() {
         const item = document.getElementById("itemSearch").value;
@@ -422,9 +272,25 @@
         if(!item || !qty) return;
         const tbody = document.querySelector("#resultTable tbody");
         const row = tbody.insertRow(0);
-        row.innerHTML = `<td style="text-align:right">${item}</td><td style="font-weight:bold">${qty}</td><td><button onclick="this.parentElement.parentElement.remove()" style="background:none; border:none; color:red; cursor:pointer; font-size:18px;">✖</button></td>`;
+        row.innerHTML = `<td style="text-align:right">${item}</td><td style="font-weight:bold">${qty}</td><td><button onclick="this.parentElement.parentElement.remove()" style="color:red; background:none; border:none;">✖</button></td>`;
         document.getElementById("itemSearch").value = ""; document.getElementById("qty").value = "";
         document.getElementById("itemSearch").focus();
+    }
+
+    async function shareDirectly() {
+        const rows = document.querySelectorAll("#resultTable tbody tr");
+        if (rows.length === 0) return alert("الجدول فارغ");
+
+        const client = document.getElementById("clientName").value || "بدون اسم";
+        const date = new Date().toLocaleDateString('ar-EG');
+        let items = [];
+        rows.forEach(r => items.push({ name: r.cells[0].innerText, qty: r.cells[1].innerText }));
+
+        const payload = { action: 'sharePDF', client, date, items };
+
+        fetch(SCRIPT_URL, { method: "POST", mode: "no-cors", body: JSON.stringify(payload) });
+        exportPDF();
+        alert("✅ تم الإرسال للواتساب بنجاح وجاري حفظ نسخة PDF...");
     }
 
     function prepareExport() {
@@ -433,6 +299,16 @@
         const b = document.getElementById("expBody"); b.innerHTML = "";
         document.querySelectorAll("#resultTable tbody tr").forEach((r, i) => {
             b.innerHTML += `<tr><td>${i+1}</td><td style="text-align:right;">${r.cells[0].innerText}</td><td>${r.cells[1].innerText}</td></tr>`;
+        });
+    }
+
+    function exportPDF() {
+        prepareExport();
+        const { jsPDF } = window.jspdf;
+        html2canvas(document.getElementById("finalExportContainer"), { scale: 2, useCORS: true }).then(canvas => {
+            const pdf = new jsPDF('p', 'mm', 'a4');
+            pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, 210, (canvas.height * 210) / canvas.width);
+            pdf.save(`طلب_${document.getElementById("clientName").value}.pdf`);
         });
     }
 
@@ -445,15 +321,6 @@
         });
     }
 
-    function exportPDF() {
-        prepareExport();
-        html2canvas(document.getElementById("finalExportContainer"), { scale: 2, useCORS: true }).then(canvas => {
-            const pdf = new jspdf.jsPDF('p', 'mm', 'a4');
-            pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, 210, (canvas.height * 210) / canvas.width);
-            pdf.save(`فاتورة_${document.getElementById("clientName").value}.pdf`);
-        });
-    }
-
     function switchPage(p) {
         document.getElementById("orderPage").classList.toggle("hidden", p !== 'order');
         document.getElementById("browsePage").classList.toggle("hidden", p !== 'browse');
@@ -461,106 +328,17 @@
         document.getElementById("tab2").classList.toggle("active", p === 'browse');
     }
 
-    function clearTable() { 
-        if(confirm("مسح الجدول بالكامل؟")) 
-            document.querySelector("#resultTable tbody").innerHTML = ""; 
+    function clearTable() { if(confirm("مسح الجدول؟")) document.querySelector("#resultTable tbody").innerHTML = ""; }
+
+    document.getElementById("settingsMenu").onchange = function() {
+        if(this.value === "theme") document.body.classList.toggle("lightMode");
+        if(this.value === "logo") { let url = prompt("رابط اللوجو:"); if(url) document.querySelectorAll("#logoImg, #logoImgNav").forEach(img=>img.src=url); }
+        if(this.value === "signature") { 
+            let s = document.getElementById("signatureBox");
+            s.style.display = (s.style.display === "none") ? "inline-block" : "none";
+        }
+        this.value = "";
     }
-
-    window.onclick = function(event) { 
-        if (!event.target.matches('#itemSearch')) { 
-            document.getElementById("results").classList.add('hidden'); 
-        } 
-    };
-    /* ===== إعدادات النظام ===== */
-
-document.getElementById("settingsMenu").onchange=function(){
-
-if(this.value==="theme"){
-toggleTheme()
-}
-
-if(this.value==="logo"){
-changeLogo()
-}
-
-if(this.value==="signature"){
-toggleSignature()
-}
-
-this.value=""
-}
-
-
-/* تغيير الوضع */
-
-function toggleTheme(){
-
-document.body.classList.toggle("lightMode")
-
-localStorage.setItem(
-"theme",
-document.body.classList.contains("lightMode")?"light":"dark"
-)
-
-}
-
-
-/* تغيير اللوجو */
-
-function changeLogo(){
-
-let url=prompt("ضع رابط اللوجو الجديد")
-
-if(!url)return
-
-document.querySelectorAll("#logoImg").forEach(img=>{
-img.src=url
-})
-
-localStorage.setItem("logo",url)
-
-}
-
-
-/* إخفاء التوقيع */
-
-function toggleSignature(){
-
-let sig=document.getElementById("signatureBox")
-
-if(sig.style.display==="none"){
-sig.style.display="inline-block"
-localStorage.setItem("signature","show")
-}else{
-sig.style.display="none"
-localStorage.setItem("signature","hide")
-}
-
-}
-
-
-/* تحميل الإعدادات */
-
-window.addEventListener("load",()=>{
-
-if(localStorage.getItem("theme")==="light"){
-document.body.classList.add("lightMode")
-}
-
-let logo=localStorage.getItem("logo")
-
-if(logo){
-document.querySelectorAll("#logoImg").forEach(img=>{
-img.src=logo
-})
-}
-
-if(localStorage.getItem("signature")==="hide"){
-document.getElementById("signatureBox").style.display="none"
-}
-
-})
 </script>
-
 </body>
 </html>
