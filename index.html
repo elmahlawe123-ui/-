@@ -33,6 +33,14 @@
             border-bottom: 3px solid var(--primary); position: sticky; top: 0; z-index: 1000;
         }
 
+        /* مؤشر المزامنة التلقائية */
+        #syncIndicator {
+            position: fixed; top: 70px; left: 50%; transform: translateX(-50%);
+            background: var(--success); color: white; padding: 5px 15px;
+            border-radius: 20px; font-size: 12px; font-weight: bold;
+            display: none; z-index: 2000; box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
         .nav-tabs { display: flex; background: var(--card); border-bottom: 1px solid var(--border); }
         .nav-tabs button { flex: 1; padding: 15px; border: none; background: none; color: #94a3b8; font-weight: bold; cursor: pointer; font-family: 'Cairo'; }
         .nav-tabs button.active { color: var(--primary); border-bottom: 3px solid var(--primary); background: rgba(176, 141, 87, 0.1); }
@@ -87,6 +95,8 @@
 </head>
 <body>
 
+<div id="syncIndicator">🔄 جاري تحديث البيانات...</div>
+
 <div id="loginOverlay" style="position:fixed; inset:0; background:var(--dark); z-index:9999; display:flex; align-items:center; justify-content:center; flex-direction:column;">
     <div class="card" style="width:320px; text-align:center; border: 2px solid var(--primary); background: #111;">
         <img src="https://i.ibb.co/4R44srhj/image.jpg" style="width: 110px; height:110px; border-radius: 50%; border: 3px solid var(--primary); margin-bottom: 15px; object-fit: cover;">
@@ -139,8 +149,8 @@
             <div class="card">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
                     <h3 style="color:var(--primary); margin:0;">إدارة الأصناف</h3>
-                    <button id="syncBtn" class="btn" style="background:var(--success); color:white; padding: 6px 12px; font-size: 13px;" onclick="syncFromCloud()">
-                        🔄 مزامنة السحاب
+                    <button id="syncBtn" class="btn" style="background:var(--success); color:white; padding: 6px 12px; font-size: 13px;" onclick="syncFromCloud(false)">
+                        🔄 مزامنة يدوية
                     </button>
                 </div>
                 <div class="search-wrapper">
@@ -187,36 +197,44 @@
             document.getElementById("loginOverlay").style.display = "none";
             document.getElementById("appContent").classList.remove("hidden");
             renderCloudItems();
+            // تشغيل المزامنة التلقائية فور الدخول
+            syncFromCloud(true);
         } else { alert("الرمز خطأ"); }
     }
 
-    // --- وظيفة المزامنة الجديدة من جوجل شيت ---
-    async function syncFromCloud() {
+    // --- وظيفة المزامنة المحدثة (تدعم الوضع التلقائي واليدوي) ---
+    async function syncFromCloud(isAuto = false) {
         const btn = document.getElementById("syncBtn");
+        const indicator = document.getElementById("syncIndicator");
         const originalText = btn.innerHTML;
         
         try {
-            btn.innerHTML = "جاري التحميل...";
-            btn.disabled = true;
+            if (isAuto) {
+                indicator.style.display = "block"; // إظهار مؤشر صغير علوي
+            } else {
+                btn.innerHTML = "جاري التحميل...";
+                btn.disabled = true;
+            }
 
-            // جلب البيانات من Google Apps Script (يجب أن يدعم doGet)
             const response = await fetch(GOOGLE_URL);
             if (!response.ok) throw new Error("Network error");
             
             const cloudData = await response.json();
 
             if (Array.isArray(cloudData)) {
-                // دمج البيانات السحابية مع المحلية مع منع التكرار
+                // دمج البيانات السحابية مع المحلية ومنع التكرار
                 const combined = [...new Set([...localItems, ...cloudData])];
                 localItems = combined;
                 localStorage.setItem("items", JSON.stringify(localItems));
                 renderCloudItems();
-                alert("تمت المزامنة بنجاح! تم تحديث قائمة الأصناف.");
+                
+                if(!isAuto) alert("تمت المزامنة بنجاح!");
             }
         } catch (error) {
-            console.error(error);
-            alert("حدث خطأ أثناء المزامنة. تأكد من إعدادات الرابط السحابي.");
+            console.error("Sync Error:", error);
+            if(!isAuto) alert("حدث خطأ أثناء المزامنة. تأكد من اتصالك بالإنترنت.");
         } finally {
+            indicator.style.display = "none";
             btn.innerHTML = originalText;
             btn.disabled = false;
         }
@@ -250,6 +268,7 @@
         if(!localItems.some(i => i.toLowerCase() === name.toLowerCase())) {
             localItems.push(name);
             renderCloudItems();
+            // إرسال للصنف الجديد للسحاب في الخلفية
             fetch(GOOGLE_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: 'add', item: name }) });
             return true;
         }
@@ -260,15 +279,11 @@
         const itemInput = document.getElementById("itemSearch");
         const item = itemInput.value.trim();
         const qty = document.getElementById("qty").value;
-
         if(!item || !qty) return;
-
         saveItemToCloud(item);
-
         const tbody = document.querySelector("#resultTable tbody");
         const row = tbody.insertRow(0);
         row.innerHTML = `<td style="text-align:right">${item}</td><td style="font-weight:bold">${qty}</td><td><button onclick="this.parentElement.parentElement.remove()" style="background:none; border:none; color:red; cursor:pointer; font-size:18px;">✖</button></td>`;
-        
         itemInput.value = ""; 
         document.getElementById("qty").value = ""; 
         itemInput.focus();
@@ -279,7 +294,6 @@
         const resDiv = document.getElementById("results");
         resDiv.innerHTML = "";
         if(!val) return resDiv.classList.add('hidden');
-        
         const matches = localItems.filter(i => i.toLowerCase().includes(val));
         matches.forEach(item => {
             const d = document.createElement("div");
