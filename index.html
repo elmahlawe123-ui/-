@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>نظام ال وحيد - الإصدار السحابي</title>
+    <title>نظام ال وحيد - النسخة المطورة</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@700&family=Cairo:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -33,19 +33,13 @@
             border-bottom: 3px solid var(--primary); position: sticky; top: 0; z-index: 1000;
         }
 
-        #syncIndicator {
-            position: fixed; top: 70px; left: 50%; transform: translateX(-50%);
-            background: var(--success); color: white; padding: 5px 15px;
-            border-radius: 20px; font-size: 12px; font-weight: bold;
-            display: none; z-index: 2000; box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-        }
-
         .nav-tabs { display: flex; background: var(--card); border-bottom: 1px solid var(--border); }
         .nav-tabs button { flex: 1; padding: 15px; border: none; background: none; color: #94a3b8; font-weight: bold; cursor: pointer; font-family: 'Cairo'; }
         .nav-tabs button.active { color: var(--primary); border-bottom: 3px solid var(--primary); background: rgba(176, 141, 87, 0.1); }
 
         .container { padding: 15px; max-width: 800px; margin: 0 auto; }
         .card { background: var(--card); padding: 25px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 20px; }
+        
         .search-wrapper { position: relative; display: flex; align-items: center; width: 100%; }
         
         input { 
@@ -71,15 +65,27 @@
         .hidden { display: none !important; }
         .item-card { background: var(--card); border: 1px solid var(--border); padding: 12px; border-radius: 8px; text-align: right; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
 
-        #finalExportContainer { display: block; direction: rtl; padding: 40px; background-color: #ffffff !important; width: 750px; position: fixed; left: -9999px; top: 0; }
-        #finalExportContainer * { color: #000 !important; }
+        #finalExportContainer { 
+            display: block; 
+            direction: rtl; 
+            padding: 40px; 
+            background-color: #ffffff !important; 
+            width: 750px; 
+            color: #000000 !important; 
+            position: fixed; 
+            left: -9999px; 
+            top: 0; 
+        }
+        #finalExportContainer * { color: #000000 !important; }
+
         .invoice-table { width: 100%; border-collapse: collapse; margin-top: 20px; border: 2px solid #000; }
-        .invoice-table th, .invoice-table td { padding: 12px; font-size: 20px; font-weight: bold; text-align: center; border: 1px solid #000; }
+        .invoice-table th, .invoice-table td { 
+            padding: 12px; font-size: 20px; font-weight: bold; text-align: center; 
+            border: 1px solid #000; background-color: #fff !important; color: #000 !important;
+        }
     </style>
 </head>
 <body>
-
-<div id="syncIndicator">🔄 جاري تحديث البيانات من السحاب...</div>
 
 <div id="loginOverlay" style="position:fixed; inset:0; background:var(--dark); z-index:9999; display:flex; align-items:center; justify-content:center; flex-direction:column;">
     <div class="card" style="width:320px; text-align:center; border: 2px solid var(--primary); background: #111;">
@@ -133,8 +139,8 @@
             <div class="card">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
                     <h3 style="color:var(--primary); margin:0;">إدارة الأصناف</h3>
-                    <button id="syncBtn" class="btn" style="background:var(--success); color:white; padding: 6px 12px; font-size: 13px;" onclick="syncFromCloud(false)">
-                        🔄 تحديث يدوي
+                    <button id="syncBtn" class="btn" style="background:var(--success); color:white; padding: 6px 12px; font-size: 13px;" onclick="syncFromCloud()">
+                        🔄 مزامنة السحاب
                     </button>
                 </div>
                 <div class="search-wrapper">
@@ -156,7 +162,7 @@
             <p style="margin: 5px 0; font-size: 22px; font-weight: bold;">كشف طلب مواد </p>
         </div>
     </div>
-    <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+    <div style="display: flex; justify-content: space-between; margin-bottom: 20px; background: white;">
         <div style="font-size: 24px;">السيد: <strong id="expClient"></strong></div>
         <div style="font-size: 22px;">التاريخ: <span id="expDate"></span></div>
     </div>
@@ -166,57 +172,54 @@
         </thead>
         <tbody id="expBody"></tbody>
     </table>
-    <div style="margin-top: 80px; text-align: right;">
+    <div style="margin-top: 80px; text-align: right; background: white;">
         <p style="font-weight: bold; font-size: 22px; border-bottom: 3px solid black; display: inline-block; padding-left: 80px;">توقيع المستلم</p>
     </div>
 </div>
 
 <script>
-    // ضع رابط الـ Script الخاص بك هنا
     const GOOGLE_URL = 'https://script.google.com/macros/s/AKfycby94J0O_uH3WIFzLoelLDAVMagTZEGbo0LAfbVaVR_52wgSoCtbqJ-6ZHjbnUBujlfc/exec';
     
-    let localItems = JSON.parse(localStorage.getItem("items")) || [];
+    let localItems = JSON.parse(localStorage.getItem("items")) || ["إسمنت", "حديد", "رمل"];
 
     function checkPassword() {
         if(document.getElementById("passInput").value === "123") {
             document.getElementById("loginOverlay").style.display = "none";
             document.getElementById("appContent").classList.remove("hidden");
             renderCloudItems();
-            syncFromCloud(true); // مزامنة فورية عند الدخول
         } else { alert("الرمز خطأ"); }
     }
 
-    async function syncFromCloud(isAuto = false) {
+    // --- وظيفة المزامنة الجديدة من جوجل شيت ---
+    async function syncFromCloud() {
         const btn = document.getElementById("syncBtn");
-        const indicator = document.getElementById("syncIndicator");
+        const originalText = btn.innerHTML;
+        
         try {
-            if (isAuto) indicator.style.display = "block";
-            else { btn.disabled = true; btn.innerText = "جاري جلب البيانات..."; }
+            btn.innerHTML = "جاري التحميل...";
+            btn.disabled = true;
 
-            const response = await fetch(GOOGLE_URL + "?t=" + new Date().getTime());
+            // جلب البيانات من Google Apps Script (يجب أن يدعم doGet)
+            const response = await fetch(GOOGLE_URL);
+            if (!response.ok) throw new Error("Network error");
+            
             const cloudData = await response.json();
 
             if (Array.isArray(cloudData)) {
-                localItems = [...new Set(cloudData)];
+                // دمج البيانات السحابية مع المحلية مع منع التكرار
+                const combined = [...new Set([...localItems, ...cloudData])];
+                localItems = combined;
                 localStorage.setItem("items", JSON.stringify(localItems));
                 renderCloudItems();
+                alert("تمت المزامنة بنجاح! تم تحديث قائمة الأصناف.");
             }
-        } catch (e) { console.error("Sync failed", e); }
-        finally {
-            indicator.style.display = "none";
+        } catch (error) {
+            console.error(error);
+            alert("حدث خطأ أثناء المزامنة. تأكد من إعدادات الرابط السحابي.");
+        } finally {
+            btn.innerHTML = originalText;
             btn.disabled = false;
-            btn.innerText = "🔄 تحديث يدوي";
         }
-    }
-
-    async function sendCloudAction(data) {
-        try {
-            await fetch(GOOGLE_URL, {
-                method: 'POST',
-                mode: 'no-cors',
-                body: JSON.stringify(data)
-            });
-        } catch (e) { console.error("Cloud action failed", e); }
     }
 
     function renderCloudItems(filter = "") {
@@ -233,63 +236,50 @@
                 </div>`;
             grid.appendChild(div);
         });
+        localStorage.setItem("items", JSON.stringify(localItems));
     }
 
     function addCloudItemManual() {
-        const name = document.getElementById("newItemName").value.trim();
-        if(!name) return;
-        if(localItems.includes(name)) { alert("موجود مسبقاً"); return; }
-        localItems.push(name);
-        renderCloudItems();
-        sendCloudAction({ action: 'add', item: name });
-        document.getElementById("newItemName").value = "";
+        const input = document.getElementById("newItemName");
+        if(saveItemToCloud(input.value)) input.value = "";
     }
 
-    function deleteItem(name) {
-        if(confirm("حذف '" + name + "' من السحاب نهائياً؟")) {
-            localItems = localItems.filter(i => i !== name);
+    function saveItemToCloud(name) {
+        name = name.trim();
+        if(!name) return false;
+        if(!localItems.some(i => i.toLowerCase() === name.toLowerCase())) {
+            localItems.push(name);
             renderCloudItems();
-            sendCloudAction({ action: 'delete', item: name });
+            fetch(GOOGLE_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: 'add', item: name }) });
+            return true;
         }
-    }
-
-    function editItem(oldName) {
-        const newName = prompt("تعديل الصنف:", oldName);
-        if(newName && newName !== oldName) {
-            const index = localItems.indexOf(oldName);
-            if (index > -1) {
-                localItems[index] = newName;
-                renderCloudItems();
-                sendCloudAction({ action: 'edit', oldItem: oldName, item: newName });
-            }
-        }
+        return false;
     }
 
     function addItem() {
         const itemInput = document.getElementById("itemSearch");
         const item = itemInput.value.trim();
         const qty = document.getElementById("qty").value;
+
         if(!item || !qty) return;
 
-        // إذا كان الصنف جديداً تماماً، أضفه للسحاب أيضاً
-        if(!localItems.includes(item)) {
-            localItems.push(item);
-            renderCloudItems();
-            sendCloudAction({ action: 'add', item: item });
-        }
+        saveItemToCloud(item);
 
         const tbody = document.querySelector("#resultTable tbody");
         const row = tbody.insertRow(0);
         row.innerHTML = `<td style="text-align:right">${item}</td><td style="font-weight:bold">${qty}</td><td><button onclick="this.parentElement.parentElement.remove()" style="background:none; border:none; color:red; cursor:pointer; font-size:18px;">✖</button></td>`;
-        itemInput.value = ""; document.getElementById("qty").value = ""; itemInput.focus();
+        
+        itemInput.value = ""; 
+        document.getElementById("qty").value = ""; 
+        itemInput.focus();
     }
 
-    // --- بقية وظائف التصدير والبحث والخدمات ---
     document.getElementById("itemSearch").oninput = function() {
         const val = this.value.toLowerCase();
         const resDiv = document.getElementById("results");
         resDiv.innerHTML = "";
         if(!val) return resDiv.classList.add('hidden');
+        
         const matches = localItems.filter(i => i.toLowerCase().includes(val));
         matches.forEach(item => {
             const d = document.createElement("div");
@@ -313,6 +303,28 @@
         });
     }
 
+    function exportAsImage() {
+        if (document.querySelectorAll("#resultTable tbody tr").length === 0) return alert("الجدول فارغ!");
+        prepareExport();
+        html2canvas(document.getElementById("finalExportContainer"), { scale: 3, useCORS: true, backgroundColor: "#ffffff" }).then(canvas => {
+            const link = document.createElement('a');
+            link.download = `فاتورة_${document.getElementById("clientName").value}.png`;
+            link.href = canvas.toDataURL("image/png"); link.click();
+        });
+    }
+
+    function exportPDF() {
+        if (document.querySelectorAll("#resultTable tbody tr").length === 0) return alert("الجدول فارغ!");
+        prepareExport();
+        html2canvas(document.getElementById("finalExportContainer"), { scale: 2, useCORS: true, backgroundColor: "#ffffff" }).then(canvas => {
+            const { jsPDF } = window.jspdf;
+            const pdf = new jsPDF('p', 'mm', 'a4');
+            const imgData = canvas.toDataURL('image/png');
+            pdf.addImage(imgData, 'PNG', 0, 0, 210, (canvas.height * 210) / canvas.width);
+            pdf.save(`فاتورة_${document.getElementById("clientName").value}.pdf`);
+        });
+    }
+
     async function shareAsImage() {
         if (document.querySelectorAll("#resultTable tbody tr").length === 0) return alert("الجدول فارغ!");
         prepareExport();
@@ -322,25 +334,6 @@
         if (navigator.canShare && navigator.canShare({ files: [file] })) {
             await navigator.share({ files: [file], title: 'فاتورة ال وحيد' });
         } else { exportAsImage(); }
-    }
-
-    function exportAsImage() {
-        prepareExport();
-        html2canvas(document.getElementById("finalExportContainer"), { scale: 3, useCORS: true }).then(canvas => {
-            const link = document.createElement('a');
-            link.download = `فاتورة_${document.getElementById("clientName").value}.png`;
-            link.href = canvas.toDataURL(); link.click();
-        });
-    }
-
-    function exportPDF() {
-        prepareExport();
-        html2canvas(document.getElementById("finalExportContainer"), { scale: 2, useCORS: true }).then(canvas => {
-            const { jsPDF } = window.jspdf;
-            const pdf = new jsPDF('p', 'mm', 'a4');
-            pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, 210, (canvas.height * 210) / canvas.width);
-            pdf.save(`فاتورة.pdf`);
-        });
     }
 
     function startVoice(inputId, callback = null) {
@@ -361,7 +354,9 @@
         document.getElementById("tab2").classList.toggle("active", p === 'browse');
     }
 
-    function clearTable() { if(confirm("مسح الجدول؟")) document.querySelector("#resultTable tbody").innerHTML = ""; }
+    function deleteItem(name) { if(confirm("حذف الصنف نهائياً؟")) { localItems = localItems.filter(i => i !== name); renderCloudItems(); } }
+    function editItem(oldName) { const newName = prompt("تعديل اسم الصنف:", oldName); if(newName) { localItems[localItems.indexOf(oldName)] = newName; renderCloudItems(); } }
+    function clearTable() { if(confirm("مسح محتويات الجدول؟")) document.querySelector("#resultTable tbody").innerHTML = ""; }
     window.onclick = (e) => { if (!e.target.matches('#itemSearch')) document.getElementById("results").classList.add('hidden'); };
 </script>
 
