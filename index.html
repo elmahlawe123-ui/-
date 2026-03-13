@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>نظام ال وحيد - النسخة المطورة</title>
+    <title>نظام ال وحيد - النسخة المطورة A4</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@700&family=Cairo:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -65,23 +65,29 @@
         .hidden { display: none !important; }
         .item-card { background: var(--card); border: 1px solid var(--border); padding: 12px; border-radius: 8px; text-align: right; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
 
+        /* --- تنسيق الطباعة A4 المطور --- */
         #finalExportContainer { 
-            display: block; 
             direction: rtl; 
-            padding: 40px; 
             background-color: #ffffff !important; 
-            width: 750px; 
+            width: 210mm; 
+            min-height: 297mm;
             color: #000000 !important; 
             position: fixed; 
             left: -9999px; 
             top: 0; 
+            padding: 15mm;
+            box-sizing: border-box;
         }
         #finalExportContainer * { color: #000000 !important; }
 
         .invoice-table { width: 100%; border-collapse: collapse; margin-top: 20px; border: 2px solid #000; }
-        .invoice-table th, .invoice-table td { 
-            padding: 12px; font-size: 20px; font-weight: bold; text-align: center; 
-            border: 1px solid #000; background-color: #fff !important; color: #000 !important;
+        .invoice-table th { 
+            background-color: #f1f1f1 !important; 
+            padding: 12px; font-size: 20px; font-weight: bold; 
+            border: 1px solid #000; 
+        }
+        .invoice-table td { 
+            padding: 10px; font-size: 19px; border: 1px solid #000; text-align: center;
         }
     </style>
 </head>
@@ -157,44 +163,39 @@
 </div>
 
 <div id="finalExportContainer">
-    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 5px solid #b08d57; padding-bottom: 15px; margin-bottom: 25px; background: white;">
+    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 5px solid #b08d57; padding-bottom: 15px; margin-bottom: 25px;">
         <img src="https://i.ibb.co/4R44srhj/image.jpg" crossOrigin="anonymous" style="width: 120px; height:120px; border-radius: 50%; object-fit: cover;">
         <div style="text-align: left;">
-            <h1 style="margin: 0; color: #b08d57 !important; font-size: 55px; font-family: 'Aref Ruqaa', serif;">كشف طلب مواد</h1>
-            <p style="margin: 5px 0; font-size: 22px; font-weight: bold;">* </p>
+            <h1 style="margin: 0; color: #b08d57 !important; font-size: 48px; font-family: 'Aref Ruqaa', serif;">كشف طلب مواد</h1>
+            <p style="margin: 5px 0; font-size: 20px; font-weight: bold;">مؤسسة ال وحيد للتجارة</p>
         </div>
     </div>
     
-    <div style="display: flex; justify-content: space-between; margin-bottom: 20px; background: white; flex-wrap: wrap;">
-        <div style="font-size: 24px;">السيد: <strong id="expClient"></strong></div>
-        <div style="font-size: 22px;">التاريخ: <span id="expDate"></span></div>
-        <div id="expNotesWrapper" style="width: 100%; margin-top: 10px; font-size: 20px; border-top: 1px dashed #ccc; padding-top: 5px;">
+    <div style="display: flex; justify-content: space-between; margin-bottom: 20px; flex-wrap: wrap;">
+        <div style="font-size: 22px;">السيد: <strong id="expClient"></strong></div>
+        <div style="font-size: 20px;">التاريخ: <span id="expDate"></span></div>
+        <div id="expNotesWrapper" style="width: 100%; margin-top: 10px; font-size: 18px; border-top: 1px dashed #ccc; padding-top: 5px;">
             ملاحظات: <span id="expNotes"></span>
         </div>
     </div>
 
     <table class="invoice-table">
         <thead>
-            <tr><th style="width: 10%;">م</th><th style="width: 65%; text-align: right;">الصنف</th><th style="width: 25%;">الكمية</th></tr>
+            <tr><th style="width: 10%;">م</th><th style="width: 65%; text-align: right; padding-right:15px;">الصنف</th><th style="width: 25%;">الكمية</th></tr>
         </thead>
         <tbody id="expBody"></tbody>
     </table>
 
-    <div style="margin-top: 60px; display: flex; justify-content: flex-end; background: white;">
-        <div style="text-align: center; border-top: 3px double #b08d57; padding-top: 15px; min-width: 300px;">
-            <p style="margin: 0; font-size: 42px; color: #000 !important; font-family: 'Aref Ruqaa', serif; line-height: 1.2; text-shadow: 1px 1px 1px rgba(0,0,0,0.1);">
-               *
-            </p>
-            <p style="margin: 0; font-size: 20px; color: #b08d57 !important; direction: ltr; font-weight: bold; font-family: 'Cairo';">
-                <span style="color: #000 !important;">ت:</span> 0100
-            </p>
+    <div style="margin-top: 50px; display: flex; justify-content: flex-end;">
+        <div style="text-align: center; border-top: 2px solid #b08d57; padding-top: 10px; min-width: 250px;">
+            <p style="margin: 0; font-size: 32px; font-family: 'Aref Ruqaa', serif;">ال وحيد</p>
+            <p style="margin: 0; font-size: 18px; direction: ltr;">0100XXXXXXX</p>
         </div>
     </div>
 </div>
 
 <script>
     const GOOGLE_URL = 'https://script.google.com/macros/s/AKfycby94J0O_uH3WIFzLoelLDAVMagTZEGbo0LAfbVaVR_52wgSoCtbqJ-6ZHjbnUBujlfc/exec';
-    
     let localItems = JSON.parse(localStorage.getItem("items")) || ["إسمنت", "حديد", "رمل"];
 
     function checkPassword() {
@@ -205,83 +206,145 @@
         } else { alert("الرمز خطأ"); }
     }
 
+    // مزامنة الأصناف
     async function syncFromCloud() {
         const btn = document.getElementById("syncBtn");
-        const originalText = btn.innerHTML;
         try {
-            btn.innerHTML = "جاري التحميل...";
-            btn.disabled = true;
+            btn.innerText = "جاري التحميل...";
             const response = await fetch(GOOGLE_URL);
             const cloudData = await response.json();
             if (Array.isArray(cloudData)) {
-                const combined = [...new Set([...localItems, ...cloudData])];
-                localItems = combined;
+                localItems = [...new Set([...localItems, ...cloudData])];
                 localStorage.setItem("items", JSON.stringify(localItems));
                 renderCloudItems();
-                alert("تمت المزامنة بنجاح!");
+                alert("تمت المزامنة!");
             }
-        } catch (error) {
-            alert("حدث خطأ أثناء المزامنة.");
-        } finally {
-            btn.innerHTML = originalText;
-            btn.disabled = false;
-        }
+        } catch (e) { alert("خطأ في المزامنة"); }
+        finally { btn.innerText = "🔄 مزامنة السحاب"; }
     }
 
     function renderCloudItems(filter = "") {
         const grid = document.getElementById("itemsGrid");
         grid.innerHTML = "";
-        const filtered = localItems.filter(i => i.toLowerCase().includes(filter.toLowerCase()));
-        filtered.forEach(item => {
+        localItems.filter(i => i.includes(filter)).forEach(item => {
             const div = document.createElement("div");
             div.className = "item-card";
             div.innerHTML = `<span>${item}</span>
                 <div>
-                    <button style="background:var(--edit); color:white; border:none; padding:5px 10px; border-radius:4px; cursor:pointer;" onclick="editItem('${item}')">تعديل</button>
-                    <button style="background:var(--danger); color:white; border:none; padding:5px 10px; border-radius:4px; cursor:pointer; margin-right:5px;" onclick="deleteItem('${item}')">حذف</button>
+                    <button style="background:var(--edit); color:white; border:none; padding:5px; border-radius:4px;" onclick="editItem('${item}')">تعديل</button>
+                    <button style="background:var(--danger); color:white; border:none; padding:5px; margin-right:5px; border-radius:4px;" onclick="deleteItem('${item}')">حذف</button>
                 </div>`;
             grid.appendChild(div);
         });
-        localStorage.setItem("items", JSON.stringify(localItems));
-    }
-
-    function addCloudItemManual() {
-        const input = document.getElementById("newItemName");
-        if(saveItemToCloud(input.value)) input.value = "";
     }
 
     function saveItemToCloud(name) {
         name = name.trim();
-        if(!name) return false;
-        if(!localItems.some(i => i.toLowerCase() === name.toLowerCase())) {
-            localItems.push(name);
-            renderCloudItems();
-            fetch(GOOGLE_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: 'add', item: name }) });
-            return true;
-        }
-        return false;
+        if(!name || localItems.includes(name)) return false;
+        localItems.push(name);
+        localStorage.setItem("items", JSON.stringify(localItems));
+        fetch(GOOGLE_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: 'add', item: name }) });
+        renderCloudItems();
+        return true;
     }
 
     function addItem() {
-        const itemInput = document.getElementById("itemSearch");
-        const item = itemInput.value.trim();
+        const item = document.getElementById("itemSearch").value.trim();
         const qty = document.getElementById("qty").value;
         if(!item || !qty) return;
         saveItemToCloud(item);
-        const tbody = document.querySelector("#resultTable tbody");
-        const row = tbody.insertRow(0);
-        row.innerHTML = `<td style="text-align:right">${item}</td><td style="font-weight:bold">${qty}</td><td><button onclick="this.parentElement.parentElement.remove()" style="background:none; border:none; color:red; cursor:pointer; font-size:18px;">✖</button></td>`;
-        itemInput.value = ""; 
-        document.getElementById("qty").value = ""; 
-        itemInput.focus();
+        const row = document.querySelector("#resultTable tbody").insertRow(0);
+        row.innerHTML = `<td style="text-align:right">${item}</td><td style="font-weight:bold">${qty}</td><td><button onclick="this.parentElement.parentElement.remove()" style="color:red; background:none; border:none; font-size:20px;">✖</button></td>`;
+        document.getElementById("itemSearch").value = "";
+        document.getElementById("qty").value = "";
+        document.getElementById("itemSearch").focus();
     }
 
+    function prepareExport() {
+        document.getElementById("expClient").innerText = document.getElementById("clientName").value || "بدون اسم";
+        document.getElementById("expDate").innerText = new Date().toLocaleDateString('ar-EG');
+        const notes = document.getElementById("orderNotes").value;
+        document.getElementById("expNotesWrapper").style.display = notes ? "block" : "none";
+        document.getElementById("expNotes").innerText = notes;
+        
+        const b = document.getElementById("expBody");
+        b.innerHTML = "";
+        document.querySelectorAll("#resultTable tbody tr").forEach((r, i) => {
+            b.innerHTML += `<tr><td>${i+1}</td><td style="text-align:right; padding-right:15px;">${r.cells[0].innerText}</td><td>${r.cells[1].innerText}</td></tr>`;
+        });
+    }
+
+    // وظيفة تصدير PDF مع تقسيم الصفحات تلقائياً
+    async function exportPDF() {
+        if (document.querySelectorAll("#resultTable tbody tr").length === 0) return alert("الجدول فارغ!");
+        prepareExport();
+        const element = document.getElementById("finalExportContainer");
+        
+        // إظهار مؤقت للحسابات
+        element.style.left = "0";
+        element.style.zIndex = "-1";
+
+        try {
+            const canvas = await html2canvas(element, { scale: 2, useCORS: true });
+            const imgData = canvas.toDataURL('image/png');
+            const { jsPDF } = window.jspdf;
+            const pdf = new jsPDF('p', 'mm', 'a4');
+            
+            const pdfWidth = pdf.internal.pageSize.getWidth();
+            const pdfHeight = pdf.internal.pageSize.getHeight();
+            const imgHeight = (canvas.height * pdfWidth) / canvas.width;
+            
+            let heightLeft = imgHeight;
+            let position = 0;
+
+            pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, imgHeight);
+            heightLeft -= pdfHeight;
+
+            while (heightLeft >= 0) {
+                position = heightLeft - imgHeight;
+                pdf.addPage();
+                pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, imgHeight);
+                heightLeft -= pdfHeight;
+            }
+
+            pdf.save(`طلب_${document.getElementById("clientName").value}.pdf`);
+        } catch (err) { alert("حدث خطأ أثناء التصدير"); }
+        finally { element.style.left = "-9999px"; }
+    }
+
+    async function shareAsImage() {
+        prepareExport();
+        const element = document.getElementById("finalExportContainer");
+        element.style.left = "0";
+        const canvas = await html2canvas(element, { scale: 2, useCORS: true });
+        element.style.left = "-9999px";
+        canvas.toBlob(async (blob) => {
+            const file = new File([blob], 'invoice.png', { type: 'image/png' });
+            if (navigator.share) await navigator.share({ files: [file], title: 'فاتورة' });
+            else exportAsImage();
+        });
+    }
+
+    function exportAsImage() {
+        prepareExport();
+        const element = document.getElementById("finalExportContainer");
+        element.style.left = "0";
+        html2canvas(element, { scale: 2, useCORS: true }).then(canvas => {
+            const link = document.createElement('a');
+            link.download = 'order.png';
+            link.href = canvas.toDataURL();
+            link.click();
+            element.style.left = "-9999px";
+        });
+    }
+
+    // وظائف البحث والتنقل
     document.getElementById("itemSearch").oninput = function() {
-        const val = this.value.toLowerCase();
+        const val = this.value;
         const resDiv = document.getElementById("results");
         resDiv.innerHTML = "";
         if(!val) return resDiv.classList.add('hidden');
-        const matches = localItems.filter(i => i.toLowerCase().includes(val));
+        const matches = localItems.filter(i => i.includes(val));
         matches.forEach(item => {
             const d = document.createElement("div");
             d.className = "result-item"; d.textContent = item;
@@ -295,90 +358,25 @@
         resDiv.classList.remove('hidden');
     };
 
-    function prepareExport() {
-        document.getElementById("expClient").innerText = document.getElementById("clientName").value || "بدون اسم";
-        document.getElementById("expDate").innerText = new Date().toLocaleDateString('ar-EG');
-        
-        // الملاحظات
-        const notesVal = document.getElementById("orderNotes").value;
-        const expNotes = document.getElementById("expNotes");
-        const expNotesWrapper = document.getElementById("expNotesWrapper");
-        if (notesVal.trim() === "") {
-            expNotesWrapper.style.display = "none";
-        } else {
-            expNotesWrapper.style.display = "block";
-            expNotes.innerText = notesVal;
-        }
-
-        const b = document.getElementById("expBody"); b.innerHTML = "";
-        document.querySelectorAll("#resultTable tbody tr").forEach((r, i) => {
-            b.innerHTML += `<tr><td>${i+1}</td><td style="text-align:right;">${r.cells[0].innerText}</td><td>${r.cells[1].innerText}</td></tr>`;
-        });
-    }
-
-    function exportAsImage() {
-        if (document.querySelectorAll("#resultTable tbody tr").length === 0) return alert("الجدول فارغ!");
-        prepareExport();
-        html2canvas(document.getElementById("finalExportContainer"), { scale: 3, useCORS: true, backgroundColor: "#ffffff" }).then(canvas => {
-            const link = document.createElement('a');
-            link.download = `فاتورة_${document.getElementById("clientName").value}.png`;
-            link.href = canvas.toDataURL("image/png"); link.click();
-        });
-    }
-
-    function exportPDF() {
-        if (document.querySelectorAll("#resultTable tbody tr").length === 0) return alert("الجدول فارغ!");
-        prepareExport();
-        html2canvas(document.getElementById("finalExportContainer"), { scale: 2, useCORS: true, backgroundColor: "#ffffff" }).then(canvas => {
-            const { jsPDF } = window.jspdf;
-            const pdf = new jsPDF('p', 'mm', 'a4');
-            const imgData = canvas.toDataURL('image/png');
-            pdf.addImage(imgData, 'PNG', 0, 0, 210, (canvas.height * 210) / canvas.width);
-            pdf.save(`فاتورة_${document.getElementById("clientName").value}.pdf`);
-        });
-    }
-
-    async function shareAsImage() {
-        if (document.querySelectorAll("#resultTable tbody tr").length === 0) return alert("الجدول فارغ!");
-        prepareExport();
-        const canvas = await html2canvas(document.getElementById("finalExportContainer"), { scale: 3, useCORS: true, backgroundColor: "#ffffff" });
-        const blob = await new Promise(res => canvas.toBlob(res, 'image/png'));
-        const file = new File([blob], `فاتورة.png`, { type: 'image/png' });
-        if (navigator.canShare && navigator.canShare({ files: [file] })) {
-            await navigator.share({ files: [file], title: 'فاتورة ال وحيد' });
-        } else { exportAsImage(); }
-    }
-
-    function startVoice(inputId, callback = null) {
-        const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-        recognition.lang = 'ar-SA';
-        recognition.start();
-        recognition.onresult = (e) => {
-            document.getElementById(inputId).value = e.results[0][0].transcript;
-            if(callback) callback();
-            else document.getElementById(inputId).dispatchEvent(new Event('input'));
+    function startVoice(id, cb) {
+        const rec = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+        rec.lang = 'ar-SA'; rec.start();
+        rec.onresult = (e) => { 
+            document.getElementById(id).value = e.results[0][0].transcript; 
+            if(cb) cb(); 
         };
     }
 
-    function switchPage(p) { 
+    function switchPage(p) {
         document.getElementById("orderPage").classList.toggle("hidden", p !== 'order');
         document.getElementById("browsePage").classList.toggle("hidden", p !== 'browse');
         document.getElementById("tab1").classList.toggle("active", p === 'order');
         document.getElementById("tab2").classList.toggle("active", p === 'browse');
     }
 
-    function deleteItem(name) { if(confirm("حذف الصنف نهائياً؟")) { localItems = localItems.filter(i => i !== name); renderCloudItems(); } }
-    function editItem(oldName) { const newName = prompt("تعديل اسم الصنف:", oldName); if(newName) { localItems[localItems.indexOf(oldName)] = newName; renderCloudItems(); } }
+    function clearTable() { if(confirm("مسح الكل؟")) document.querySelector("#resultTable tbody").innerHTML = ""; }
     
-    function clearTable() { 
-        if(confirm("مسح محتويات الجدول؟")) {
-            document.querySelector("#resultTable tbody").innerHTML = "";
-            document.getElementById("clientName").value = "";
-            document.getElementById("orderNotes").value = "";
-        }
-    }
-    
-    window.onclick = (e) => { if (!e.target.matches('#itemSearch')) document.getElementById("results").classList.add('hidden'); };
+    window.onclick = (e) => { if(!e.target.matches('#itemSearch')) document.getElementById("results").classList.add('hidden'); };
 </script>
 
 </body>
