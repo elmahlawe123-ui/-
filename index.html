@@ -295,7 +295,7 @@
         const totalPages = Math.ceil(rows.length / itemsPerPage);
 
         // نص الرسالة المطلوب
-        const shareText = `*📦 طلبية جديدة - نظام المحلاوي*
+        const shareText = `*📦 طلبية جديدة -  *
 ------------------------------
 👤 *السيد:* ${clientName}
 📅 *التاريخ:* ${new Date().toLocaleDateString('ar-EG')}
@@ -304,7 +304,7 @@
 📊 *تفاصيل الطلبية:*
 ✅ عدد الأصناف: ${rows.length} صنف
 
-*شكراً لتعاملكم معنا* 🌹`.trim();
+*تم الإرسال بواسطة نظام المحلاوى * 🌹`.trim();
 
         const modal = document.getElementById("multiShareModal");
         const status = document.getElementById("shareStatus");
