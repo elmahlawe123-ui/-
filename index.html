@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>نظام المحلاوى - V 2.3</title>
+    <title>نظام ال وحيد - V 2.3</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@700&family=Cairo:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -87,7 +87,7 @@
 <div id="loginOverlay" style="position:fixed; inset:0; background:var(--dark); z-index:9999; display:flex; align-items:center; justify-content:center; flex-direction:column;">
     <div class="card" style="width:320px; text-align:center; border: 2px solid var(--primary); background: #111;">
         <img src="https://i.ibb.co/4R44srhj/image.jpg" style="width: 110px; height:110px; border-radius: 50%; border: 3px solid var(--primary); margin-bottom: 15px; object-fit: cover;">
-        <div class="brand-name" style="font-size: 40px; margin-bottom: 5px;">المحلاوى</div>
+        <div class="brand-name" style="font-size: 40px; margin-bottom: 5px;">ال وحيد</div>
         <div style="color: var(--primary); font-size: 12px; margin-bottom: 15px;">VERSION 2.3</div>
         <input type="password" id="passInput" placeholder="الرمز (123)" style="text-align:center;" onkeydown="if(event.key==='Enter') checkPassword()">
         <button class="btn btn-main" onclick="checkPassword()">دخول</button>
@@ -107,7 +107,7 @@
     <header>
         <div style="display: flex; align-items: center; gap: 12px;">
             <img src="https://i.ibb.co/4R44srhj/image.jpg" style="width: 45px; height:45px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary);">
-            <div class="brand-name" style="font-size: 24px;">المحلاوى</div>
+            <div class="brand-name" style="font-size: 24px;">ال وحيد</div>
         </div>
         <span style="font-size: 11px; color: var(--primary);">V 2.3</span>
     </header>
@@ -122,7 +122,7 @@
         <div id="orderPage">
             <div class="card">
                 <input type="text" id="clientName" placeholder="اسم العميل...">
-                <textarea id="clientNotes" placeholder="ملاحظات العميل (اختياري)..." rows="2" style="resize: none;"></textarea>
+                <input type="text" id="clientNotes" placeholder="ملاحظات للعميل...">
                 
                 <div style="position:relative;">
                     <input type="text" id="itemSearch" placeholder="ابحث عن مادة..." autocomplete="off">
@@ -139,6 +139,9 @@
 
                 <div class="grid-buttons">
                     <button class="btn full-width" style="background:var(--share); color:white;" onclick="prepareAndShowShare()">🔗 مشاركة وحفظ بالسجل</button>
+                    
+                    <button id="adminTestBtn" class="btn full-width hidden" style="background:#555; color:white; border: 1px dashed var(--primary);" onclick="addRandomItems()">🧪 إضافة 40 صنف عشوائي (للأدمن)</button>
+                    
                     <button class="btn full-width" style="background:#25D366; color:white;" onclick="processExport('image')">📸 حفظ الصور في المعرض</button>
                     <button class="btn full-width" style="background:#444; color:white;" onclick="clearTable()">🗑️ مسح الجدول</button>
                 </div>
@@ -172,14 +175,17 @@
 
 <script>
     const GOOGLE_URL = 'https://script.google.com/macros/s/AKfycby94J0O_uH3WIFzLoelLDAVMagTZEGbo0LAfbVaVR_52wgSoCtbqJ-6ZHjbnUBujlfc/exec';
-    let localItems = JSON.parse(localStorage.getItem("items")) || ["إسمنت", "حديد", "رمل"];
+    let localItems = JSON.parse(localStorage.getItem("items")) || [];
     let invoiceHistory = JSON.parse(localStorage.getItem("invoiceHistory")) || [];
     let shareQueue = []; 
 
     function checkPassword() {
-        if(document.getElementById("passInput").value === "123") {
+        const pass = document.getElementById("passInput").value;
+        const adminBtn = document.getElementById("adminTestBtn");
+        if(pass === "123" || pass === "4040") {
             document.getElementById("loginOverlay").style.display = "none";
             document.getElementById("appContent").classList.remove("hidden");
+            if(pass === "4040") adminBtn.classList.remove("hidden");
             renderCloudItems();
             renderHistory();
         } else { alert("الرمز خطأ"); }
@@ -197,6 +203,18 @@
         itemInput.value = ""; document.getElementById("qty").value = ""; itemInput.focus();
     }
 
+    function addRandomItems() {
+        if (localItems.length === 0) return alert("لا توجد أصناف في الذاكرة!");
+        const tbody = document.querySelector("#resultTable tbody");
+        const count = tbody.rows.length;
+        for (let i = 1; i <= 40; i++) {
+            const item = localItems[Math.floor(Math.random() * localItems.length)];
+            const row = tbody.insertRow(-1);
+            row.innerHTML = `<td>${count + i}</td><td style="text-align:right">${item}</td><td style="font-weight:bold">${Math.floor(Math.random()*20)+1}</td><td><button onclick="removeRow(this)" style="color:red; background:none; border:none;">✖</button></td>`;
+        }
+        alert("تم إضافة 40 صنف عشوائي بنجاح.");
+    }
+
     function removeRow(btn) {
         btn.parentElement.parentElement.remove();
         document.querySelectorAll("#resultTable tbody tr").forEach((row, index) => { row.cells[0].innerText = index + 1; });
@@ -207,62 +225,16 @@
         const notes = document.getElementById("clientNotes").value || "";
         const rows = Array.from(document.querySelectorAll("#resultTable tbody tr"));
         const items = rows.map(r => ({ name: r.cells[1].innerText, qty: r.cells[2].innerText }));
-        
-        const invoice = {
-            id: Date.now(),
-            client: client,
-            notes: notes,
-            date: new Date().toLocaleString('ar-EG'),
-            items: items,
-            totalItems: items.length
-        };
-
+        const invoice = { id: Date.now(), client: client, notes: notes, date: new Date().toLocaleString('ar-EG'), items: items, totalItems: items.length };
         invoiceHistory.unshift(invoice);
         localStorage.setItem("invoiceHistory", JSON.stringify(invoiceHistory));
         renderHistory();
     }
 
-    function renderHistory(filter = "") {
-        const list = document.getElementById("historyList");
-        list.innerHTML = "";
-        const filtered = invoiceHistory.filter(h => h.client.toLowerCase().includes(filter.toLowerCase()));
-        
-        if(filtered.length === 0) { list.innerHTML = "<p style='text-align:center; color:gray;'>لا توجد فواتير محفوظة</p>"; return; }
-
-        filtered.forEach(inv => {
-            const div = document.createElement("div");
-            div.className = "history-item";
-            div.innerHTML = `
-                <div class="history-meta"><span>📅 ${inv.date}</span><span>📦 ${inv.totalItems} صنف</span></div>
-                <div class="history-name">${inv.client}</div>
-                ${inv.notes ? `<div style="font-size:12px; color:#cbd5e1;">📝 ${inv.notes}</div>` : ''}
-            `;
-            div.onclick = () => showHistoryDetail(inv);
-            list.appendChild(div);
-        });
-    }
-
-    function showHistoryDetail(inv) {
-        let details = `فاتورة: ${inv.client}\n`;
-        if(inv.notes) details += `ملاحظات: ${inv.notes}\n`;
-        details += `التاريخ: ${inv.date}\n\n`;
-        inv.items.forEach((it, idx) => details += `${idx+1}. ${it.name} (${it.qty})\n`);
-        alert(details);
-    }
-
-    function clearHistory() {
-        if(confirm("هل أنت متأكد من مسح جميع الفواتير المحفوظة؟")) {
-            invoiceHistory = [];
-            localStorage.setItem("invoiceHistory", JSON.stringify(invoiceHistory));
-            renderHistory();
-        }
-    }
-
     async function prepareAndShowShare() {
         const rows = Array.from(document.querySelectorAll("#resultTable tbody tr"));
         if (rows.length === 0) return alert("الجدول فارغ!");
-
-        // حفظ في السجل أولاً
+        
         saveInvoiceToHistory();
 
         const clientName = document.getElementById("clientName").value || "عميل";
@@ -287,15 +259,15 @@
             pageDiv.innerHTML = `
                 <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 5px solid #b08d57; padding-bottom: 15px; margin-bottom: 20px;">
                     <img src="https://i.ibb.co/4R44srhj/image.jpg" crossOrigin="anonymous" style="width: 100px; height:100px; border-radius: 50%;">
-                    <div><h1 style="margin: 0; color: #b08d57; font-size: 40px; font-family: 'Aref Ruqaa';">كشف طلب مواد</h1>
+                    <div><h1 style="margin: 0; color: #b08d57; font-size: 40px; font-family: 'Aref Ruqaa';">ال وحيد</h1>
                     <p style="text-align:left; margin:0;">صفحة ${i+1} من ${totalPages}</p></div>
                 </div>
-                <div style="display: flex; flex-direction: column; gap: 5px; margin-bottom: 15px; font-size: 20px;">
-                    <div style="display: flex; justify-content: space-between;">
+                <div style="font-size: 20px; margin-bottom: 15px;">
+                    <div style="display:flex; justify-content:space-between;">
                         <div>السيد: <strong>${clientName}</strong></div>
                         <div>${new Date().toLocaleDateString('ar-EG')}</div>
                     </div>
-                    ${clientNotes ? `<div style="font-size: 16px; color: #444; border-top: 1px dashed #ccc; padding-top: 5px;">ملاحظات: ${clientNotes}</div>` : ''}
+                    ${clientNotes ? `<div style="font-size:16px; color:#555; margin-top:5px; border-top:1px solid #eee;">ملاحظات: ${clientNotes}</div>` : ''}
                 </div>
                 <table class="invoice-table">
                     <thead><tr><th style="width:10%">م</th><th style="width:65%; text-align:right;">الصنف</th><th style="width:25%">الكمية</th></tr></thead>
@@ -309,7 +281,7 @@
         }
 
         let currentIdx = 0;
-        status.innerText = `تم الحفظ في السجل. جاهز لإرسال ${totalPages} صفحات`;
+        status.innerText = `جاهز لإرسال ${totalPages} صفحات`;
         btn.disabled = false;
         btn.innerText = `إرسال الصفحة (1)`;
         
@@ -322,16 +294,16 @@
                         btn.innerText = `إرسال الصفحة (${currentIdx + 1})`;
                         status.innerText = `تم إرسال ${currentIdx} من أصل ${totalPages}`;
                     } else {
-                        status.innerText = "الصور أُرسلت بنجاح!";
-                        btn.innerText = "إرسال ملخص نصي 💬";
+                        status.innerText = "تم الإرسال الصوري. إرسال الملخص؟";
+                        btn.innerText = "إرسال ملخص WhatsApp 💬";
                         btn.style.background = "#25D366";
                         btn.onclick = () => {
-                            const summaryText = `*طلب مواد من المحلاوى*\n-------------------\n👤 *السيد:* ${clientName}\n📝 *ملاحظات:* ${clientNotes || 'لا يوجد'}\n📦 *عدد الأصناف:* ${rows.length}\n📅 *التاريخ:* ${new Date().toLocaleDateString('ar-EG')}\n-------------------\n_تم الإرسال بواسطة نظام المحلاوى V2.2_`;
+                            const summaryText = `*طلب مواد من ال وحيد*\n👤 *السيد:* ${clientName}\n📝 *ملاحظات:* ${clientNotes || 'لا يوجد'}\n📦 *الأصناف:* ${rows.length}`;
                             window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(summaryText)}`, '_blank');
                             modal.classList.add("hidden");
                         };
                     }
-                } catch (e) { console.log("User cancelled"); }
+                } catch (e) { console.log("Cancelled"); }
             }
         };
     }
@@ -343,22 +315,39 @@
         document.getElementById("tab1").classList.toggle("active", p === 'order');
         document.getElementById("tab2").classList.toggle("active", p === 'browse');
         document.getElementById("tab3").classList.toggle("active", p === 'history');
-        if(p === 'history') renderHistory();
+    }
+
+    function renderHistory(filter = "") {
+        const list = document.getElementById("historyList"); list.innerHTML = "";
+        const filtered = invoiceHistory.filter(h => h.client.toLowerCase().includes(filter.toLowerCase()));
+        filtered.forEach(inv => {
+            const div = document.createElement("div"); div.className = "history-item";
+            div.innerHTML = `<div class="history-meta"><span>📅 ${inv.date}</span><span>📦 ${inv.totalItems} صنف</span></div><div class="history-name">${inv.client}</div>`;
+            div.onclick = () => alert(`العميل: ${inv.client}\nملاحظات: ${inv.notes}\nالأصناف: ${inv.totalItems}`);
+            list.appendChild(div);
+        });
     }
 
     async function syncFromCloud() {
-        const btn = document.getElementById("syncBtn"); btn.innerText = "جاري المزامنة...";
+        const btn = document.getElementById("syncBtn"); btn.innerText = "جاري...";
         try {
             const res = await fetch(GOOGLE_URL);
             const data = await res.json();
-            if (Array.isArray(data)) { localItems = [...new Set([...localItems, ...data])]; renderCloudItems(); alert("تمت المزامنة!"); }
-        } catch (e) { alert("خطأ اتصال"); }
+            if (Array.isArray(data)) { 
+                localItems = [...new Set([...localItems, ...data])]; 
+                localStorage.setItem("items", JSON.stringify(localItems));
+                renderCloudItems(); 
+                alert("تم تحديث الأصناف من السحابة");
+            }
+        } catch (e) { alert("فشلت المزامنة"); }
         btn.innerText = "🔄 مزامنة";
     }
 
     function saveItemToCloud(name) {
         if(name && !localItems.includes(name)) {
-            localItems.push(name); renderCloudItems();
+            localItems.push(name); 
+            localStorage.setItem("items", JSON.stringify(localItems));
+            renderCloudItems();
             fetch(GOOGLE_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: 'add', item: name }) });
         }
     }
@@ -371,7 +360,6 @@
             div.innerHTML = `<span>${item}</span><div><button onclick="editItem('${item}')" style="background:var(--edit); color:white; border:none; padding:5px; border-radius:4px;">تعديل</button><button onclick="deleteItem('${item}')" style="background:var(--danger); color:white; border:none; padding:5px; border-radius:4px; margin-right:5px;">حذف</button></div>`;
             grid.appendChild(div);
         });
-        localStorage.setItem("items", JSON.stringify(localItems));
     }
 
     function addCloudItemManual() {
@@ -379,15 +367,19 @@
         if(input.value) { saveItemToCloud(input.value); input.value = ""; }
     }
 
+    function deleteItem(n) { if(confirm("حذف؟")) { localItems = localItems.filter(i => i !== n); localStorage.setItem("items", JSON.stringify(localItems)); renderCloudItems(); } }
+    function editItem(o) { const n = prompt("تعديل:", o); if(n) { localItems[localItems.indexOf(o)] = n; localStorage.setItem("items", JSON.stringify(localItems)); renderCloudItems(); } }
+    function clearTable() { if(confirm("مسح الجدول بالكامل؟")) document.querySelector("#resultTable tbody").innerHTML = ""; }
+    function clearHistory() { if(confirm("حذف كل السجل؟")) { invoiceHistory = []; localStorage.setItem("invoiceHistory", "[]"); renderHistory(); } }
+
     function startVoice(id) {
         const rec = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
         rec.lang = 'ar-SA'; rec.start();
-        rec.onresult = (e) => { document.getElementById(id).value = e.results[0][0].transcript; document.getElementById(id).dispatchEvent(new Event('input')); };
+        rec.onresult = (e) => { 
+            document.getElementById(id).value = e.results[0][0].transcript; 
+            document.getElementById(id).dispatchEvent(new Event('input')); 
+        };
     }
-
-    function deleteItem(n) { if(confirm("حذف؟")) { localItems = localItems.filter(i => i !== n); renderCloudItems(); } }
-    function editItem(o) { const n = prompt("تعديل:", o); if(n) { localItems[localItems.indexOf(o)] = n; renderCloudItems(); } }
-    function clearTable() { if(confirm("مسح الكل؟")) document.querySelector("#resultTable tbody").innerHTML = ""; }
 
     document.getElementById("itemSearch").oninput = function() {
         const val = this.value.toLowerCase();
@@ -408,36 +400,28 @@
         container.innerHTML = "";
         const clientName = document.getElementById("clientName").value || "عميل";
         const clientNotes = document.getElementById("clientNotes").value || "";
-        const itemsPerPage = 25;
-        const totalPages = Math.ceil(rows.length / itemsPerPage);
-
+        const totalPages = Math.ceil(rows.length / 25);
         for (let i = 0; i < totalPages; i++) {
             const pageDiv = document.createElement("div");
             pageDiv.className = "export-page";
-            const pageItems = rows.slice(i * itemsPerPage, (i + 1) * itemsPerPage);
+            const pageItems = rows.slice(i * 25, (i + 1) * 25);
             pageDiv.innerHTML = `
                 <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:5px solid #b08d57; padding-bottom:15px; margin-bottom:20px;">
                     <img src="https://i.ibb.co/4R44srhj/image.jpg" crossOrigin="anonymous" style="width:100px; height:100px; border-radius:50%;">
-                    <div style="text-align:left;"><h1 style="margin:0; color:#b08d57; font-size:45px; font-family:'Aref Ruqaa';">المحلاوى</h1>
-                    <p style="margin:0; font-weight:bold;">صفحة ${i+1} من ${totalPages}</p></div>
+                    <div style="text-align:left;"><h1 style="margin:0; color:#b08d57; font-size:45px; font-family:'Aref Ruqaa';">ال وحيد</h1><p style="margin:0;">صفحة ${i+1} من ${totalPages}</p></div>
                 </div>
-                <div style="display: flex; flex-direction: column; gap: 5px; margin-bottom: 15px; font-size: 20px;">
-                    <div style="display: flex; justify-content: space-between;">
-                        <div>السيد: <strong>${clientName}</strong></div>
-                        <div>${new Date().toLocaleDateString('ar-EG')}</div>
-                    </div>
-                    ${clientNotes ? `<div style="font-size: 16px; color: #444; border-top: 1px dashed #ccc; padding-top: 5px;">ملاحظات: ${clientNotes}</div>` : ''}
+                <div style="font-size:20px; margin-bottom:15px;">
+                    <div style="display:flex; justify-content:space-between;"><div>السيد: <strong>${clientName}</strong></div><div>${new Date().toLocaleDateString('ar-EG')}</div></div>
+                    ${clientNotes ? `<div style="font-size:16px; color:#555; margin-top:5px; border-top:1px solid #eee;">ملاحظات: ${clientNotes}</div>` : ''}
                 </div>
                 <table class="invoice-table"><thead><tr><th>م</th><th style="text-align:right">الصنف</th><th>الكمية</th></tr></thead>
                 <tbody>${pageItems.map((r, idx) => `<tr><td>${(i*25)+idx+1}</td><td style="text-align:right">${r.cells[1].innerText}</td><td>${r.cells[2].innerText}</td></tr>`).join('')}</tbody></table>`;
             container.appendChild(pageDiv);
         }
-
         const pages = document.querySelectorAll(".export-page");
         for (let j = 0; j < pages.length; j++) {
             const canvas = await html2canvas(pages[j], { scale: 3, useCORS: true });
-            const link = document.createElement('a');
-            link.download = `فاتورة_${clientName}_${j+1}.png`;
+            const link = document.createElement('a'); link.download = `فاتورة_${clientName}_${j+1}.png`;
             link.href = canvas.toDataURL(); link.click();
         }
     }
