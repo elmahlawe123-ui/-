@@ -326,7 +326,7 @@
                         btn.innerText = "إرسال ملخص نصي 💬";
                         btn.style.background = "#25D366";
                         btn.onclick = () => {
-                            const summaryText = `*طلب مواد من المحلاوى*\n-------------------\n👤 *السيد:* ${clientName}\n📝 *ملاحظات:* ${clientNotes || 'لا يوجد'}\n📦 *عدد الأصناف:* ${rows.length}\n📅 *التاريخ:* ${new Date().toLocaleDateString('ar-EG')}\n-------------------\n_تم الحفظ في سجل النظام_`;
+                            const summaryText = `*طلب مواد من المحلاوى*\n-------------------\n👤 *السيد:* ${clientName}\n📝 *ملاحظات:* ${clientNotes || 'لا يوجد'}\n📦 *عدد الأصناف:* ${rows.length}\n📅 *التاريخ:* ${new Date().toLocaleDateString('ar-EG')}\n-------------------\n_تم الإرسال بواسطة نظام المحلاوى V2.2_`;
                             window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(summaryText)}`, '_blank');
                             modal.classList.add("hidden");
                         };
