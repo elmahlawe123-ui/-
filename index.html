@@ -57,6 +57,7 @@
 
         table { width: 100%; border-collapse: collapse; margin-top: 15px; background: var(--card); border-radius: 8px; overflow: hidden; }
         th, td { padding: 12px; border: 1px solid var(--border); text-align: center; }
+        .serial-col { width: 40px; background: rgba(176, 141, 87, 0.1); color: var(--primary); font-weight: bold; }
 
         .results-box { position: absolute; background: var(--card); border: 1px solid var(--primary); width: 100%; z-index: 1100; max-height: 250px; overflow-y: auto; border-radius: 8px; top: 55px; }
         .result-item { padding: 15px; cursor: pointer; border-bottom: 1px solid var(--border); text-align: right; }
@@ -118,7 +119,7 @@
                 <button class="btn btn-main" onclick="addItem()">➕ إضافة للجدول</button>
 
                 <table id="resultTable">
-                    <thead><tr><th>المادة</th><th>الكمية</th><th>حذف</th></tr></thead>
+                    <thead><tr><th style="width:10%">ت</th><th>المادة</th><th>الكمية</th><th>حذف</th></tr></thead>
                     <tbody></tbody>
                 </table>
 
@@ -164,7 +165,7 @@
     </div>
     <table class="invoice-table">
         <thead>
-            <tr><th style="width: 10%;">م</th><th style="width: 65%; text-align: right;">الصنف</th><th style="width: 25%;">الكمية</th></tr>
+            <tr><th style="width: 10%;">ت</th><th style="width: 65%; text-align: right;">الصنف</th><th style="width: 25%;">الكمية</th></tr>
         </thead>
         <tbody id="expBody"></tbody>
     </table>
@@ -236,10 +237,33 @@
         const item = itemInput.value.trim();
         const qty = document.getElementById("qty").value;
         if(!item || !qty) return;
+        
         const tbody = document.querySelector("#resultTable tbody");
-        const row = tbody.insertRow(0);
-        row.innerHTML = `<td style="text-align:right">${item}</td><td style="font-weight:bold">${qty}</td><td><button onclick="this.parentElement.parentElement.remove()" style="background:none; border:none; color:red; font-size:18px;">✖</button></td>`;
-        itemInput.value = ""; document.getElementById("qty").value = ""; itemInput.focus();
+        const row = tbody.insertRow(-1); // إضافة في نهاية الجدول
+        
+        row.innerHTML = `
+            <td class="serial-col"></td>
+            <td style="text-align:right">${item}</td>
+            <td style="font-weight:bold">${qty}</td>
+            <td><button onclick="removeRow(this)" style="background:none; border:none; color:red; font-size:18px;">✖</button></td>
+        `;
+        
+        updateSerialNumbers();
+        itemInput.value = ""; 
+        document.getElementById("qty").value = ""; 
+        itemInput.focus();
+    }
+
+    function removeRow(btn) {
+        btn.parentElement.parentElement.remove();
+        updateSerialNumbers();
+    }
+
+    function updateSerialNumbers() {
+        const rows = document.querySelectorAll("#resultTable tbody tr");
+        rows.forEach((row, index) => {
+            row.cells[0].innerText = index + 1;
+        });
     }
 
     document.getElementById("itemSearch").oninput = function() {
@@ -280,13 +304,11 @@
             b.innerHTML = "";
             const start = i * itemsPerPage;
             rows.slice(start, start + itemsPerPage).forEach((r, idx) => {
-                b.innerHTML += `<tr><td>${start + idx + 1}</td><td style="text-align:right;">${r.cells[0].innerText}</td><td>${r.cells[1].innerText}</td></tr>`;
+                b.innerHTML += `<tr><td>${start + idx + 1}</td><td style="text-align:right;">${r.cells[1].innerText}</td><td>${r.cells[2].innerText}</td></tr>`;
             });
 
             const canvas = await html2canvas(document.getElementById("finalExportContainer"), { 
-                scale: 4, // جودة فائقة
-                useCORS: true, 
-                backgroundColor: "#ffffff" 
+                scale: 4, useCORS: true, backgroundColor: "#ffffff" 
             });
             const link = document.createElement('a');
             link.download = `فاتورة_${clientName}_${i + 1}.png`;
@@ -306,7 +328,7 @@
         document.getElementById("pageNumberDisplay").innerText = "صفحة 1";
         const b = document.getElementById("expBody"); b.innerHTML = "";
         Array.from(rows).slice(0, 25).forEach((r, i) => {
-            b.innerHTML += `<tr><td>${i+1}</td><td style="text-align:right;">${r.cells[0].innerText}</td><td>${r.cells[1].innerText}</td></tr>`;
+            b.innerHTML += `<tr><td>${i+1}</td><td style="text-align:right;">${r.cells[1].innerText}</td><td>${r.cells[2].innerText}</td></tr>`;
         });
 
         const canvas = await html2canvas(document.getElementById("finalExportContainer"), { scale: 3, useCORS: true });
@@ -330,7 +352,7 @@
                 document.getElementById("expNotes").innerText = document.getElementById("orderNotes").value;
                 const b = document.getElementById("expBody"); b.innerHTML = "";
                 Array.from(rows).slice(i*itemsPerPage, (i+1)*itemsPerPage).forEach((r, idx) => {
-                    b.innerHTML += `<tr><td>${(i*itemsPerPage)+idx+1}</td><td style="text-align:right;">${r.cells[0].innerText}</td><td>${r.cells[1].innerText}</td></tr>`;
+                    b.innerHTML += `<tr><td>${(i*itemsPerPage)+idx+1}</td><td style="text-align:right;">${r.cells[1].innerText}</td><td>${r.cells[2].innerText}</td></tr>`;
                 });
                 const canvas = await html2canvas(document.getElementById("finalExportContainer"), { scale: 2, useCORS: true });
                 pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, 210, (canvas.height * 210) / canvas.width);
@@ -357,7 +379,7 @@
 
     function deleteItem(name) { if(confirm("حذف؟")) { localItems = localItems.filter(i => i !== name); renderCloudItems(); } }
     function editItem(old) { const n = prompt("تعديل:", old); if(n) { localItems[localItems.indexOf(old)] = n; renderCloudItems(); } }
-    function clearTable() { if(confirm("مسح؟")) document.querySelector("#resultTable tbody").innerHTML = ""; }
+    function clearTable() { if(confirm("مسح؟")) { document.querySelector("#resultTable tbody").innerHTML = ""; updateSerialNumbers(); } }
 </script>
 </body>
 </html>
