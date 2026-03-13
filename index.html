@@ -65,16 +65,16 @@
         .hidden { display: none !important; }
         .item-card { background: var(--card); border: 1px solid var(--border); padding: 12px; border-radius: 8px; text-align: right; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
 
-        /* التصدير المخفي بجودة عالية */
+        /* التصدير المخفي - تم تحسين الأبعاد للجودة القصوى */
         #finalExportContainer { 
             display: block; direction: rtl; padding: 40px; background-color: #ffffff !important; 
-            width: 750px; color: #000000 !important; position: fixed; left: -9999px; top: 0; 
+            width: 850px; color: #000000 !important; position: fixed; left: -9999px; top: 0; 
         }
         #finalExportContainer * { color: #000000 !important; }
 
         .invoice-table { width: 100%; border-collapse: collapse; margin-top: 20px; border: 2px solid #000; }
         .invoice-table th, .invoice-table td { 
-            padding: 12px; font-size: 20px; font-weight: bold; text-align: center; 
+            padding: 10px; font-size: 19px; font-weight: bold; text-align: center; 
             border: 1px solid #000; background-color: #fff !important; color: #000 !important;
         }
     </style>
@@ -85,7 +85,7 @@
     <div class="card" style="width:320px; text-align:center; border: 2px solid var(--primary); background: #111;">
         <img src="https://i.ibb.co/4R44srhj/image.jpg" style="width: 110px; height:110px; border-radius: 50%; border: 3px solid var(--primary); margin-bottom: 15px; object-fit: cover;">
         <div class="brand-name" style="font-size: 40px; margin-bottom: 5px;">ال وحيد</div>
-        <div style="color:var(--primary); font-size: 12px; opacity:0.7;">إصدار 2.1.1</div>
+        <div style="color:var(--primary); font-size: 12px; opacity:0.7;">إصدار 2.1.2 (المحسن)</div>
         <input type="password" id="passInput" placeholder="الرمز (123)" style="text-align:center; margin-top: 15px;" onkeydown="if(event.key==='Enter') checkPassword()">
         <button class="btn btn-main" onclick="checkPassword()">دخول للنظام</button>
     </div>
@@ -151,7 +151,7 @@
         <img src="https://i.ibb.co/4R44srhj/image.jpg" crossOrigin="anonymous" style="width: 120px; height:120px; border-radius: 50%; object-fit: cover;">
         <div style="text-align: left;">
             <h1 style="margin: 0; color: #b08d57 !important; font-size: 55px; font-family: 'Aref Ruqaa', serif;">كشف طلب مواد</h1>
-            <p style="margin: 5px 0; font-size: 22px; font-weight: bold;">*.* - <span id="pageNumberDisplay"></span></p>
+            <p style="margin: 5px 0; font-size: 22px; font-weight: bold;">ال وحيد - <span id="pageNumberDisplay"></span></p>
         </div>
     </div>
     <div style="margin-bottom: 20px;">
@@ -169,8 +169,8 @@
         </thead>
         <tbody id="expBody"></tbody>
     </table>
-    <div style="margin-top: 50px; text-align: right;">
-        <p style="font-weight: bold; font-size: 22px; border-bottom: 3px solid black; display: inline-block; padding-left: 80px;">أ........./ ت........</p>
+    <div style="margin-top: 40px; text-align: right;">
+        <p style="font-weight: bold; font-size: 22px; border-bottom: 3px solid black; display: inline-block; padding-left: 80px;">التوقيع: ..........................</p>
     </div>
 </div>
 
@@ -186,6 +186,55 @@
         } else { alert("الرمز خطأ"); }
     }
 
+    // --- دالة التصدير المحسنة PDF ---
+    async function exportPDF() {
+        const rows = Array.from(document.querySelectorAll("#resultTable tbody tr"));
+        if (rows.length === 0) return alert("الجدول فارغ!");
+        
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF('p', 'mm', 'a4');
+        const itemsPerPage = 25; // ضبط العدد لـ 25
+        const totalPages = Math.ceil(rows.length / itemsPerPage);
+
+        for (let i = 0; i < totalPages; i++) {
+            if (i > 0) pdf.addPage();
+
+            // تجهيز بيانات الصفحة الحالية في الحاوية المخفية
+            document.getElementById("expClient").innerText = document.getElementById("clientName").value || "بدون اسم";
+            document.getElementById("expNotes").innerText = document.getElementById("orderNotes").value;
+            document.getElementById("expDate").innerText = new Date().toLocaleDateString('ar-EG');
+            document.getElementById("pageNumberDisplay").innerText = `صفحة ${i + 1} من ${totalPages}`;
+            
+            const b = document.getElementById("expBody");
+            b.innerHTML = "";
+            const start = i * itemsPerPage;
+            const pageRows = rows.slice(start, start + itemsPerPage);
+
+            pageRows.forEach((r, idx) => {
+                b.innerHTML += `<tr>
+                    <td>${start + idx + 1}</td>
+                    <td style="text-align:right;">${r.cells[1].innerText}</td>
+                    <td>${r.cells[2].innerText}</td>
+                </tr>`;
+            });
+
+            // التقاط الصورة بجودة فائقة (scale: 3 أو 4)
+            const canvas = await html2canvas(document.getElementById("finalExportContainer"), { 
+                scale: 3, 
+                useCORS: true,
+                backgroundColor: "#ffffff"
+            });
+            
+            const imgData = canvas.toDataURL('image/png');
+            const pdfWidth = pdf.internal.pageSize.getWidth();
+            const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+
+            pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+        }
+        pdf.save(`فاتورة_${document.getElementById("clientName").value || 'عميل'}.pdf`);
+    }
+
+    // --- بقية وظائف النظام ---
     async function syncFromCloud() {
         const btn = document.getElementById("syncBtn");
         try {
@@ -239,29 +288,20 @@
         if(!item || !qty) return;
         
         const tbody = document.querySelector("#resultTable tbody");
-        const row = tbody.insertRow(-1); // إضافة في نهاية الجدول
-        
+        const row = tbody.insertRow(-1);
         row.innerHTML = `
             <td class="serial-col"></td>
             <td style="text-align:right">${item}</td>
             <td style="font-weight:bold">${qty}</td>
             <td><button onclick="removeRow(this)" style="background:none; border:none; color:red; font-size:18px;">✖</button></td>
         `;
-        
         updateSerialNumbers();
-        itemInput.value = ""; 
-        document.getElementById("qty").value = ""; 
-        itemInput.focus();
+        itemInput.value = ""; document.getElementById("qty").value = ""; itemInput.focus();
     }
 
-    function removeRow(btn) {
-        btn.parentElement.parentElement.remove();
-        updateSerialNumbers();
-    }
-
+    function removeRow(btn) { btn.parentElement.parentElement.remove(); updateSerialNumbers(); }
     function updateSerialNumbers() {
-        const rows = document.querySelectorAll("#resultTable tbody tr");
-        rows.forEach((row, index) => {
+        document.querySelectorAll("#resultTable tbody tr").forEach((row, index) => {
             row.cells[0].innerText = index + 1;
         });
     }
@@ -288,30 +328,20 @@
     async function exportAsImage() {
         const rows = Array.from(document.querySelectorAll("#resultTable tbody tr"));
         if (rows.length === 0) return alert("الجدول فارغ!");
-
-        const clientName = document.getElementById("clientName").value || "بدون اسم";
-        const notes = document.getElementById("orderNotes").value;
         const itemsPerPage = 25;
         const totalPages = Math.ceil(rows.length / itemsPerPage);
 
         for (let i = 0; i < totalPages; i++) {
-            document.getElementById("expClient").innerText = clientName;
-            document.getElementById("expNotes").innerText = notes;
-            document.getElementById("expDate").innerText = new Date().toLocaleDateString('ar-EG');
             document.getElementById("pageNumberDisplay").innerText = `صفحة ${i + 1} من ${totalPages}`;
-            
-            const b = document.getElementById("expBody");
-            b.innerHTML = "";
+            const b = document.getElementById("expBody"); b.innerHTML = "";
             const start = i * itemsPerPage;
             rows.slice(start, start + itemsPerPage).forEach((r, idx) => {
                 b.innerHTML += `<tr><td>${start + idx + 1}</td><td style="text-align:right;">${r.cells[1].innerText}</td><td>${r.cells[2].innerText}</td></tr>`;
             });
 
-            const canvas = await html2canvas(document.getElementById("finalExportContainer"), { 
-                scale: 4, useCORS: true, backgroundColor: "#ffffff" 
-            });
+            const canvas = await html2canvas(document.getElementById("finalExportContainer"), { scale: 4, useCORS: true });
             const link = document.createElement('a');
-            link.download = `فاتورة_${clientName}_${i + 1}.png`;
+            link.download = `فاتورة_${i + 1}.png`;
             link.href = canvas.toDataURL("image/png");
             link.click();
             await new Promise(r => setTimeout(r, 600));
@@ -321,44 +351,17 @@
     async function shareAsImage() {
         const rows = document.querySelectorAll("#resultTable tbody tr");
         if (rows.length === 0) return alert("الجدول فارغ!");
-        
-        document.getElementById("expClient").innerText = document.getElementById("clientName").value || "بدون اسم";
-        document.getElementById("expNotes").innerText = document.getElementById("orderNotes").value;
-        document.getElementById("expDate").innerText = new Date().toLocaleDateString('ar-EG');
         document.getElementById("pageNumberDisplay").innerText = "صفحة 1";
         const b = document.getElementById("expBody"); b.innerHTML = "";
         Array.from(rows).slice(0, 25).forEach((r, i) => {
             b.innerHTML += `<tr><td>${i+1}</td><td style="text-align:right;">${r.cells[1].innerText}</td><td>${r.cells[2].innerText}</td></tr>`;
         });
-
         const canvas = await html2canvas(document.getElementById("finalExportContainer"), { scale: 3, useCORS: true });
         const blob = await new Promise(res => canvas.toBlob(res, 'image/png'));
         const file = new File([blob], `فاتورة.png`, { type: 'image/png' });
         if (navigator.canShare && navigator.canShare({ files: [file] })) {
             await navigator.share({ files: [file], title: 'فاتورة ال وحيد' });
         } else { exportAsImage(); }
-    }
-
-    function exportPDF() {
-        const rows = document.querySelectorAll("#resultTable tbody tr");
-        if (rows.length === 0) return alert("الجدول فارغ!");
-        const { jsPDF } = window.jspdf;
-        const pdf = new jsPDF('p', 'mm', 'a4');
-        const itemsPerPage = 25;
-        (async () => {
-            for (let i = 0; i < Math.ceil(rows.length/itemsPerPage); i++) {
-                if (i > 0) pdf.addPage();
-                document.getElementById("expClient").innerText = document.getElementById("clientName").value;
-                document.getElementById("expNotes").innerText = document.getElementById("orderNotes").value;
-                const b = document.getElementById("expBody"); b.innerHTML = "";
-                Array.from(rows).slice(i*itemsPerPage, (i+1)*itemsPerPage).forEach((r, idx) => {
-                    b.innerHTML += `<tr><td>${(i*itemsPerPage)+idx+1}</td><td style="text-align:right;">${r.cells[1].innerText}</td><td>${r.cells[2].innerText}</td></tr>`;
-                });
-                const canvas = await html2canvas(document.getElementById("finalExportContainer"), { scale: 2, useCORS: true });
-                pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, 210, (canvas.height * 210) / canvas.width);
-            }
-            pdf.save("فاتورة.pdf");
-        })();
     }
 
     function startVoice(id) {
