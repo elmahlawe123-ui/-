@@ -3,213 +3,135 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>نظام آل وحيد - النسخة الاحترافية</title>
+    <title>نظام آل وحيد - النسخة المطورة</title>
 
-    <link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@700&family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@700&family=Cairo:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     
     <style>
         :root { 
             --primary: #c5a059; 
-            --primary-dark: #a88948;
-            --gold-gradient: linear-gradient(135deg, #f3d078 0%, #c5a059 100%);
-            --bg: #0f172a; 
-            --card-bg: #1e293b; 
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --border: #334155; 
-            --danger: #ff4d4d;
-            --success: #22c55e;
-            --info: #3b82f6;
+            --gold-gradient: linear-gradient(to bottom, #f1c40f, #b08d57);
+            --bg: #0f172a; --text: #f1f5f9; --card: #1e293b; --border: #334155; 
+            --dark: #000000; --danger: #ef4444; --success: #10b981;
         }
 
-        body { 
-            font-family: 'Cairo', sans-serif; 
-            background: var(--bg); 
-            color: var(--text-main); 
-            margin: 0; 
-            line-height: 1.6;
-        }
-
-        /* Login Screen */
-        #loginOverlay {
-            position: fixed; inset: 0; background: radial-gradient(circle at center, #1e293b, #000);
-            z-index: 9999; display: flex; align-items: center; justify-content: center;
-        }
-        .login-card {
-            background: rgba(30, 41, 59, 0.8); padding: 40px; border-radius: 24px;
-            border: 1px solid var(--primary); backdrop-filter: blur(10px);
-            width: 90%; max-width: 350px; text-align: center;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-        }
-
-        /* Typography */
+        body { font-family: 'Cairo', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding-bottom: 30px; }
+        
         .brand-name {
-            font-family: 'Aref Ruqaa', serif; background: var(--gold-gradient);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            font-size: 38px; margin: 10px 0;
+            font-family: 'Aref Ruqaa', serif; font-size: 32px; font-weight: bold;
+            background: var(--gold-gradient); -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent; filter: drop-shadow(0px 2px 2px rgba(0,0,0,0.5));
+            display: inline-block;
         }
 
         header { 
-            background: #000; padding: 15px 25px; 
+            background: linear-gradient(145deg, #000, #1a1a1a); padding: 12px 20px; 
             display: flex; justify-content: space-between; align-items: center; 
-            border-bottom: 2px solid var(--primary); position: sticky; top: 0; z-index: 100;
+            border-bottom: 3px solid var(--primary); position: sticky; top: 0; z-index: 1000;
         }
 
-        /* Navigation */
-        .nav-tabs { display: flex; background: #161e2e; padding: 5px; gap: 5px; }
-        .nav-tabs button { 
-            flex: 1; padding: 12px; border: none; background: transparent; 
-            color: var(--text-muted); font-weight: 700; border-radius: 10px; transition: 0.3s;
-        }
-        .nav-tabs button.active { 
-            background: var(--primary); color: #000; 
-        }
+        .nav-tabs { display: flex; background: var(--card); border-bottom: 1px solid var(--border); }
+        .nav-tabs button { flex: 1; padding: 15px; border: none; background: none; color: #94a3b8; font-weight: bold; cursor: pointer; font-family: 'Cairo'; }
+        .nav-tabs button.active { color: var(--primary); border-bottom: 3px solid var(--primary); background: rgba(176, 141, 87, 0.1); }
 
-        .container { padding: 20px; max-width: 600px; margin: 0 auto; }
-        .card { 
-            background: var(--card-bg); padding: 20px; border-radius: 16px; 
-            border: 1px solid var(--border); margin-bottom: 20px;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
-        }
-
-        /* Forms */
+        .container { padding: 15px; max-width: 800px; margin: 0 auto; }
+        .card { background: var(--card); padding: 25px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 20px; }
+        
         input { 
-            width: 100%; padding: 12px 15px; margin: 10px 0; border: 1px solid var(--border); 
-            border-radius: 10px; background: #0f172a; color: #fff; box-sizing: border-box;
-            font-family: 'Cairo'; font-size: 15px; transition: 0.3s;
-        }
-        input:focus { border-color: var(--primary); outline: none; box-shadow: 0 0 0 2px rgba(197, 160, 89, 0.2); }
-
-        .search-wrapper { position: relative; }
-        .voice-btn { 
-            position: absolute; left: 10px; top: 50%; transform: translateY(-50%);
-            background: none; border: none; font-size: 18px; cursor: pointer; color: var(--primary);
+            width: 100%; padding: 14px; margin: 8px 0; border: 1px solid var(--border); 
+            border-radius: 8px; background: rgba(255,255,255,0.05); color: var(--text); 
+            box-sizing: border-box; font-size: 16px; outline: none; font-family: 'Cairo'; 
         }
 
-        /* Buttons */
-        .btn { 
-            padding: 12px; border: none; border-radius: 10px; cursor: pointer; 
-            font-weight: 700; display: flex; align-items: center; justify-content: center; 
-            gap: 8px; transition: 0.2s; font-family: 'Cairo';
-        }
-        .btn:active { transform: scale(0.98); }
-        .btn-main { background: var(--primary); color: #000; width: 100%; font-size: 16px; }
-        
-        .grid-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
-        
-        /* Table Style */
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 14px; }
-        th { background: #334155; color: var(--primary); padding: 12px; text-align: center; }
-        td { padding: 12px; border-bottom: 1px solid var(--border); text-align: center; }
+        .btn { padding: 12px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.3s; font-family: 'Cairo'; }
+        .btn-main { background: var(--primary); color: white; width: 100%; margin: 10px 0; font-size: 18px; }
 
-        .results-box { 
-            position: absolute; background: #1e293b; border: 1px solid var(--primary); 
-            width: 100%; z-index: 1000; border-radius: 10px; max-height: 200px; overflow-y: auto;
-            top: 100%; box-shadow: 0 10px 20px rgba(0,0,0,0.3);
-        }
-        .result-item { padding: 12px; border-bottom: 1px solid var(--border); cursor: pointer; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; background: var(--card); border-radius: 8px; overflow: hidden; }
+        th, td { padding: 12px; border: 1px solid var(--border); text-align: center; }
 
         .hidden { display: none !important; }
 
-        /* Items Management */
-        .item-row { 
-            display: flex; justify-content: space-between; align-items: center; 
-            background: #0f172a; padding: 10px 15px; border-radius: 10px; margin-bottom: 8px;
-        }
-
-        /* --- Export Layout (Hidden) --- */
+        /* --- تصميم الفاتورة عند التصدير --- */
         #finalExportContainer { 
-            position: fixed; left: -9999px; width: 800px; background: #fff; padding: 50px; color: #000;
+            display: block; direction: rtl; padding: 40px; background-color: #ffffff !important; 
+            width: 750px; position: fixed; left: -9999px; top: 0; 
         }
-        .exp-header { border-bottom: 4px solid #c5a059; padding-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
-        .exp-table { width: 100%; margin-top: 30px; border-collapse: collapse; }
-        .exp-table th { background: #f8f9fa; border: 1px solid #000; color: #000; padding: 15px; }
-        .exp-table td { border: 1px solid #000; padding: 15px; font-weight: bold; font-size: 18px; }
-        .footer-sig { margin-top: 60px; text-align: right; font-size: 20px; font-weight: bold; border-top: 2px solid #000; display: inline-block; padding-top: 10px; }
+        #finalExportContainer * { color: #000000 !important; }
+
+        .invoice-table { width: 100%; border-collapse: collapse; margin-top: 20px; border: 2px solid #000; }
+        .invoice-table th, .invoice-table td { padding: 12px; font-size: 20px; font-weight: bold; text-align: center; border: 1px solid #000; }
+        
+        /* تنسيق الاسم والهاتف الجديد */
+        .signature-box {
+            margin-top: 60px;
+            padding: 15px;
+            border: 3px solid var(--primary);
+            display: inline-block;
+            float: left;
+            border-radius: 15px;
+            text-align: center;
+            background: #fff !important;
+        }
+        .signature-box p { margin: 5px 0; font-family: 'Cairo'; }
+        .sig-name { font-size: 24px; font-weight: 800; color: var(--primary) !important; }
+        .sig-phone { font-size: 20px; font-weight: bold; letter-spacing: 1px; }
     </style>
 </head>
 <body>
 
-<div id="loginOverlay">
-    <div class="login-card">
-        <img src="https://i.ibb.co/4R44srhj/image.jpg" style="width: 100px; height: 100px; border-radius: 50%; border: 3px solid var(--primary); margin-bottom: 15px;">
-        <div class="brand-name">آل وحيد</div>
-        <p style="color: var(--text-muted); margin-bottom: 20px;">نظام إدارة الطلبيات الذكي</p>
-        <input type="password" id="passInput" placeholder="أدخل رمز الدخول" style="text-align: center;">
-        <button class="btn btn-main" onclick="checkPassword()">دخول النظام</button>
+<div id="loginOverlay" style="position:fixed; inset:0; background:var(--dark); z-index:9999; display:flex; align-items:center; justify-content:center; flex-direction:column;">
+    <div class="card" style="width:320px; text-align:center; border: 2px solid var(--primary); background: #111;">
+        <img src="https://i.ibb.co/4R44srhj/image.jpg" style="width: 110px; height:110px; border-radius: 50%; border: 3px solid var(--primary); margin-bottom: 15px; object-fit: cover;">
+        <div class="brand-name" style="font-size: 40px; margin-bottom: 10px;">ال وحيد</div>
+        <input type="password" id="passInput" placeholder="الرمز (123)" style="text-align:center;" onkeydown="if(event.key==='Enter') checkPassword()">
+        <button class="btn btn-main" onclick="checkPassword()">دخول للنظام</button>
     </div>
 </div>
 
 <div id="appContent" class="hidden">
     <header>
-        <div style="display: flex; align-items: center; gap: 10px;">
-            <img src="https://i.ibb.co/4R44srhj/image.jpg" style="width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--primary);">
-            <div class="brand-name" style="font-size: 24px;">آل وحيد</div>
+        <div style="display: flex; align-items: center; gap: 12px;">
+            <img src="https://i.ibb.co/4R44srhj/image.jpg" style="width: 45px; height:45px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary);">
+            <div class="brand-name">ال وحيد</div>
         </div>
-        <div id="clock" style="font-size: 12px; color: var(--primary);"></div>
     </header>
 
     <div class="nav-tabs">
-        <button id="tab1" class="active" onclick="switchPage('order')">📑 طلبية جديدة</button>
-        <button id="tab2" onclick="switchPage('browse')">📦 المخزن</button>
+        <button id="tab1" class="active" onclick="switchPage('order')">تسجيل طلبية</button>
+        <button id="tab2" onclick="switchPage('browse')">مخزن الأصناف</button>
     </div>
 
     <div class="container">
         <div id="orderPage">
             <div class="card">
-                <label style="font-size: 13px; color: var(--primary);">بيانات العميل:</label>
-                <input type="text" id="clientName" placeholder="اسم العميل الكامل...">
-                
-                <hr style="border: 0; border-top: 1px solid var(--border); margin: 15px 0;">
-                
-                <label style="font-size: 13px; color: var(--primary);">إضافة مواد:</label>
-                <div class="search-wrapper">
-                    <input type="text" id="itemSearch" placeholder="ابحث عن صنف أو اكتب جديد..." autocomplete="off">
-                    <button class="voice-btn" onclick="startVoice('itemSearch')">🎤</button>
-                    <div id="results" class="results-box hidden"></div>
+                <input type="text" id="clientName" placeholder="اسم العميل..." onkeydown="if(event.key==='Enter') document.getElementById('itemSearch').focus()">
+                <div style="position:relative;">
+                    <input type="text" id="itemSearch" placeholder="ابحث عن مادة..." autocomplete="off">
+                    <div id="results" class="results-box hidden" style="position:absolute; width:100%; background:var(--card); z-index:10; border:1px solid var(--primary); max-height:200px; overflow-y:auto;"></div>
                 </div>
-                
-                <input type="number" id="qty" placeholder="الكمية" inputmode="numeric">
-                
-                <button class="btn btn-main" style="margin-top: 10px;" onclick="addItem()">✨ إضافة للجدول</button>
-            </div>
+                <input type="number" id="qty" placeholder="الكمية المطلوبة" inputmode="numeric" onkeydown="if(event.key==='Enter') addItem()">
+                <button class="btn btn-main" onclick="addItem()">➕ إضافة للجدول</button>
 
-            <div class="card" style="padding: 10px; overflow-x: auto;">
                 <table id="resultTable">
-                    <thead>
-                        <tr>
-                            <th>الصنف</th>
-                            <th>الكمية</th>
-                            <th></th>
-                        </tr>
-                    </thead>
+                    <thead><tr><th>المادة</th><th>الكمية</th><th>حذف</th></tr></thead>
                     <tbody></tbody>
                 </table>
-            </div>
 
-            <div class="grid-actions">
-                <button class="btn" style="background: #25D366; color: #fff; grid-column: span 2;" onclick="shareAsImage()">
-                    🟢 مشاركة عبر واتساب
-                </button>
-                <button class="btn" style="background: var(--info); color: #fff;" onclick="exportAsImage()">📸 صورة</button>
-                <button class="btn" style="background: #e11d48; color: #fff;" onclick="exportPDF()">📄 PDF</button>
-                <button class="btn" style="background: #475569; color: #fff; grid-column: span 2;" onclick="clearTable()">🗑️ مسح الجدول</button>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px;">
+                    <button class="btn" style="background:#25D366; color:white; grid-column: span 2;" onclick="shareAsImage()">🔗 مشاركة واتساب</button>
+                    <button class="btn" style="background:var(--primary); color:white;" onclick="exportAsImage()">📸 حفظ صورة</button>
+                    <button class="btn" style="background:#444; color:white;" onclick="clearTable()">🗑️ مسح الكل</button>
+                </div>
             </div>
         </div>
 
         <div id="browsePage" class="hidden">
             <div class="card">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                    <h3 style="margin:0; color: var(--primary);">قائمة الأصناف</h3>
-                    <button id="syncBtn" class="btn" style="background: var(--success); color: #fff; padding: 5px 15px; font-size: 12px;" onclick="syncFromCloud()">
-                        🔄 تحديث السحاب
-                    </button>
-                </div>
-                <input type="text" id="newItemName" placeholder="بحث أو إضافة صنف جديد..." oninput="renderCloudItems(this.value)">
-                <button class="btn btn-main" style="background: #475569; color: #fff;" onclick="addCloudItemManual()">حفظ كصنف جديد</button>
-                
+                <h3 style="color:var(--primary);">إدارة الأصناف</h3>
+                <input type="text" id="newItemName" placeholder="أضف صنف جديد هنا..." onkeydown="if(event.key==='Enter') addCloudItemManual()">
+                <button class="btn btn-main" onclick="addCloudItemManual()">حفظ صنف ✅</button>
                 <div id="itemsGrid" style="margin-top: 20px;"></div>
             </div>
         </div>
@@ -217,182 +139,85 @@
 </div>
 
 <div id="finalExportContainer">
-    <div class="exp-header">
-        <img src="https://i.ibb.co/4R44srhj/image.jpg" crossOrigin="anonymous" style="width: 100px; height: 100px; border-radius: 50%;">
+    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 5px solid #b08d57; padding-bottom: 15px; margin-bottom: 25px;">
+        <img src="https://i.ibb.co/4R44srhj/image.jpg" crossOrigin="anonymous" style="width: 120px; height:120px; border-radius: 50%;">
         <div style="text-align: left;">
-            <h1 style="margin:0; font-family:'Aref Ruqaa'; font-size: 50px; color: #c5a059;">آل وحيد</h1>
-            <p style="margin:0; font-size: 18px; font-weight: bold;">لتجارة مواد البناء والمقاولات</p>
+            <h1 style="margin: 0; color: #b08d57 !important; font-size: 55px; font-family: 'Aref Ruqaa', serif;">ال وحيد</h1>
+            <p style="margin: 5px 0; font-size: 22px; font-weight: bold;">كشف طلب مواد </p>
         </div>
     </div>
     
-    <div style="display: flex; justify-content: space-between; margin-top: 30px; font-size: 20px;">
-        <div>مطلوب للسيد: <span id="expClient" style="border-bottom: 2px dotted #000; padding: 0 10px;"></span></div>
-        <div>التاريخ: <span id="expDate"></span></div>
+    <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+        <div style="font-size: 24px;">السيد: <strong id="expClient"></strong></div>
+        <div style="font-size: 22px;">التاريخ: <span id="expDate"></span></div>
     </div>
 
-    <table class="exp-table">
+    <table class="invoice-table">
         <thead>
-            <tr>
-                <th style="width: 80px;">م</th>
-                <th>بيان المـواد</th>
-                <th style="width: 150px;">الكمية</th>
-            </tr>
+            <tr><th style="width: 10%;">م</th><th style="width: 65%;">الصنف</th><th style="width: 25%;">الكمية</th></tr>
         </thead>
         <tbody id="expBody"></tbody>
     </table>
 
-    <div style="margin-top: 50px; display: flex; justify-content: space-between; align-items: flex-end;">
-        <div style="font-size: 14px; color: #666;">* تم استخراج هذا الكشف آلياً عبر نظام آل وحيد</div>
-        <div class="footer-sig">
-            أ.أحمد وحيد<br>
-            ت: 01007519016
+    <div style="width: 100%; margin-top: 40px;">
+        <div class="signature-box">
+            <p class="sig-name">أ. أحمد وحيد</p>
+            <p class="sig-phone">ت: 01007519016</p>
         </div>
     </div>
 </div>
 
 <script>
-    const GOOGLE_URL = 'https://script.google.com/macros/s/AKfycby94J0O_uH3WIFzLoelLDAVMagTZEGbo0LAfbVaVR_52wgSoCtbqJ-6ZHjbnUBujlfc/exec';
-    let localItems = JSON.parse(localStorage.getItem("items")) || ["إسمنت", "حديد عز", "طوب أحمر", "رمل"];
+    let localItems = JSON.parse(localStorage.getItem("items")) || ["إسمنت", "حديد", "رمل"];
 
     function checkPassword() {
         if(document.getElementById("passInput").value === "123") {
             document.getElementById("loginOverlay").style.display = "none";
             document.getElementById("appContent").classList.remove("hidden");
-            renderCloudItems();
-            updateClock();
-        } else { alert("عذراً، الرمز غير صحيح"); }
-    }
-
-    function updateClock() {
-        const now = new Date();
-        document.getElementById("clock").innerText = now.toLocaleString('ar-EG', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-        setTimeout(updateClock, 1000);
-    }
-
-    async function syncFromCloud() {
-        const btn = document.getElementById("syncBtn");
-        btn.disabled = true; btn.innerText = "جاري المزامنة...";
-        try {
-            const res = await fetch(GOOGLE_URL);
-            const data = await res.json();
-            if (Array.isArray(data)) {
-                localItems = [...new Set([...localItems, ...data])];
-                localStorage.setItem("items", JSON.stringify(localItems));
-                renderCloudItems();
-                alert("تم تحديث البيانات من السحاب");
-            }
-        } catch (e) { alert("خطأ في الاتصال"); }
-        finally { btn.disabled = false; btn.innerText = "🔄 تحديث السحاب"; }
-    }
-
-    function renderCloudItems(filter = "") {
-        const grid = document.getElementById("itemsGrid");
-        grid.innerHTML = "";
-        localItems.filter(i => i.includes(filter)).forEach(item => {
-            const div = document.createElement("div");
-            div.className = "item-row";
-            div.innerHTML = `<span>${item}</span>
-                <div>
-                    <button onclick="editItem('${item}')" style="color:var(--info); background:none; border:none; cursor:pointer;">✏️</button>
-                    <button onclick="deleteItem('${item}')" style="color:var(--danger); background:none; border:none; cursor:pointer; margin-right:10px;">🗑️</button>
-                </div>`;
-            grid.appendChild(div);
-        });
-        localStorage.setItem("items", JSON.stringify(localItems));
+        } else { alert("الرمز خطأ"); }
     }
 
     function addItem() {
-        const item = document.getElementById("itemSearch").value.trim();
+        const item = document.getElementById("itemSearch").value;
         const qty = document.getElementById("qty").value;
-        if(!item || !qty) return alert("أكمل البيانات");
+        if(!item || !qty) return;
 
-        saveItemToCloud(item);
         const tbody = document.querySelector("#resultTable tbody");
         const row = tbody.insertRow(0);
-        row.innerHTML = `<td style="text-align:right">${item}</td><td style="font-weight:700">${qty}</td>
-            <td><button onclick="this.parentElement.parentElement.remove()" style="background:none; border:none; color:var(--danger); font-size:18px;">✕</button></td>`;
+        row.innerHTML = `<td>${item}</td><td>${qty}</td><td><button onclick="this.parentElement.parentElement.remove()" style="color:red; background:none; border:none; cursor:pointer;">✖</button></td>`;
         
         document.getElementById("itemSearch").value = "";
         document.getElementById("qty").value = "";
         document.getElementById("itemSearch").focus();
     }
 
-    function saveItemToCloud(name) {
-        if(!localItems.includes(name)) {
-            localItems.push(name);
-            renderCloudItems();
-            fetch(GOOGLE_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: 'add', item: name }) });
-        }
-    }
-
-    document.getElementById("itemSearch").oninput = function() {
-        const val = this.value;
-        const resDiv = document.getElementById("results");
-        resDiv.innerHTML = "";
-        if(!val) return resDiv.classList.add('hidden');
-        
-        const matches = localItems.filter(i => i.includes(val));
-        matches.forEach(item => {
-            const d = document.createElement("div");
-            d.className = "result-item"; d.textContent = item;
-            d.onclick = () => { 
-                document.getElementById("itemSearch").value = item; 
-                resDiv.classList.add('hidden');
-                document.getElementById("qty").focus();
-            };
-            resDiv.appendChild(d);
-        });
-        resDiv.classList.toggle('hidden', matches.length === 0);
-    };
-
     function prepareExport() {
-        document.getElementById("expClient").innerText = document.getElementById("clientName").value || "عميل نقدي";
+        document.getElementById("expClient").innerText = document.getElementById("clientName").value || "عميل محترم";
         document.getElementById("expDate").innerText = new Date().toLocaleDateString('ar-EG');
         const b = document.getElementById("expBody"); b.innerHTML = "";
         document.querySelectorAll("#resultTable tbody tr").forEach((r, i) => {
-            b.innerHTML += `<tr><td>${i+1}</td><td style="text-align:right;">${r.cells[0].innerText}</td><td>${r.cells[1].innerText}</td></tr>`;
+            b.innerHTML += `<tr><td>${i+1}</td><td>${r.cells[0].innerText}</td><td>${r.cells[1].innerText}</td></tr>`;
         });
-    }
-
-    async function exportAsImage() {
-        if (document.querySelectorAll("#resultTable tbody tr").length === 0) return alert("الجدول فارغ");
-        prepareExport();
-        const canvas = await html2canvas(document.getElementById("finalExportContainer"), { scale: 3 });
-        const link = document.createElement('a');
-        link.download = `طلب_${document.getElementById("clientName").value}.png`;
-        link.href = canvas.toDataURL(); link.click();
     }
 
     async function shareAsImage() {
         prepareExport();
-        const canvas = await html2canvas(document.getElementById("finalExportContainer"), { scale: 3 });
-        canvas.toBlob(async blob => {
-            const file = new File([blob], 'order.png', { type: 'image/png' });
-            if (navigator.canShare && navigator.canShare({ files: [file] })) {
-                await navigator.share({ files: [file], title: 'طلب مواد - آل وحيد' });
-            } else { alert("المشاركة غير مدعومة في متصفحك، سيتم حفظ الصورة بدلاً من ذلك"); exportAsImage(); }
+        const canvas = await html2canvas(document.getElementById("finalExportContainer"), { scale: 3, useCORS: true });
+        canvas.toBlob(blob => {
+            const file = new File([blob], 'فاتورة.png', { type: 'image/png' });
+            if (navigator.share) {
+                navigator.share({ files: [file], title: 'فاتورة ال وحيد' });
+            } else { exportAsImage(); }
         });
     }
 
-    function exportPDF() {
+    function exportAsImage() {
         prepareExport();
-        html2canvas(document.getElementById("finalExportContainer"), { scale: 2 }).then(canvas => {
-            const pdf = new jspdf.jsPDF('p', 'mm', 'a4');
-            pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, 210, (canvas.height * 210) / canvas.width);
-            pdf.save(`طلب_${document.getElementById("clientName").value}.pdf`);
+        html2canvas(document.getElementById("finalExportContainer"), { scale: 3, useCORS: true }).then(canvas => {
+            const link = document.createElement('a');
+            link.download = `فاتورة_${document.getElementById("clientName").value}.png`;
+            link.href = canvas.toDataURL(); link.click();
         });
-    }
-
-    function startVoice(id) {
-        const Rec = window.SpeechRecognition || window.webkitSpeechRecognition;
-        if(!Rec) return alert("صوت غير مدعوم");
-        const recognition = new Rec();
-        recognition.lang = 'ar-SA';
-        recognition.start();
-        recognition.onresult = (e) => {
-            document.getElementById(id).value = e.results[0][0].transcript;
-            document.getElementById(id).dispatchEvent(new Event('input'));
-        };
     }
 
     function switchPage(p) { 
@@ -402,9 +227,7 @@
         document.getElementById("tab2").classList.toggle("active", p === 'browse');
     }
 
-    function deleteItem(name) { if(confirm("حذف الصنف؟")) { localItems = localItems.filter(i => i !== name); renderCloudItems(); } }
-    function editItem(old) { const n = prompt("الاسم الجديد:", old); if(n) { localItems[localItems.indexOf(old)] = n; renderCloudItems(); } }
-    function clearTable() { if(confirm("تأكيد مسح الجدول؟")) document.querySelector("#resultTable tbody").innerHTML = ""; }
+    function clearTable() { if(confirm("مسح الجدول؟")) document.querySelector("#resultTable tbody").innerHTML = ""; }
 </script>
 
 </body>
