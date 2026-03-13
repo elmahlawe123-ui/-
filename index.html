@@ -65,23 +65,24 @@
         .hidden { display: none !important; }
         .item-card { background: var(--card); border: 1px solid var(--border); padding: 12px; border-radius: 8px; text-align: right; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
 
-        /* حاوية التصدير المخفية */
+        /* حاوية التصدير - مخفية تماماً عن المستخدم */
         #finalExportContainer { 
             display: block; 
             direction: rtl; 
             padding: 40px; 
             background-color: #ffffff !important; 
-            width: 750px; 
+            width: 794px; /* عرض A4 بيكسل تقريباً */
             color: #000000 !important; 
             position: fixed; 
             left: -9999px; 
             top: 0; 
+            z-index: -1;
         }
         #finalExportContainer * { color: #000000 !important; }
 
         .invoice-table { width: 100%; border-collapse: collapse; margin-top: 20px; border: 2px solid #000; }
         .invoice-table th, .invoice-table td { 
-            padding: 12px; font-size: 20px; font-weight: bold; text-align: center; 
+            padding: 10px; font-size: 18px; font-weight: bold; text-align: center; 
             border: 1px solid #000; background-color: #fff !important; color: #000 !important;
         }
     </style>
@@ -90,7 +91,7 @@
 
 <div id="loginOverlay" style="position:fixed; inset:0; background:var(--dark); z-index:9999; display:flex; align-items:center; justify-content:center; flex-direction:column;">
     <div class="card" style="width:320px; text-align:center; border: 2px solid var(--primary); background: #111; position: relative;">
-        <span style="position: absolute; top: 10px; left: 10px; font-size: 11px; color: var(--primary); font-weight: bold;">V 2.0.0</span>
+        <span style="position: absolute; top: 10px; left: 10px; font-size: 11px; color: var(--primary); font-weight: bold; opacity: 0.8;">V 2.0.0</span>
         <img src="https://i.ibb.co/4R44srhj/image.jpg" style="width: 110px; height:110px; border-radius: 50%; border: 3px solid var(--primary); margin-bottom: 15px; object-fit: cover;">
         <div class="brand-name" style="font-size: 40px; margin-bottom: 10px;">ال وحيد</div>
         <input type="password" id="passInput" placeholder="الرمز (123)" style="text-align:center;" onkeydown="if(event.key==='Enter') checkPassword()">
@@ -129,9 +130,9 @@
                 </table>
 
                 <div class="grid-buttons">
-                    <button class="btn full-width" style="background:var(--share); color:white;" onclick="shareAsImage()">🔗 مشاركة مباشرة (واتساب)</button>
+                    <button class="btn full-width" style="background:var(--share); color:white;" onclick="shareAsImage()">🔗 مشاركة (واتساب)</button>
                     <button class="btn" style="background:#25D366; color:white;" onclick="exportAsImage()">📸 حفظ صورة</button>
-                    <button class="btn" style="background:var(--primary); color:white;" onclick="exportPDF()">📄 تصدير PDF مقسم</button>
+                    <button id="pdfBtn" class="btn" style="background:var(--primary); color:white;" onclick="exportPDF()">📄 تصدير PDF مقسم</button>
                     <button class="btn full-width" style="background:#444; color:white;" onclick="clearTable()">🗑️ مسح الجدول</button>
                 </div>
             </div>
@@ -157,16 +158,16 @@
 </div>
 
 <div id="finalExportContainer">
-    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 5px solid #b08d57; padding-bottom: 15px; margin-bottom: 25px; background: white;">
-        <img src="https://i.ibb.co/4R44srhj/image.jpg" crossOrigin="anonymous" style="width: 120px; height:120px; border-radius: 50%; object-fit: cover;">
+    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 5px solid #b08d57; padding-bottom: 15px; margin-bottom: 25px;">
+        <img src="https://i.ibb.co/4R44srhj/image.jpg" crossOrigin="anonymous" style="width: 100px; height:100px; border-radius: 50%; object-fit: cover;">
         <div style="text-align: left;">
-            <h1 style="margin: 0; color: #b08d57 !important; font-size: 55px; font-family: 'Aref Ruqaa', serif;">ال وحيد</h1>
-            <p style="margin: 5px 0; font-size: 22px; font-weight: bold;">كشف طلب مواد </p>
+            <h1 style="margin: 0; color: #b08d57 !important; font-size: 45px; font-family: 'Aref Ruqaa', serif;">ال وحيد</h1>
+            <p style="margin: 5px 0; font-size: 20px; font-weight: bold;">كشف طلب مواد </p>
         </div>
     </div>
-    <div style="display: flex; justify-content: space-between; margin-bottom: 20px; background: white;">
-        <div style="font-size: 24px;">السيد: <strong id="expClient"></strong></div>
-        <div style="font-size: 22px;">التاريخ: <span id="expDate"></span></div>
+    <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+        <div style="font-size: 22px;">السيد: <strong id="expClient"></strong></div>
+        <div style="font-size: 20px;">التاريخ: <span id="expDate"></span></div>
     </div>
     <table class="invoice-table">
         <thead>
@@ -174,14 +175,13 @@
         </thead>
         <tbody id="expBody"></tbody>
     </table>
-    <div style="margin-top: 80px; text-align: right; background: white;">
-        <p style="font-weight: bold; font-size: 22px; border-bottom: 3px solid black; display: inline-block; padding-left: 80px;">أ.احمد وحيد / ت.01007519016</p>
+    <div style="margin-top: 50px; text-align: right;">
+        <p style="font-weight: bold; font-size: 20px; border-bottom: 2px solid black; display: inline-block; padding-left: 50px;">أ.احمد وحيد / ت.01007519016</p>
     </div>
 </div>
 
 <script>
     const GOOGLE_URL = 'https://script.google.com/macros/s/AKfycby94J0O_uH3WIFzLoelLDAVMagTZEGbo0LAfbVaVR_52wgSoCtbqJ-6ZHjbnUBujlfc/exec';
-    
     let localItems = JSON.parse(localStorage.getItem("items")) || ["إسمنت", "حديد", "رمل"];
 
     function checkPassword() {
@@ -192,27 +192,82 @@
         } else { alert("الرمز خطأ"); }
     }
 
-    async function syncFromCloud() {
-        const btn = document.getElementById("syncBtn");
-        const originalText = btn.innerHTML;
+    // --- وظيفة PDF المطورة لحل مشكلة تداخل الصفحات ---
+    async function exportPDF() {
+        const rows = document.querySelectorAll("#resultTable tbody tr");
+        if (rows.length === 0) return alert("الجدول فارغ!");
+
+        const btn = document.getElementById("pdfBtn");
+        const originalText = btn.innerText;
+        btn.innerText = "جاري المعالجة...";
+        btn.disabled = true;
+
         try {
-            btn.innerHTML = "جاري التحميل...";
-            btn.disabled = true;
-            const response = await fetch(GOOGLE_URL);
-            if (!response.ok) throw new Error("Network error");
-            const cloudData = await response.json();
-            if (Array.isArray(cloudData)) {
-                localItems = [...new Set([...localItems, ...cloudData])];
-                localStorage.setItem("items", JSON.stringify(localItems));
-                renderCloudItems();
-                alert("تمت المزامنة بنجاح!");
+            const { jsPDF } = window.jspdf;
+            const pdf = new jsPDF('p', 'mm', 'a4');
+            const itemsPerPage = 25;
+            const totalPages = Math.ceil(rows.length / itemsPerPage);
+
+            for (let i = 0; i < totalPages; i++) {
+                const start = i * itemsPerPage;
+                const end = start + itemsPerPage;
+                const pageItems = Array.from(rows).slice(start, end);
+
+                // تجهيز الحاوية: مسح القديم وكتابة الجديد
+                document.getElementById("expClient").innerText = document.getElementById("clientName").value || "بدون اسم";
+                document.getElementById("expDate").innerText = new Date().toLocaleDateString('ar-EG');
+                
+                const b = document.getElementById("expBody");
+                b.innerHTML = ""; // تفريغ الجدول تماماً لمنع التداخل
+                
+                pageItems.forEach((r, idx) => {
+                    b.innerHTML += `<tr>
+                        <td>${start + idx + 1}</td>
+                        <td style="text-align:right;">${r.cells[0].innerText}</td>
+                        <td>${r.cells[1].innerText}</td>
+                    </tr>`;
+                });
+
+                // انتظار بسيط لضمان تحديث الـ DOM
+                await new Promise(r => setTimeout(r, 150));
+
+                const canvas = await html2canvas(document.getElementById("finalExportContainer"), { 
+                    scale: 2, 
+                    useCORS: true, 
+                    backgroundColor: "#ffffff" 
+                });
+
+                const imgData = canvas.toDataURL('image/png');
+                if (i > 0) pdf.addPage();
+                
+                const imgWidth = 210;
+                const imgHeight = (canvas.height * imgWidth) / canvas.width;
+                pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+                
+                pdf.setFontSize(10);
+                pdf.text(`صفحة ${i + 1} من ${totalPages}`, 105, 290, { align: 'center' });
             }
-        } catch (error) {
-            alert("حدث خطأ أثناء المزامنة.");
+
+            pdf.save(`فاتورة_${document.getElementById("clientName").value || 'جديدة'}.pdf`);
+        } catch (e) {
+            alert("حدث خطأ أثناء التصدير");
         } finally {
-            btn.innerHTML = originalText;
+            btn.innerText = originalText;
             btn.disabled = false;
         }
+    }
+
+    // بقية الوظائف الأساسية
+    function addItem() {
+        const itemInput = document.getElementById("itemSearch");
+        const item = itemInput.value.trim();
+        const qty = document.getElementById("qty").value;
+        if(!item || !qty) return;
+        saveItemToCloud(item);
+        const tbody = document.querySelector("#resultTable tbody");
+        const row = tbody.insertRow(0);
+        row.innerHTML = `<td style="text-align:right">${item}</td><td style="font-weight:bold">${qty}</td><td><button onclick="this.parentElement.parentElement.remove()" style="background:none; border:none; color:red; cursor:pointer; font-size:18px;">✖</button></td>`;
+        itemInput.value = ""; document.getElementById("qty").value = ""; itemInput.focus();
     }
 
     function renderCloudItems(filter = "") {
@@ -232,70 +287,28 @@
         localStorage.setItem("items", JSON.stringify(localItems));
     }
 
-    function addItem() {
-        const itemInput = document.getElementById("itemSearch");
-        const item = itemInput.value.trim();
-        const qty = document.getElementById("qty").value;
-        if(!item || !qty) return;
-        saveItemToCloud(item);
-        const tbody = document.querySelector("#resultTable tbody");
-        const row = tbody.insertRow(0);
-        row.innerHTML = `<td style="text-align:right">${item}</td><td style="font-weight:bold">${qty}</td><td><button onclick="this.parentElement.parentElement.remove()" style="background:none; border:none; color:red; cursor:pointer; font-size:18px;">✖</button></td>`;
-        itemInput.value = ""; document.getElementById("qty").value = ""; itemInput.focus();
+    async function syncFromCloud() {
+        const btn = document.getElementById("syncBtn");
+        btn.disabled = true;
+        try {
+            const response = await fetch(GOOGLE_URL);
+            const cloudData = await response.json();
+            if (Array.isArray(cloudData)) {
+                localItems = [...new Set([...localItems, ...cloudData])];
+                renderCloudItems();
+                alert("تم التحديث!");
+            }
+        } catch (e) { alert("خطأ في المزامنة"); }
+        btn.disabled = false;
     }
 
     function saveItemToCloud(name) {
-        name = name.trim(); if(!name) return false;
-        if(!localItems.some(i => i.toLowerCase() === name.toLowerCase())) {
-            localItems.push(name); renderCloudItems();
-            fetch(GOOGLE_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: 'add', item: name }) });
-            return true;
-        }
-        return false;
+        if(!name || localItems.includes(name)) return;
+        localItems.push(name);
+        renderCloudItems();
+        fetch(GOOGLE_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: 'add', item: name }) });
     }
 
-    // --- وظيفة PDF المتطورة (تقسيم صفحات) ---
-    async function exportPDF() {
-        const rows = document.querySelectorAll("#resultTable tbody tr");
-        if (rows.length === 0) return alert("الجدول فارغ!");
-
-        const { jsPDF } = window.jspdf;
-        const pdf = new jsPDF('p', 'mm', 'a4');
-        const itemsPerPage = 25; // عدد الأصناف في كل صفحة
-        const totalPages = Math.ceil(rows.length / itemsPerPage);
-
-        for (let i = 0; i < totalPages; i++) {
-            const start = i * itemsPerPage;
-            const end = start + itemsPerPage;
-            const pageItems = Array.from(rows).slice(start, end);
-
-            // تجهيز بيانات الصفحة
-            document.getElementById("expClient").innerText = document.getElementById("clientName").value || "بدون اسم";
-            document.getElementById("expDate").innerText = new Date().toLocaleDateString('ar-EG');
-            const b = document.getElementById("expBody");
-            b.innerHTML = "";
-            
-            pageItems.forEach((r, idx) => {
-                b.innerHTML += `<tr><td>${start + idx + 1}</td><td style="text-align:right;">${r.cells[0].innerText}</td><td>${r.cells[1].innerText}</td></tr>`;
-            });
-
-            // التقاط الصفحة كصورة
-            const canvas = await html2canvas(document.getElementById("finalExportContainer"), { 
-                scale: 2, useCORS: true, backgroundColor: "#ffffff" 
-            });
-            const imgData = canvas.toDataURL('image/png');
-
-            if (i > 0) pdf.addPage();
-            pdf.addImage(imgData, 'PNG', 0, 0, 210, (canvas.height * 210) / canvas.width);
-            
-            // إضافة رقم الصفحة في تذييل الـ PDF
-            pdf.setFontSize(10);
-            pdf.text(`صفحة ${i + 1} من ${totalPages}`, 105, 290, { align: 'center' });
-        }
-        pdf.save(`طلب_${document.getElementById("clientName").value}.pdf`);
-    }
-
-    // وظائف إضافية
     function prepareExport() {
         document.getElementById("expClient").innerText = document.getElementById("clientName").value || "بدون اسم";
         document.getElementById("expDate").innerText = new Date().toLocaleDateString('ar-EG');
@@ -307,20 +320,28 @@
 
     async function exportAsImage() {
         prepareExport();
+        await new Promise(r => setTimeout(r, 100));
         const canvas = await html2canvas(document.getElementById("finalExportContainer"), { scale: 3, useCORS: true });
         const link = document.createElement('a');
-        link.download = `فاتورة.png`; link.href = canvas.toDataURL("image/png"); link.click();
+        link.download = `طلب.png`; link.href = canvas.toDataURL("image/png"); link.click();
     }
 
     async function shareAsImage() {
         prepareExport();
+        await new Promise(r => setTimeout(r, 100));
         const canvas = await html2canvas(document.getElementById("finalExportContainer"), { scale: 3, useCORS: true });
         canvas.toBlob(async blob => {
-            const file = new File([blob], `فاتورة.png`, { type: 'image/png' });
-            if (navigator.canShare && navigator.canShare({ files: [file] })) {
-                await navigator.share({ files: [file], title: 'طلب ال وحيد' });
-            } else { alert("المشاركة غير مدعومة في متصفحك، استخدم حفظ صورة"); }
+            const file = new File([blob], `طلب.png`, { type: 'image/png' });
+            if (navigator.share) await navigator.share({ files: [file], title: 'طلب ال وحيد' });
+            else alert("المشاركة غير مدعومة");
         });
+    }
+
+    function switchPage(p) { 
+        document.getElementById("orderPage").classList.toggle("hidden", p !== 'order');
+        document.getElementById("browsePage").classList.toggle("hidden", p !== 'browse');
+        document.getElementById("tab1").classList.toggle("active", p === 'order');
+        document.getElementById("tab2").classList.toggle("active", p === 'browse');
     }
 
     function startVoice(inputId, callback = null) {
@@ -334,17 +355,10 @@
         };
     }
 
-    function switchPage(p) { 
-        document.getElementById("orderPage").classList.toggle("hidden", p !== 'order');
-        document.getElementById("browsePage").classList.toggle("hidden", p !== 'browse');
-        document.getElementById("tab1").classList.toggle("active", p === 'order');
-        document.getElementById("tab2").classList.toggle("active", p === 'browse');
-    }
+    function deleteItem(name) { if(confirm("حذف؟")) { localItems = localItems.filter(i => i !== name); renderCloudItems(); } }
+    function editItem(oldName) { const newName = prompt("تعديل:", oldName); if(newName) { localItems[localItems.indexOf(oldName)] = newName; renderCloudItems(); } }
+    function clearTable() { if(confirm("مسح؟")) document.querySelector("#resultTable tbody").innerHTML = ""; }
 
-    function deleteItem(name) { if(confirm("حذف الصنف؟")) { localItems = localItems.filter(i => i !== name); renderCloudItems(); } }
-    function editItem(oldName) { const newName = prompt("تعديل الاسم:", oldName); if(newName) { localItems[localItems.indexOf(oldName)] = newName; renderCloudItems(); } }
-    function clearTable() { if(confirm("مسح الجدول؟")) document.querySelector("#resultTable tbody").innerHTML = ""; }
-    
     document.getElementById("itemSearch").oninput = function() {
         const val = this.value.toLowerCase();
         const resDiv = document.getElementById("results");
@@ -354,11 +368,7 @@
         matches.forEach(item => {
             const d = document.createElement("div");
             d.className = "result-item"; d.textContent = item;
-            d.onclick = () => { 
-                document.getElementById("itemSearch").value = item; 
-                resDiv.classList.add('hidden'); 
-                document.getElementById("qty").focus(); 
-            };
+            d.onclick = () => { document.getElementById("itemSearch").value = item; resDiv.classList.add('hidden'); document.getElementById("qty").focus(); };
             resDiv.appendChild(d);
         });
         resDiv.classList.remove('hidden');
