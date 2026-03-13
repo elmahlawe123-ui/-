@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>نظام المحلاوي - V 2.3.4</title>
+    <title>نظام المحلاوي - V 2.3.5</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@700&family=Cairo:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -88,7 +88,7 @@
     <div class="card" style="width:320px; text-align:center; border: 2px solid var(--primary); background: #111;">
         <img src="https://i.ibb.co/4R44srhj/image.jpg" style="width: 110px; height:110px; border-radius: 50%; border: 3px solid var(--primary); margin-bottom: 15px; object-fit: cover;">
         <div class="brand-name" style="font-size: 40px; margin-bottom: 5px;">المحلاوي</div>
-        <div style="color: var(--primary); font-size: 12px; margin-bottom: 15px;">VERSION 2.3.4</div>
+        <div style="color: var(--primary); font-size: 12px; margin-bottom: 15px;">VERSION 2.3.5</div>
         <input type="password" id="passInput" placeholder="الرمز (123)" style="text-align:center;" onkeydown="if(event.key==='Enter') checkPassword()">
         <button class="btn btn-main" onclick="checkPassword()">دخول</button>
     </div>
@@ -112,7 +112,7 @@
         <div id="modalItemsList"></div>
         <div id="modalActions" style="margin-top: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
             <button id="reprintBtn" class="btn" style="background:var(--share); color:white;">🔄 إعادة طباعة</button>
-            <button id="deleteInvoiceBtn" class="btn" style="background:var(--danger); color:white;">🗑️ حذف الفاتورة</button>
+            <button id="deleteInvoiceBtn" class="btn" style="background:var(--danger); color:white;">🗑️ حذف السجل</button>
         </div>
     </div>
 </div>
@@ -123,7 +123,7 @@
             <img src="https://i.ibb.co/4R44srhj/image.jpg" style="width: 45px; height:45px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary);">
             <div class="brand-name" style="font-size: 24px;">المحلاوي</div>
         </div>
-        <span style="font-size: 11px; color: var(--primary);">V 2.3.4</span>
+        <span style="font-size: 11px; color: var(--primary);">V 2.3.5</span>
     </header>
 
     <div class="nav-tabs">
@@ -150,7 +150,7 @@
                 </table>
                 <div class="grid-buttons">
                     <button class="btn full-width" style="background:var(--share); color:white;" onclick="prepareAndShowShare()">🔗 مشاركة وحفظ بالسجل</button>
-                    <button id="adminTestBtn" class="btn full-width hidden" style="background:#555; color:white; border: 1px dashed var(--primary);" onclick="addRandomItems()">🧪 إضافة 40 صنف عشوائي</button>
+                    <button id="adminTestBtn" class="btn full-width hidden" style="background:#555; color:white; border: 1px dashed var(--primary);" onclick="addRandomItems()">🧪 إضافة أصناف عشوائية</button>
                     <button class="btn full-width" style="background:#25D366; color:white;" onclick="processExport()">📸 حفظ الصور في المعرض</button>
                     <button class="btn full-width" style="background:#444; color:white;" onclick="clearTable()">🗑️ مسح الجدول</button>
                 </div>
@@ -252,22 +252,19 @@
         tableHTML += `</tbody></table>`;
         document.getElementById("modalItemsList").innerHTML = tableHTML;
 
-        // زر إعادة الطباعة
         document.getElementById("reprintBtn").onclick = () => {
             modal.classList.add("hidden");
             reprintInvoice(inv);
         };
 
-        // زر حذف الفاتورة
         document.getElementById("deleteInvoiceBtn").onclick = () => {
-            if(confirm(`هل أنت متأكد من حذف فاتورة العميل "${inv.client}" نهائياً من السجل؟`)) {
+            if(confirm(`حذف فاتورة "${inv.client}"؟`)) {
                 invoiceHistory = invoiceHistory.filter(h => h.id !== inv.id);
                 localStorage.setItem("invoiceHistory", JSON.stringify(invoiceHistory));
                 modal.classList.add("hidden");
                 renderHistory();
             }
         };
-
         modal.classList.remove("hidden");
     }
 
@@ -290,12 +287,24 @@
         saveInvoiceToHistory();
         
         const clientName = document.getElementById("clientName").value || "عميل";
-        const clientNotes = document.getElementById("clientNotes").value || "";
+        const clientNotes = document.getElementById("clientNotes").value || "لا يوجد";
         const container = document.getElementById("exportContainer");
         container.innerHTML = "";
         shareQueue = [];
         const itemsPerPage = 25;
         const totalPages = Math.ceil(rows.length / itemsPerPage);
+
+        // نص الرسالة المطلوب
+        const shareText = `*📦 طلبية جديدة - نظام المحلاوي*
+------------------------------
+👤 *السيد:* ${clientName}
+📅 *التاريخ:* ${new Date().toLocaleDateString('ar-EG')}
+📝 *ملاحظات:* ${clientNotes}
+------------------------------
+📊 *تفاصيل الطلبية:*
+✅ عدد الأصناف: ${rows.length} صنف
+
+*شكراً لتعاملكم معنا* 🌹`.trim();
 
         const modal = document.getElementById("multiShareModal");
         const status = document.getElementById("shareStatus");
@@ -312,11 +321,11 @@
                 <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:5px solid #b08d57; padding-bottom:15px; margin-bottom:20px;">
                     <img src="https://i.ibb.co/4R44srhj/image.jpg" crossorigin="anonymous" style="width:100px; height:100px; border-radius:50%;">
                     <div><h1 style="margin:0; color:#b08d57; font-size:40px; font-family:'Aref Ruqaa';">المحلاوي</h1>
-                    <p style="text-align:left; margin:0;">صفحة ${i+1} من ${totalPages}</p></div>
+                    <p style="text-align:left; margin:0; color:black;">صفحة ${i+1} من ${totalPages}</p></div>
                 </div>
                 <div style="font-size:20px; margin-bottom:15px; color:black;">
                     <div style="display:flex; justify-content:space-between;"><div>السيد: <strong>${clientName}</strong></div><div>${new Date().toLocaleDateString('ar-EG')}</div></div>
-                    ${clientNotes ? `<div style="font-size:16px; color:#555; margin-top:5px; border-top:1px solid #eee;">ملاحظات: ${clientNotes}</div>` : ''}
+                    ${clientNotes !== 'لا يوجد' ? `<div style="font-size:16px; color:#555; margin-top:5px; border-top:1px solid #eee;">ملاحظات: ${clientNotes}</div>` : ''}
                 </div>
                 <table class="invoice-table">
                     <thead><tr><th>م</th><th style="text-align:right">الصنف</th><th>الكمية</th></tr></thead>
@@ -335,7 +344,10 @@
         btn.onclick = async () => {
             if (currentIdx < shareQueue.length) {
                 try {
-                    await navigator.share({ files: [shareQueue[currentIdx]] });
+                    await navigator.share({
+                        files: [shareQueue[currentIdx]],
+                        text: currentIdx === 0 ? shareText : ''
+                    });
                     currentIdx++;
                     if (currentIdx < shareQueue.length) {
                         btn.innerText = `إرسال الصفحة (${currentIdx + 1})`;
@@ -361,7 +373,7 @@
             const pageDiv = document.createElement("div");
             pageDiv.className = "export-page";
             const pageItems = rows.slice(i * 25, (i + 1) * 25);
-            pageDiv.innerHTML = `<div style="padding:20px;"><h1 style="color:#b08d57; font-family:'Aref Ruqaa';">المحلاوي - صفحة ${i+1}</h1><table class="invoice-table"><thead><tr><th>م</th><th>الصنف</th><th>الكمية</th></tr></thead><tbody>${pageItems.map((r, idx) => `<tr><td>${(i*25)+idx+1}</td><td style="text-align:right">${r.cells[1].innerText}</td><td>${r.cells[2].innerText}</td></tr>`).join('')}</tbody></table></div>`;
+            pageDiv.innerHTML = `<div style="padding:20px; background:white; color:black;"><h1 style="color:#b08d57; font-family:'Aref Ruqaa';">المحلاوي - صفحة ${i+1}</h1><table class="invoice-table"><thead><tr><th>م</th><th>الصنف</th><th>الكمية</th></tr></thead><tbody>${pageItems.map((r, idx) => `<tr><td>${(i*25)+idx+1}</td><td style="text-align:right">${r.cells[1].innerText}</td><td>${r.cells[2].innerText}</td></tr>`).join('')}</tbody></table></div>`;
             container.appendChild(pageDiv);
             const canvas = await html2canvas(pageDiv, { scale: 2, useCORS: true });
             const link = document.createElement('a'); link.download = `فاتورة_${clientName}_${i+1}.png`; link.href = canvas.toDataURL(); link.click();
@@ -386,9 +398,9 @@
                 localItems = [...new Set([...localItems, ...data])]; 
                 localStorage.setItem("items", JSON.stringify(localItems));
                 renderCloudItems(); 
-                alert("تم تحديث الأصناف");
+                alert("تم التحديث");
             }
-        } catch (e) { alert("خطأ في المزامنة"); }
+        } catch (e) { alert("خطأ"); }
         btn.innerText = "🔄 مزامنة";
     }
 
@@ -418,7 +430,7 @@
 
     function deleteItem(n) { if(confirm("حذف؟")) { localItems = localItems.filter(i => i !== n); localStorage.setItem("items", JSON.stringify(localItems)); renderCloudItems(); } }
     function editItem(o) { const n = prompt("تعديل:", o); if(n) { localItems[localItems.indexOf(o)] = n; localStorage.setItem("items", JSON.stringify(localItems)); renderCloudItems(); } }
-    function clearTable() { if(confirm("مسح الجدول بالكامل؟")) document.querySelector("#resultTable tbody").innerHTML = ""; }
+    function clearTable() { if(confirm("مسح الجدول؟")) document.querySelector("#resultTable tbody").innerHTML = ""; }
     function clearHistory() { if(confirm("حذف كل السجل؟")) { invoiceHistory = []; localStorage.setItem("invoiceHistory", "[]"); renderHistory(); } }
 
     function startVoice(id) {
@@ -432,10 +444,9 @@
 
     function addRandomItems() {
         const tbody = document.querySelector("#resultTable tbody");
-        const count = tbody.rows.length;
         for (let i = 1; i <= 40; i++) {
             const row = tbody.insertRow(-1);
-            row.innerHTML = `<td>${count + i}</td><td style="text-align:right">صنف تجريبي ${count+i}</td><td style="font-weight:bold">${Math.floor(Math.random()*15)+1}</td><td><button onclick="removeRow(this)" style="color:red; background:none; border:none;">✖</button></td>`;
+            row.innerHTML = `<td>${tbody.rows.length}</td><td style="text-align:right">صنف تجريبي ${i}</td><td style="font-weight:bold">${Math.floor(Math.random()*10)+1}</td><td><button onclick="removeRow(this)" style="color:red; background:none; border:none;">✖</button></td>`;
         }
     }
 
