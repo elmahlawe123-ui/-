@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>نظام ال وحيد - V 2.1.0.0</title>
+    <title>نظام ال وحيد - V 2.2</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@700&family=Cairo:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -70,10 +70,9 @@
             border: 1px solid #000; background: #fff !important; color: #000 !important;
         }
 
-        /* نافذة التحكم في الإرسال المتعدد */
         #multiShareModal {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2000;
-            display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 20px;
+            position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 2000;
+            display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 20px; padding: 20px;
         }
     </style>
 </head>
@@ -83,17 +82,19 @@
     <div class="card" style="width:320px; text-align:center; border: 2px solid var(--primary); background: #111;">
         <img src="https://i.ibb.co/4R44srhj/image.jpg" style="width: 110px; height:110px; border-radius: 50%; border: 3px solid var(--primary); margin-bottom: 15px; object-fit: cover;">
         <div class="brand-name" style="font-size: 40px; margin-bottom: 5px;">ال وحيد</div>
-        <div style="color: var(--primary); font-size: 12px; margin-bottom: 15px;">VERSION 2.1.0.0.0</div>
+        <div style="color: var(--primary); font-size: 12px; margin-bottom: 15px;">V 2.2</div>
         <input type="password" id="passInput" placeholder="الرمز (123)" style="text-align:center;" onkeydown="if(event.key==='Enter') checkPassword()">
         <button class="btn btn-main" onclick="checkPassword()">دخول</button>
     </div>
 </div>
 
 <div id="multiShareModal" class="hidden">
-    <h2 id="shareTitle" style="color:white; text-align:center;">جاري تجهيز الصفحات...</h2>
-    <div id="shareStatus" style="color:var(--primary); font-size:20px;"></div>
-    <button id="nextShareBtn" class="btn btn-main" style="width:250px; height:60px; font-size:22px;">إرسال الصفحة (1)</button>
-    <button onclick="document.getElementById('multiShareModal').classList.add('hidden')" style="background:none; border:none; color:gray; cursor:pointer;">إلغاء</button>
+    <div style="background:var(--card); padding:30px; border-radius:15px; text-align:center; border:1px solid var(--primary); width:100%; max-width:350px;">
+        <h2 id="shareTitle" style="color:var(--primary); margin-top:0;">إرسال الفاتورة</h2>
+        <div id="shareStatus" style="color:white; font-size:18px; margin-bottom:20px;"></div>
+        <button id="nextShareBtn" class="btn btn-main" style="width:100%; height:60px; font-size:20px; margin-bottom:10px;">بدء الإرسال</button>
+        <button onclick="document.getElementById('multiShareModal').classList.add('hidden')" style="background:none; border:none; color:#666; cursor:pointer; font-size:14px;">إلغاء العملية</button>
+    </div>
 </div>
 
 <div id="appContent" class="hidden">
@@ -102,7 +103,7 @@
             <img src="https://i.ibb.co/4R44srhj/image.jpg" style="width: 45px; height:45px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary);">
             <div class="brand-name" style="font-size: 24px;">ال وحيد</div>
         </div>
-        <span style="font-size: 11px; color: var(--primary);">V 2.1.0.0</span>
+        <span style="font-size: 11px; color: var(--primary);">V 2.2</span>
     </header>
 
     <div class="nav-tabs">
@@ -128,8 +129,8 @@
                 </table>
 
                 <div class="grid-buttons">
-                    <button class="btn full-width" style="background:var(--share); color:white;" onclick="prepareAndShowShare()">🔗 مشاركة الفاتورة (واتساب)</button>
-                    <button class="btn" style="background:#25D366; color:white;" onclick="processExport('image')">📸 حفظ الصور بالجهاز</button>
+                    <button class="btn full-width" style="background:var(--share); color:white;" onclick="prepareAndShowShare()">🔗 مشاركة (واتساب + ملخص)</button>
+                    <button class="btn" style="background:#25D366; color:white;" onclick="processExport('image')">📸 حفظ الصور</button>
                     <button class="btn" style="background:var(--primary); color:white;" onclick="processExport('pdf')">📄 تصدير PDF</button>
                     <button class="btn full-width" style="background:#444; color:white;" onclick="clearTable()">🗑️ مسح الجدول</button>
                 </div>
@@ -155,7 +156,7 @@
 <script>
     const GOOGLE_URL = 'https://script.google.com/macros/s/AKfycby94J0O_uH3WIFzLoelLDAVMagTZEGbo0LAfbVaVR_52wgSoCtbqJ-6ZHjbnUBujlfc/exec';
     let localItems = JSON.parse(localStorage.getItem("items")) || ["إسمنت", "حديد", "رمل"];
-    let shareQueue = []; // طابور الصور المراد مشاركتها
+    let shareQueue = []; 
 
     function checkPassword() {
         if(document.getElementById("passInput").value === "123") {
@@ -182,24 +183,23 @@
         document.querySelectorAll("#resultTable tbody tr").forEach((row, index) => { row.cells[0].innerText = index + 1; });
     }
 
-    // وظيفة تحضير الصور للمشاركة المتعددة
     async function prepareAndShowShare() {
         const rows = Array.from(document.querySelectorAll("#resultTable tbody tr"));
         if (rows.length === 0) return alert("الجدول فارغ!");
 
+        const clientName = document.getElementById("clientName").value || "عميل";
         const container = document.getElementById("exportContainer");
         container.innerHTML = "";
         shareQueue = [];
         const itemsPerPage = 25;
         const totalPages = Math.ceil(rows.length / itemsPerPage);
 
-        // إظهار نافذة التحكم
         const modal = document.getElementById("multiShareModal");
         const status = document.getElementById("shareStatus");
         const btn = document.getElementById("nextShareBtn");
         modal.classList.remove("hidden");
         btn.disabled = true;
-        status.innerText = "جاري معالجة الصفحات...";
+        status.innerText = "جاري تجهيز الصفحات...";
 
         for (let i = 0; i < totalPages; i++) {
             const pageDiv = document.createElement("div");
@@ -212,7 +212,7 @@
                     <p style="text-align:left; margin:0;">صفحة ${i+1} من ${totalPages}</p></div>
                 </div>
                 <div style="display: flex; justify-content: space-between; margin-bottom: 15px; font-size: 20px;">
-                    <div>السيد: <strong>${document.getElementById("clientName").value || "عميل"}</strong></div>
+                    <div>السيد: <strong>${clientName}</strong></div>
                     <div>${new Date().toLocaleDateString('ar-EG')}</div>
                 </div>
                 <table class="invoice-table">
@@ -223,14 +223,14 @@
             container.appendChild(pageDiv);
             const canvas = await html2canvas(pageDiv, { scale: 3, useCORS: true });
             const blob = await new Promise(res => canvas.toBlob(res, 'image/png'));
-            shareQueue.push(new File([blob], `صفحة_${i+1}.png`, { type: 'image/png' }));
+            shareQueue.push(new File([blob], `فاتورة_${i+1}.png`, { type: 'image/png' }));
         }
 
-        // إعداد الزر للبدء
         let currentIdx = 0;
         status.innerText = `جاهز لإرسال ${totalPages} صفحات`;
         btn.disabled = false;
         btn.innerText = `إرسال الصفحة (1)`;
+        btn.style.background = "var(--primary)";
         
         btn.onclick = async () => {
             if (currentIdx < shareQueue.length) {
@@ -241,11 +241,18 @@
                         btn.innerText = `إرسال الصفحة (${currentIdx + 1})`;
                         status.innerText = `تم إرسال ${currentIdx} من أصل ${totalPages}`;
                     } else {
-                        status.innerText = "تم إرسال كافة الصفحات بنجاح!";
-                        btn.innerText = "إغلاق";
-                        btn.onclick = () => modal.classList.add("hidden");
+                        // المرحلة الأخيرة: إرسال الرسالة النصية الملخصة
+                        status.innerText = "تم إرسال الصور. أرسل ملخص الطلبية الآن:";
+                        btn.innerText = "إرسال ملخص الطلبية 💬";
+                        btn.style.background = "#25D366"; // لون أخضر للواتساب
+                        btn.onclick = () => {
+                            const summaryText = `*طلب مواد من ال وحيد*\n-------------------\n👤 *السيد:* ${clientName}\n📦 *عدد الأصناف:* ${rows.length}\n📄 *عدد الصفحات:* ${totalPages}\n📅 *التاريخ:* ${new Date().toLocaleDateString('ar-EG')}\n-------------------\n_تم الإرسال بواسطة نظام ال وحيد V2.2_`;
+                            const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(summaryText)}`;
+                            window.open(whatsappUrl, '_blank');
+                            modal.classList.add("hidden");
+                        };
                     }
-                } catch (e) { console.log("User cancelled or error"); }
+                } catch (e) { console.log("User cancelled"); }
             }
         };
     }
@@ -273,8 +280,8 @@
             container.appendChild(pageDiv);
         }
 
-        const pages = document.querySelectorAll(".export-page");
         if (type === 'image') {
+            const pages = document.querySelectorAll(".export-page");
             for (let j = 0; j < pages.length; j++) {
                 const canvas = await html2canvas(pages[j], { scale: 3, useCORS: true });
                 const link = document.createElement('a');
@@ -284,6 +291,7 @@
         } else if (type === 'pdf') {
             const { jsPDF } = window.jspdf;
             const pdf = new jsPDF('p', 'mm', 'a4');
+            const pages = document.querySelectorAll(".export-page");
             for (let j = 0; j < pages.length; j++) {
                 const canvas = await html2canvas(pages[j], { scale: 3, useCORS: true });
                 if (j > 0) pdf.addPage();
