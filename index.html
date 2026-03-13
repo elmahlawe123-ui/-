@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>نظام ال وحيد - V 2.2</title>
+    <title>نظام ال وحيد - V 2.3</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@700&family=Cairo:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -34,7 +34,7 @@
         }
 
         .nav-tabs { display: flex; background: var(--card); border-bottom: 1px solid var(--border); }
-        .nav-tabs button { flex: 1; padding: 15px; border: none; background: none; color: #94a3b8; font-weight: bold; cursor: pointer; font-family: 'Cairo'; }
+        .nav-tabs button { flex: 1; padding: 15px; border: none; background: none; color: #94a3b8; font-weight: bold; cursor: pointer; font-family: 'Cairo'; font-size: 13px; }
         .nav-tabs button.active { color: var(--primary); border-bottom: 3px solid var(--primary); background: rgba(176, 141, 87, 0.1); }
 
         .container { padding: 15px; max-width: 800px; margin: 0 auto; }
@@ -74,6 +74,14 @@
             position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 2000;
             display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 20px; padding: 20px;
         }
+
+        /* تنسيق السجل */
+        .history-item { 
+            background: #2d3748; padding: 15px; border-radius: 10px; margin-bottom: 10px; 
+            border-right: 5px solid var(--primary); cursor: pointer;
+        }
+        .history-meta { display: flex; justify-content: space-between; font-size: 12px; color: #a0aec0; }
+        .history-name { font-weight: bold; font-size: 18px; color: var(--primary); margin: 5px 0; }
     </style>
 </head>
 <body>
@@ -82,7 +90,7 @@
     <div class="card" style="width:320px; text-align:center; border: 2px solid var(--primary); background: #111;">
         <img src="https://i.ibb.co/4R44srhj/image.jpg" style="width: 110px; height:110px; border-radius: 50%; border: 3px solid var(--primary); margin-bottom: 15px; object-fit: cover;">
         <div class="brand-name" style="font-size: 40px; margin-bottom: 5px;">ال وحيد</div>
-        <div style="color: var(--primary); font-size: 12px; margin-bottom: 15px;">V 2.2</div>
+        <div style="color: var(--primary); font-size: 12px; margin-bottom: 15px;">VERSION 2.3</div>
         <input type="password" id="passInput" placeholder="الرمز (123)" style="text-align:center;" onkeydown="if(event.key==='Enter') checkPassword()">
         <button class="btn btn-main" onclick="checkPassword()">دخول</button>
     </div>
@@ -103,12 +111,13 @@
             <img src="https://i.ibb.co/4R44srhj/image.jpg" style="width: 45px; height:45px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary);">
             <div class="brand-name" style="font-size: 24px;">ال وحيد</div>
         </div>
-        <span style="font-size: 11px; color: var(--primary);">V 2.2</span>
+        <span style="font-size: 11px; color: var(--primary);">V 2.3</span>
     </header>
 
     <div class="nav-tabs">
-        <button id="tab1" class="active" onclick="switchPage('order')">تسجيل طلبية</button>
-        <button id="tab2" onclick="switchPage('browse')">مخزن الأصناف</button>
+        <button id="tab1" class="active" onclick="switchPage('order')">الطلبية</button>
+        <button id="tab2" onclick="switchPage('browse')">الأصناف</button>
+        <button id="tab3" onclick="switchPage('history')">السجل</button>
     </div>
 
     <div class="container">
@@ -129,7 +138,7 @@
                 </table>
 
                 <div class="grid-buttons">
-                    <button class="btn full-width" style="background:var(--share); color:white;" onclick="prepareAndShowShare()">🔗 مشاركة (واتساب + ملخص)</button>
+                    <button class="btn full-width" style="background:var(--share); color:white;" onclick="prepareAndShowShare()">🔗 مشاركة وحفظ بالسجل</button>
                     <button class="btn" style="background:#25D366; color:white;" onclick="processExport('image')">📸 حفظ الصور</button>
                     <button class="btn" style="background:var(--primary); color:white;" onclick="processExport('pdf')">📄 تصدير PDF</button>
                     <button class="btn full-width" style="background:#444; color:white;" onclick="clearTable()">🗑️ مسح الجدول</button>
@@ -148,6 +157,15 @@
                 <div id="itemsGrid" style="margin-top: 20px;"></div>
             </div>
         </div>
+
+        <div id="historyPage" class="hidden">
+            <div class="card">
+                <h3 style="color:var(--primary); margin-top:0;">الفواتير المحفوظة</h3>
+                <input type="text" id="historySearch" placeholder="ابحث باسم العميل..." oninput="renderHistory(this.value)">
+                <div id="historyList" style="margin-top: 15px;"></div>
+                <button class="btn full-width" style="background:var(--danger); color:white; margin-top:20px;" onclick="clearHistory()">🗑️ مسح السجل بالكامل</button>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -156,6 +174,7 @@
 <script>
     const GOOGLE_URL = 'https://script.google.com/macros/s/AKfycby94J0O_uH3WIFzLoelLDAVMagTZEGbo0LAfbVaVR_52wgSoCtbqJ-6ZHjbnUBujlfc/exec';
     let localItems = JSON.parse(localStorage.getItem("items")) || ["إسمنت", "حديد", "رمل"];
+    let invoiceHistory = JSON.parse(localStorage.getItem("invoiceHistory")) || [];
     let shareQueue = []; 
 
     function checkPassword() {
@@ -163,6 +182,7 @@
             document.getElementById("loginOverlay").style.display = "none";
             document.getElementById("appContent").classList.remove("hidden");
             renderCloudItems();
+            renderHistory();
         } else { alert("الرمز خطأ"); }
     }
 
@@ -181,6 +201,58 @@
     function removeRow(btn) {
         btn.parentElement.parentElement.remove();
         document.querySelectorAll("#resultTable tbody tr").forEach((row, index) => { row.cells[0].innerText = index + 1; });
+    }
+
+    // وظيفة حفظ الفاتورة في السجل المحلي
+    function saveInvoiceToHistory() {
+        const client = document.getElementById("clientName").value || "عميل غير مسمى";
+        const rows = Array.from(document.querySelectorAll("#resultTable tbody tr"));
+        const items = rows.map(r => ({ name: r.cells[1].innerText, qty: r.cells[2].innerText }));
+        
+        const invoice = {
+            id: Date.now(),
+            client: client,
+            date: new Date().toLocaleString('ar-EG'),
+            items: items,
+            totalItems: items.length
+        };
+
+        invoiceHistory.unshift(invoice); // إضافة في البداية
+        localStorage.setItem("invoiceHistory", JSON.stringify(invoiceHistory));
+        renderHistory();
+    }
+
+    function renderHistory(filter = "") {
+        const list = document.getElementById("historyList");
+        list.innerHTML = "";
+        const filtered = invoiceHistory.filter(h => h.client.toLowerCase().includes(filter.toLowerCase()));
+        
+        if(filtered.length === 0) { list.innerHTML = "<p style='text-align:center; color:gray;'>لا توجد فواتير محفوظة</p>"; return; }
+
+        filtered.forEach(inv => {
+            const div = document.createElement("div");
+            div.className = "history-item";
+            div.innerHTML = `
+                <div class="history-meta"><span>📅 ${inv.date}</span><span>📦 ${inv.totalItems} صنف</span></div>
+                <div class="history-name">${inv.client}</div>
+            `;
+            div.onclick = () => showHistoryDetail(inv);
+            list.appendChild(div);
+        });
+    }
+
+    function showHistoryDetail(inv) {
+        let details = `فاتورة: ${inv.client}\nالتاريخ: ${inv.date}\n\n`;
+        inv.items.forEach((it, idx) => details += `${idx+1}. ${it.name} (${it.qty})\n`);
+        alert(details);
+    }
+
+    function clearHistory() {
+        if(confirm("هل أنت متأكد من مسح جميع الفواتير المحفوظة؟")) {
+            invoiceHistory = [];
+            localStorage.setItem("invoiceHistory", JSON.stringify(invoiceHistory));
+            renderHistory();
+        }
     }
 
     async function prepareAndShowShare() {
@@ -230,7 +302,6 @@
         status.innerText = `جاهز لإرسال ${totalPages} صفحات`;
         btn.disabled = false;
         btn.innerText = `إرسال الصفحة (1)`;
-        btn.style.background = "var(--primary)";
         
         btn.onclick = async () => {
             if (currentIdx < shareQueue.length) {
@@ -241,14 +312,13 @@
                         btn.innerText = `إرسال الصفحة (${currentIdx + 1})`;
                         status.innerText = `تم إرسال ${currentIdx} من أصل ${totalPages}`;
                     } else {
-                        // المرحلة الأخيرة: إرسال الرسالة النصية الملخصة
-                        status.innerText = "تم إرسال الصور. أرسل ملخص الطلبية الآن:";
-                        btn.innerText = "إرسال ملخص الطلبية 💬";
-                        btn.style.background = "#25D366"; // لون أخضر للواتساب
+                        status.innerText = "الصور أُرسلت. الآن سيتم الحفظ والإرسال النصي:";
+                        btn.innerText = "حفظ وإرسال ملخص الطلبية 💬";
+                        btn.style.background = "#25D366";
                         btn.onclick = () => {
-                            const summaryText = `*طلب مواد من ال وحيد*\n-------------------\n👤 *السيد:* ${clientName}\n📦 *عدد الأصناف:* ${rows.length}\n📄 *عدد الصفحات:* ${totalPages}\n📅 *التاريخ:* ${new Date().toLocaleDateString('ar-EG')}\n-------------------\n_تم الإرسال بواسطة نظام ال وحيد V2.2_`;
-                            const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(summaryText)}`;
-                            window.open(whatsappUrl, '_blank');
+                            saveInvoiceToHistory(); // حفظ في السجل عند الإرسال النهائي
+                            const summaryText = `*طلب مواد من ال وحيد*\n-------------------\n👤 *السيد:* ${clientName}\n📦 *عدد الأصناف:* ${rows.length}\n📄 *عدد الصفحات:* ${totalPages}\n📅 *التاريخ:* ${new Date().toLocaleDateString('ar-EG')}\n-------------------\n_تم الحفظ في سجل النظام_`;
+                            window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(summaryText)}`, '_blank');
                             modal.classList.add("hidden");
                         };
                     }
@@ -256,6 +326,73 @@
             }
         };
     }
+
+    // دوال مساعدة للتبديل بين الصفحات
+    function switchPage(p) { 
+        document.getElementById("orderPage").classList.toggle("hidden", p !== 'order');
+        document.getElementById("browsePage").classList.toggle("hidden", p !== 'browse');
+        document.getElementById("historyPage").classList.toggle("hidden", p !== 'history');
+        document.getElementById("tab1").classList.toggle("active", p === 'order');
+        document.getElementById("tab2").classList.toggle("active", p === 'browse');
+        document.getElementById("tab3").classList.toggle("active", p === 'history');
+        if(p === 'history') renderHistory();
+    }
+
+    // باقي الدوال المساعدة (نفس النسخ السابقة لضمان الاستقرار)
+    async function syncFromCloud() {
+        const btn = document.getElementById("syncBtn"); btn.innerText = "جاري المزامنة...";
+        try {
+            const res = await fetch(GOOGLE_URL);
+            const data = await res.json();
+            if (Array.isArray(data)) { localItems = [...new Set([...localItems, ...data])]; renderCloudItems(); alert("تمت المزامنة!"); }
+        } catch (e) { alert("خطأ اتصال"); }
+        btn.innerText = "🔄 مزامنة";
+    }
+
+    function saveItemToCloud(name) {
+        if(name && !localItems.includes(name)) {
+            localItems.push(name); renderCloudItems();
+            fetch(GOOGLE_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: 'add', item: name }) });
+        }
+    }
+
+    function renderCloudItems(filter = "") {
+        const grid = document.getElementById("itemsGrid"); grid.innerHTML = "";
+        localItems.filter(i => i.toLowerCase().includes(filter.toLowerCase())).forEach(item => {
+            const div = document.createElement("div");
+            div.style = "background:var(--card); border:1px solid var(--border); padding:10px; border-radius:8px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;";
+            div.innerHTML = `<span>${item}</span><div><button onclick="editItem('${item}')" style="background:var(--edit); color:white; border:none; padding:5px; border-radius:4px;">تعديل</button><button onclick="deleteItem('${item}')" style="background:var(--danger); color:white; border:none; padding:5px; border-radius:4px; margin-right:5px;">حذف</button></div>`;
+            grid.appendChild(div);
+        });
+        localStorage.setItem("items", JSON.stringify(localItems));
+    }
+
+    function addCloudItemManual() {
+        const input = document.getElementById("newItemName");
+        if(input.value) { saveItemToCloud(input.value); input.value = ""; }
+    }
+
+    function startVoice(id) {
+        const rec = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+        rec.lang = 'ar-SA'; rec.start();
+        rec.onresult = (e) => { document.getElementById(id).value = e.results[0][0].transcript; document.getElementById(id).dispatchEvent(new Event('input')); };
+    }
+
+    function deleteItem(n) { if(confirm("حذف؟")) { localItems = localItems.filter(i => i !== n); renderCloudItems(); } }
+    function editItem(o) { const n = prompt("تعديل:", o); if(n) { localItems[localItems.indexOf(o)] = n; renderCloudItems(); } }
+    function clearTable() { if(confirm("مسح الكل؟")) document.querySelector("#resultTable tbody").innerHTML = ""; }
+
+    document.getElementById("itemSearch").oninput = function() {
+        const val = this.value.toLowerCase();
+        const resDiv = document.getElementById("results"); resDiv.innerHTML = "";
+        if(!val) return resDiv.classList.add('hidden');
+        localItems.filter(i => i.toLowerCase().includes(val)).forEach(item => {
+            const d = document.createElement("div"); d.className = "result-item"; d.textContent = item;
+            d.onclick = () => { document.getElementById("itemSearch").value = item; resDiv.classList.add('hidden'); document.getElementById("qty").focus(); };
+            resDiv.appendChild(d);
+        });
+        resDiv.classList.remove('hidden');
+    };
 
     async function processExport(type) {
         const rows = Array.from(document.querySelectorAll("#resultTable tbody tr"));
@@ -300,69 +437,6 @@
             pdf.save(`فاتورة_${clientName}.pdf`);
         }
     }
-
-    function renderCloudItems(filter = "") {
-        const grid = document.getElementById("itemsGrid"); grid.innerHTML = "";
-        localItems.filter(i => i.toLowerCase().includes(filter.toLowerCase())).forEach(item => {
-            const div = document.createElement("div");
-            div.style = "background:var(--card); border:1px solid var(--border); padding:10px; border-radius:8px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;";
-            div.innerHTML = `<span>${item}</span><div><button onclick="editItem('${item}')" style="background:var(--edit); color:white; border:none; padding:5px; border-radius:4px;">تعديل</button><button onclick="deleteItem('${item}')" style="background:var(--danger); color:white; border:none; padding:5px; border-radius:4px; margin-right:5px;">حذف</button></div>`;
-            grid.appendChild(div);
-        });
-        localStorage.setItem("items", JSON.stringify(localItems));
-    }
-
-    async function syncFromCloud() {
-        const btn = document.getElementById("syncBtn"); btn.innerText = "جاري المزامنة...";
-        try {
-            const res = await fetch(GOOGLE_URL);
-            const data = await res.json();
-            if (Array.isArray(data)) { localItems = [...new Set([...localItems, ...data])]; renderCloudItems(); alert("تمت المزامنة!"); }
-        } catch (e) { alert("حدث خطأ في الاتصال"); }
-        btn.innerText = "🔄 مزامنة";
-    }
-
-    function saveItemToCloud(name) {
-        if(name && !localItems.includes(name)) {
-            localItems.push(name); renderCloudItems();
-            fetch(GOOGLE_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: 'add', item: name }) });
-        }
-    }
-
-    function addCloudItemManual() {
-        const input = document.getElementById("newItemName");
-        if(input.value) { saveItemToCloud(input.value); input.value = ""; }
-    }
-
-    function startVoice(id) {
-        const rec = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-        rec.lang = 'ar-SA'; rec.start();
-        rec.onresult = (e) => { document.getElementById(id).value = e.results[0][0].transcript; document.getElementById(id).dispatchEvent(new Event('input')); };
-    }
-
-    function switchPage(p) { 
-        document.getElementById("orderPage").classList.toggle("hidden", p !== 'order');
-        document.getElementById("browsePage").classList.toggle("hidden", p !== 'browse');
-        document.getElementById("tab1").classList.toggle("active", p === 'order');
-        document.getElementById("tab2").classList.toggle("active", p === 'browse');
-    }
-
-    function deleteItem(n) { if(confirm("حذف؟")) { localItems = localItems.filter(i => i !== n); renderCloudItems(); } }
-    function editItem(o) { const n = prompt("تعديل:", o); if(n) { localItems[localItems.indexOf(o)] = n; renderCloudItems(); } }
-    function clearTable() { if(confirm("مسح الكل؟")) document.querySelector("#resultTable tbody").innerHTML = ""; }
-
-    document.getElementById("itemSearch").oninput = function() {
-        const val = this.value.toLowerCase();
-        const resDiv = document.getElementById("results"); resDiv.innerHTML = "";
-        if(!val) return resDiv.classList.add('hidden');
-        localItems.filter(i => i.toLowerCase().includes(val)).forEach(item => {
-            const d = document.createElement("div"); d.className = "result-item"; d.textContent = item;
-            d.onclick = () => { document.getElementById("itemSearch").value = item; resDiv.classList.add('hidden'); document.getElementById("qty").focus(); };
-            resDiv.appendChild(d);
-        });
-        resDiv.classList.remove('hidden');
-    };
-    window.onclick = (e) => { if (!e.target.matches('#itemSearch')) document.getElementById("results").classList.add('hidden'); };
 </script>
 </body>
 </html>
