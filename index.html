@@ -39,7 +39,7 @@
         .container { padding: 15px; max-width: 800px; margin: 0 auto; }
         .card { background: var(--card); padding: 25px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 20px; }
         
-        input { 
+        input, textarea { 
             width: 100%; padding: 14px; margin: 8px 0; border: 1px solid var(--border); 
             border-radius: 8px; background: rgba(255,255,255,0.05); color: var(--text); 
             box-sizing: border-box; font-size: 16px; outline: none; font-family: 'Cairo'; 
@@ -96,10 +96,10 @@
 
 <div id="multiShareModal" class="hidden">
     <div style="background:var(--card); padding:30px; border-radius:15px; text-align:center; border:1px solid var(--primary); width:100%; max-width:350px;">
-        <h2 style="color:var(--primary); margin-top:0;">إرسال الفاتورة</h2>
+        <h2 id="shareTitle" style="color:var(--primary); margin-top:0;">إرسال الفاتورة</h2>
         <div id="shareStatus" style="color:white; font-size:18px; margin-bottom:20px;"></div>
         <button id="nextShareBtn" class="btn btn-main" style="width:100%; height:60px; font-size:20px; margin-bottom:10px;">بدء الإرسال</button>
-        <button onclick="document.getElementById('multiShareModal').classList.add('hidden')" style="background:none; border:none; color:#666; cursor:pointer; font-size:14px;">إلغاء</button>
+        <button onclick="document.getElementById('multiShareModal').classList.add('hidden')" style="background:none; border:none; color:#666; cursor:pointer; font-size:14px;">إلغاء العملية</button>
     </div>
 </div>
 
@@ -135,3 +135,296 @@
                 <table id="resultTable">
                     <thead><tr><th style="width:40px">م</th><th>المادة</th><th style="width:80px">الكمية</th><th>حذف</th></tr></thead>
                     <tbody></tbody>
+                </table>
+
+                <div class="grid-buttons">
+                    <button class="btn full-width" style="background:var(--share); color:white;" onclick="prepareAndShowShare()">🔗 مشاركة وحفظ بالسجل</button>
+                    
+                    <button id="adminTestBtn" class="btn full-width hidden" style="background:#555; color:white; border: 1px dashed var(--primary);" onclick="addRandomItems()">🧪 إضافة 40 صنف عشوائي (للأدمن)</button>
+                    
+                    <button class="btn full-width" style="background:#25D366; color:white;" onclick="processExport('image')">📸 حفظ الصور في المعرض</button>
+                    <button class="btn full-width" style="background:#444; color:white;" onclick="clearTable()">🗑️ مسح الجدول</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="browsePage" class="hidden">
+            <div class="card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                    <h3 style="color:var(--primary); margin:0;">إدارة الأصناف</h3>
+                    <button id="syncBtn" class="btn" style="background:var(--success); color:white; padding: 6px 12px; font-size: 13px;" onclick="syncFromCloud()">🔄 مزامنة</button>
+                </div>
+                <input type="text" id="newItemName" placeholder="بحث أو إضافة..." oninput="renderCloudItems(this.value)">
+                <button class="btn btn-main" onclick="addCloudItemManual()">حفظ صنف جديد</button>
+                <div id="itemsGrid" style="margin-top: 20px;"></div>
+            </div>
+        </div>
+
+        <div id="historyPage" class="hidden">
+            <div class="card">
+                <h3 style="color:var(--primary); margin-top:0;">الفواتير المحفوظة</h3>
+                <input type="text" id="historySearch" placeholder="ابحث باسم العميل..." oninput="renderHistory(this.value)">
+                <div id="historyList" style="margin-top: 15px;"></div>
+                <button class="btn full-width" style="background:var(--danger); color:white; margin-top:20px;" onclick="clearHistory()">🗑️ مسح السجل بالكامل</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="exportContainer"></div>
+
+<script>
+    const GOOGLE_URL = 'https://script.google.com/macros/s/AKfycby94J0O_uH3WIFzLoelLDAVMagTZEGbo0LAfbVaVR_52wgSoCtbqJ-6ZHjbnUBujlfc/exec';
+    let localItems = JSON.parse(localStorage.getItem("items")) || [];
+    let invoiceHistory = JSON.parse(localStorage.getItem("invoiceHistory")) || [];
+    let shareQueue = []; 
+
+    function checkPassword() {
+        const pass = document.getElementById("passInput").value;
+        const adminBtn = document.getElementById("adminTestBtn");
+        if(pass === "123" || pass === "4040") {
+            document.getElementById("loginOverlay").style.display = "none";
+            document.getElementById("appContent").classList.remove("hidden");
+            if(pass === "4040") adminBtn.classList.remove("hidden");
+            renderCloudItems();
+            renderHistory();
+        } else { alert("الرمز خطأ"); }
+    }
+
+    function addItem() {
+        const itemInput = document.getElementById("itemSearch");
+        const item = itemInput.value.trim();
+        const qty = document.getElementById("qty").value;
+        if(!item || !qty) return;
+        saveItemToCloud(item);
+        const tbody = document.querySelector("#resultTable tbody");
+        const row = tbody.insertRow(-1);
+        row.innerHTML = `<td>${tbody.rows.length}</td><td style="text-align:right">${item}</td><td style="font-weight:bold">${qty}</td><td><button onclick="removeRow(this)" style="background:none; border:none; color:red;">✖</button></td>`;
+        itemInput.value = ""; document.getElementById("qty").value = ""; itemInput.focus();
+    }
+
+    function addRandomItems() {
+        if (localItems.length === 0) return alert("لا توجد أصناف في الذاكرة!");
+        const tbody = document.querySelector("#resultTable tbody");
+        const count = tbody.rows.length;
+        for (let i = 1; i <= 40; i++) {
+            const item = localItems[Math.floor(Math.random() * localItems.length)];
+            const row = tbody.insertRow(-1);
+            row.innerHTML = `<td>${count + i}</td><td style="text-align:right">${item}</td><td style="font-weight:bold">${Math.floor(Math.random()*20)+1}</td><td><button onclick="removeRow(this)" style="color:red; background:none; border:none;">✖</button></td>`;
+        }
+        alert("تم إضافة 40 صنف عشوائي بنجاح.");
+    }
+
+    function removeRow(btn) {
+        btn.parentElement.parentElement.remove();
+        document.querySelectorAll("#resultTable tbody tr").forEach((row, index) => { row.cells[0].innerText = index + 1; });
+    }
+
+    function saveInvoiceToHistory() {
+        const client = document.getElementById("clientName").value || "عميل غير مسمى";
+        const notes = document.getElementById("clientNotes").value || "";
+        const rows = Array.from(document.querySelectorAll("#resultTable tbody tr"));
+        const items = rows.map(r => ({ name: r.cells[1].innerText, qty: r.cells[2].innerText }));
+        const invoice = { id: Date.now(), client: client, notes: notes, date: new Date().toLocaleString('ar-EG'), items: items, totalItems: items.length };
+        invoiceHistory.unshift(invoice);
+        localStorage.setItem("invoiceHistory", JSON.stringify(invoiceHistory));
+        renderHistory();
+    }
+
+    async function prepareAndShowShare() {
+        const rows = Array.from(document.querySelectorAll("#resultTable tbody tr"));
+        if (rows.length === 0) return alert("الجدول فارغ!");
+        
+        saveInvoiceToHistory();
+
+        const clientName = document.getElementById("clientName").value || "عميل";
+        const clientNotes = document.getElementById("clientNotes").value || "";
+        const container = document.getElementById("exportContainer");
+        container.innerHTML = "";
+        shareQueue = [];
+        const itemsPerPage = 25;
+        const totalPages = Math.ceil(rows.length / itemsPerPage);
+
+        const modal = document.getElementById("multiShareModal");
+        const status = document.getElementById("shareStatus");
+        const btn = document.getElementById("nextShareBtn");
+        modal.classList.remove("hidden");
+        btn.disabled = true;
+        status.innerText = "جاري تجهيز الصفحات...";
+
+        for (let i = 0; i < totalPages; i++) {
+            const pageDiv = document.createElement("div");
+            pageDiv.className = "export-page";
+            const pageItems = rows.slice(i * itemsPerPage, (i + 1) * itemsPerPage);
+            pageDiv.innerHTML = `
+                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 5px solid #b08d57; padding-bottom: 15px; margin-bottom: 20px;">
+                    <img src="https://i.ibb.co/4R44srhj/image.jpg" crossOrigin="anonymous" style="width: 100px; height:100px; border-radius: 50%;">
+                    <div><h1 style="margin: 0; color: #b08d57; font-size: 40px; font-family: 'Aref Ruqaa';">ال وحيد</h1>
+                    <p style="text-align:left; margin:0;">صفحة ${i+1} من ${totalPages}</p></div>
+                </div>
+                <div style="font-size: 20px; margin-bottom: 15px;">
+                    <div style="display:flex; justify-content:space-between;">
+                        <div>السيد: <strong>${clientName}</strong></div>
+                        <div>${new Date().toLocaleDateString('ar-EG')}</div>
+                    </div>
+                    ${clientNotes ? `<div style="font-size:16px; color:#555; margin-top:5px; border-top:1px solid #eee;">ملاحظات: ${clientNotes}</div>` : ''}
+                </div>
+                <table class="invoice-table">
+                    <thead><tr><th style="width:10%">م</th><th style="width:65%; text-align:right;">الصنف</th><th style="width:25%">الكمية</th></tr></thead>
+                    <tbody>${pageItems.map((r, idx) => `<tr><td>${(i * itemsPerPage) + idx + 1}</td><td style="text-align:right;">${r.cells[1].innerText}</td><td>${r.cells[2].innerText}</td></tr>`).join('')}</tbody>
+                </table>
+            `;
+            container.appendChild(pageDiv);
+            const canvas = await html2canvas(pageDiv, { scale: 3, useCORS: true });
+            const blob = await new Promise(res => canvas.toBlob(res, 'image/png'));
+            shareQueue.push(new File([blob], `فاتورة_${i+1}.png`, { type: 'image/png' }));
+        }
+
+        let currentIdx = 0;
+        status.innerText = `جاهز لإرسال ${totalPages} صفحات`;
+        btn.disabled = false;
+        btn.innerText = `إرسال الصفحة (1)`;
+        
+        btn.onclick = async () => {
+            if (currentIdx < shareQueue.length) {
+                try {
+                    await navigator.share({ files: [shareQueue[currentIdx]], title: `صفحة ${currentIdx+1}` });
+                    currentIdx++;
+                    if (currentIdx < shareQueue.length) {
+                        btn.innerText = `إرسال الصفحة (${currentIdx + 1})`;
+                        status.innerText = `تم إرسال ${currentIdx} من أصل ${totalPages}`;
+                    } else {
+                        status.innerText = "تم الإرسال الصوري. إرسال الملخص؟";
+                        btn.innerText = "إرسال ملخص WhatsApp 💬";
+                        btn.style.background = "#25D366";
+                        btn.onclick = () => {
+                            const summaryText = `*طلب مواد من ال وحيد*\n👤 *السيد:* ${clientName}\n📝 *ملاحظات:* ${clientNotes || 'لا يوجد'}\n📦 *الأصناف:* ${rows.length}`;
+                            window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(summaryText)}`, '_blank');
+                            modal.classList.add("hidden");
+                        };
+                    }
+                } catch (e) { console.log("Cancelled"); }
+            }
+        };
+    }
+
+    function switchPage(p) { 
+        document.getElementById("orderPage").classList.toggle("hidden", p !== 'order');
+        document.getElementById("browsePage").classList.toggle("hidden", p !== 'browse');
+        document.getElementById("historyPage").classList.toggle("hidden", p !== 'history');
+        document.getElementById("tab1").classList.toggle("active", p === 'order');
+        document.getElementById("tab2").classList.toggle("active", p === 'browse');
+        document.getElementById("tab3").classList.toggle("active", p === 'history');
+    }
+
+    function renderHistory(filter = "") {
+        const list = document.getElementById("historyList"); list.innerHTML = "";
+        const filtered = invoiceHistory.filter(h => h.client.toLowerCase().includes(filter.toLowerCase()));
+        filtered.forEach(inv => {
+            const div = document.createElement("div"); div.className = "history-item";
+            div.innerHTML = `<div class="history-meta"><span>📅 ${inv.date}</span><span>📦 ${inv.totalItems} صنف</span></div><div class="history-name">${inv.client}</div>`;
+            div.onclick = () => alert(`العميل: ${inv.client}\nملاحظات: ${inv.notes}\nالأصناف: ${inv.totalItems}`);
+            list.appendChild(div);
+        });
+    }
+
+    async function syncFromCloud() {
+        const btn = document.getElementById("syncBtn"); btn.innerText = "جاري...";
+        try {
+            const res = await fetch(GOOGLE_URL);
+            const data = await res.json();
+            if (Array.isArray(data)) { 
+                localItems = [...new Set([...localItems, ...data])]; 
+                localStorage.setItem("items", JSON.stringify(localItems));
+                renderCloudItems(); 
+                alert("تم تحديث الأصناف من السحابة");
+            }
+        } catch (e) { alert("فشلت المزامنة"); }
+        btn.innerText = "🔄 مزامنة";
+    }
+
+    function saveItemToCloud(name) {
+        if(name && !localItems.includes(name)) {
+            localItems.push(name); 
+            localStorage.setItem("items", JSON.stringify(localItems));
+            renderCloudItems();
+            fetch(GOOGLE_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: 'add', item: name }) });
+        }
+    }
+
+    function renderCloudItems(filter = "") {
+        const grid = document.getElementById("itemsGrid"); grid.innerHTML = "";
+        localItems.filter(i => i.toLowerCase().includes(filter.toLowerCase())).forEach(item => {
+            const div = document.createElement("div");
+            div.style = "background:var(--card); border:1px solid var(--border); padding:10px; border-radius:8px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;";
+            div.innerHTML = `<span>${item}</span><div><button onclick="editItem('${item}')" style="background:var(--edit); color:white; border:none; padding:5px; border-radius:4px;">تعديل</button><button onclick="deleteItem('${item}')" style="background:var(--danger); color:white; border:none; padding:5px; border-radius:4px; margin-right:5px;">حذف</button></div>`;
+            grid.appendChild(div);
+        });
+    }
+
+    function addCloudItemManual() {
+        const input = document.getElementById("newItemName");
+        if(input.value) { saveItemToCloud(input.value); input.value = ""; }
+    }
+
+    function deleteItem(n) { if(confirm("حذف؟")) { localItems = localItems.filter(i => i !== n); localStorage.setItem("items", JSON.stringify(localItems)); renderCloudItems(); } }
+    function editItem(o) { const n = prompt("تعديل:", o); if(n) { localItems[localItems.indexOf(o)] = n; localStorage.setItem("items", JSON.stringify(localItems)); renderCloudItems(); } }
+    function clearTable() { if(confirm("مسح الجدول بالكامل؟")) document.querySelector("#resultTable tbody").innerHTML = ""; }
+    function clearHistory() { if(confirm("حذف كل السجل؟")) { invoiceHistory = []; localStorage.setItem("invoiceHistory", "[]"); renderHistory(); } }
+
+    function startVoice(id) {
+        const rec = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+        rec.lang = 'ar-SA'; rec.start();
+        rec.onresult = (e) => { 
+            document.getElementById(id).value = e.results[0][0].transcript; 
+            document.getElementById(id).dispatchEvent(new Event('input')); 
+        };
+    }
+
+    document.getElementById("itemSearch").oninput = function() {
+        const val = this.value.toLowerCase();
+        const resDiv = document.getElementById("results"); resDiv.innerHTML = "";
+        if(!val) return resDiv.classList.add('hidden');
+        localItems.filter(i => i.toLowerCase().includes(val)).forEach(item => {
+            const d = document.createElement("div"); d.className = "result-item"; d.textContent = item;
+            d.onclick = () => { document.getElementById("itemSearch").value = item; resDiv.classList.add('hidden'); document.getElementById("qty").focus(); };
+            resDiv.appendChild(d);
+        });
+        resDiv.classList.remove('hidden');
+    };
+
+    async function processExport(type) {
+        const rows = Array.from(document.querySelectorAll("#resultTable tbody tr"));
+        if (rows.length === 0) return alert("الجدول فارغ!");
+        const container = document.getElementById("exportContainer");
+        container.innerHTML = "";
+        const clientName = document.getElementById("clientName").value || "عميل";
+        const clientNotes = document.getElementById("clientNotes").value || "";
+        const totalPages = Math.ceil(rows.length / 25);
+        for (let i = 0; i < totalPages; i++) {
+            const pageDiv = document.createElement("div");
+            pageDiv.className = "export-page";
+            const pageItems = rows.slice(i * 25, (i + 1) * 25);
+            pageDiv.innerHTML = `
+                <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:5px solid #b08d57; padding-bottom:15px; margin-bottom:20px;">
+                    <img src="https://i.ibb.co/4R44srhj/image.jpg" crossOrigin="anonymous" style="width:100px; height:100px; border-radius:50%;">
+                    <div style="text-align:left;"><h1 style="margin:0; color:#b08d57; font-size:45px; font-family:'Aref Ruqaa';">ال وحيد</h1><p style="margin:0;">صفحة ${i+1} من ${totalPages}</p></div>
+                </div>
+                <div style="font-size:20px; margin-bottom:15px;">
+                    <div style="display:flex; justify-content:space-between;"><div>السيد: <strong>${clientName}</strong></div><div>${new Date().toLocaleDateString('ar-EG')}</div></div>
+                    ${clientNotes ? `<div style="font-size:16px; color:#555; margin-top:5px; border-top:1px solid #eee;">ملاحظات: ${clientNotes}</div>` : ''}
+                </div>
+                <table class="invoice-table"><thead><tr><th>م</th><th style="text-align:right">الصنف</th><th>الكمية</th></tr></thead>
+                <tbody>${pageItems.map((r, idx) => `<tr><td>${(i*25)+idx+1}</td><td style="text-align:right">${r.cells[1].innerText}</td><td>${r.cells[2].innerText}</td></tr>`).join('')}</tbody></table>`;
+            container.appendChild(pageDiv);
+        }
+        const pages = document.querySelectorAll(".export-page");
+        for (let j = 0; j < pages.length; j++) {
+            const canvas = await html2canvas(pages[j], { scale: 3, useCORS: true });
+            const link = document.createElement('a'); link.download = `فاتورة_${clientName}_${j+1}.png`;
+            link.href = canvas.toDataURL(); link.click();
+        }
+    }
+</script>
+</body>
+</html>
