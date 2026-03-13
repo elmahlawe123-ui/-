@@ -299,7 +299,7 @@
                         btn.style.background = "#25D366";
                         btn.onclick = () => {
                             const summaryText = `
-*📦 طلبية جديدة - نظام المحلاوي*
+*📦 طلبية جديدة - *
 ------------------------------
 👤 *السيد:* ${clientName}
 📅 *التاريخ:* ${new Date().toLocaleDateString('ar-EG')}
@@ -308,7 +308,7 @@
 📊 *تفاصيل الطلبية:*
 ✅ عدد الأصناف: ${rows.length} صنف
 
-*شكراً لتعاملكم معنا* 🌹`.trim();
+*تم الإرسال بواسطة نظام المحلاوى * 🌹`.trim();
                             window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(summaryText)}`, '_blank');
                             modal.classList.add("hidden");
                         };
