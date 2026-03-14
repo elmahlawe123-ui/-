@@ -36,7 +36,6 @@
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
-
         html { scroll-behavior: smooth; }
 
         body {
@@ -48,7 +47,6 @@
             padding-bottom: 60px;
         }
 
-        /* ─── Layered background ─── */
         body::before {
             content: '';
             position: fixed;
@@ -70,7 +68,6 @@
             opacity: 0.5;
         }
 
-        /* ─── Typography ─── */
         .font-ruqaa { font-family: 'Aref Ruqaa', serif; }
 
         .brand-name {
@@ -83,7 +80,6 @@
             letter-spacing: 1px;
         }
 
-        /* ─── Header ─── */
         header {
             background: rgba(9, 13, 24, 0.95);
             padding: 0 20px;
@@ -128,7 +124,6 @@
             font-family: 'Cairo';
         }
 
-        /* ─── Header Controls ─── */
         .header-controls {
             display: flex;
             align-items: center;
@@ -136,7 +131,6 @@
             position: relative;
         }
 
-        /* ─── Mode Dropdown ─── */
         .mode-dropdown-btn {
             display: flex;
             align-items: center;
@@ -210,16 +204,8 @@
         }
         .mode-item:last-child { border-bottom: none; }
         .mode-item:hover { background: var(--gold-subtle); color: var(--gold-light); }
-        .mode-item.active {
-            color: var(--gold-light);
-            background: rgba(201,168,76,0.08);
-        }
-        .mode-item.active::after {
-            content: '✓';
-            margin-right: auto;
-            color: var(--gold);
-            font-size: 13px;
-        }
+        .mode-item.active { color: var(--gold-light); background: rgba(201,168,76,0.08); }
+        .mode-item.active::after { content: '✓'; margin-right: auto; color: var(--gold); font-size: 13px; }
         .mode-item-icon {
             width: 28px; height: 28px;
             border-radius: 8px;
@@ -228,7 +214,6 @@
             flex-shrink: 0;
         }
 
-        /* ─── Logout btn ─── */
         .logout-btn {
             width: 36px; height: 36px;
             border-radius: 50%;
@@ -241,55 +226,29 @@
             transition: all 0.2s;
             flex-shrink: 0;
         }
-        .logout-btn:hover {
-            background: rgba(224,82,82,0.18);
-            border-color: rgba(224,82,82,0.45);
-            transform: scale(1.08);
-        }
+        .logout-btn:hover { background: rgba(224,82,82,0.18); border-color: rgba(224,82,82,0.45); transform: scale(1.08); }
 
-        /* ─── Light Mode ─── */
         body.light-mode {
-            --bg:          #f0f4fa;
-            --bg2:         #e8eef8;
-            --bg3:         #dde5f4;
-            --card:        #ffffff;
-            --card2:       #f5f8ff;
-            --card-hover:  #edf2ff;
-            --border:      #d0daea;
-            --border-gold: rgba(160,115,20,0.3);
-            --text:        #1a2535;
-            --text-muted:  #7a92ae;
-            --text-soft:   #4a6080;
+            --bg: #f0f4fa; --bg2: #e8eef8; --bg3: #dde5f4;
+            --card: #ffffff; --card2: #f5f8ff; --card-hover: #edf2ff;
+            --border: #d0daea; --border-gold: rgba(160,115,20,0.3);
+            --text: #1a2535; --text-muted: #7a92ae; --text-soft: #4a6080;
         }
-        body.light-mode header {
-            background: rgba(240,244,250,0.96);
-            border-bottom-color: rgba(160,115,20,0.18);
-        }
-        body.light-mode .nav-tabs {
-            background: var(--bg2);
-        }
-        body.light-mode input {
-            background: var(--bg3);
-            color: var(--text);
-        }
+        body.light-mode header { background: rgba(240,244,250,0.96); border-bottom-color: rgba(160,115,20,0.18); }
+        body.light-mode .nav-tabs { background: var(--bg2); }
+        body.light-mode input { background: var(--bg3); color: var(--text); }
         body.light-mode .results-box { background: #fff; }
         body.light-mode .history-item { background: #fff; }
         body.light-mode .item-row { background: #fff; }
         body.light-mode .mode-menu { background: #fff; }
-        body.light-mode .mode-dropdown-btn {
-            background: rgba(160,115,20,0.07);
-            border-color: rgba(160,115,20,0.2);
-        }
-        body.light-mode body::before { opacity: 0.5; }
+        body.light-mode .mode-dropdown-btn { background: rgba(160,115,20,0.07); border-color: rgba(160,115,20,0.2); }
 
-        /* ─── Compact Mode ─── */
         body.compact-mode .card { padding: 14px; }
         body.compact-mode .history-item { padding: 10px 12px; margin-bottom: 6px; }
         body.compact-mode .item-row { padding: 8px 12px; margin-bottom: 4px; }
         body.compact-mode td { padding: 7px 6px; }
         body.compact-mode .container { padding: 12px 10px; }
 
-        /* ─── Nav ─── */
         .nav-tabs {
             display: flex;
             background: var(--bg2);
@@ -327,21 +286,11 @@
             transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        .nav-tabs button.active {
-            color: var(--gold-light);
-            background: linear-gradient(180deg, transparent, rgba(201,168,76,0.05));
-        }
-
+        .nav-tabs button.active { color: var(--gold-light); background: linear-gradient(180deg, transparent, rgba(201,168,76,0.05)); }
         .nav-tabs button.active::after { transform: scaleX(1); }
 
-        .nav-icon {
-            display: block;
-            font-size: 18px;
-            line-height: 1;
-            margin-bottom: 2px;
-        }
+        .nav-icon { display: block; font-size: 18px; line-height: 1; margin-bottom: 2px; }
 
-        /* ─── Container ─── */
         .container {
             padding: 20px 14px;
             max-width: 820px;
@@ -350,7 +299,6 @@
             z-index: 1;
         }
 
-        /* ─── Cards ─── */
         .card {
             background: var(--card);
             padding: 22px;
@@ -382,7 +330,6 @@
             letter-spacing: 0.3px;
         }
 
-        /* ─── Section labels ─── */
         .section-label {
             font-size: 11px;
             color: var(--text-muted);
@@ -394,21 +341,10 @@
             gap: 10px;
             font-weight: 600;
         }
-        .section-label::before, .section-label::after {
-            content: '';
-            flex: 1;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, var(--border));
-        }
-        .section-label::after {
-            background: linear-gradient(90deg, var(--border), transparent);
-        }
+        .section-label::before, .section-label::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, transparent, var(--border)); }
+        .section-label::after { background: linear-gradient(90deg, var(--border), transparent); }
 
-        /* ─── Inputs ─── */
-        .input-wrapper {
-            position: relative;
-            margin-bottom: 10px;
-        }
+        .input-wrapper { position: relative; margin-bottom: 10px; }
 
         input {
             width: 100%;
@@ -424,7 +360,6 @@
         }
 
         input::placeholder { color: var(--text-muted); font-size: 14px; }
-
         input:focus {
             border-color: rgba(201,168,76,0.4);
             background: rgba(13, 18, 32, 0.95);
@@ -433,22 +368,16 @@
 
         .voice-btn {
             position: absolute;
-            left: 10px;
-            top: 50%;
+            left: 10px; top: 50%;
             transform: translateY(-50%);
-            background: none;
-            border: none;
+            background: none; border: none;
             color: var(--text-muted);
-            font-size: 16px;
-            cursor: pointer;
-            padding: 6px;
-            z-index: 5;
-            transition: all 0.2s;
-            border-radius: 6px;
+            font-size: 16px; cursor: pointer;
+            padding: 6px; z-index: 5;
+            transition: all 0.2s; border-radius: 6px;
         }
         .voice-btn:hover { color: var(--gold); background: var(--gold-subtle); }
 
-        /* ─── Main button ─── */
         .btn-main {
             width: 100%;
             padding: 14px;
@@ -471,28 +400,18 @@
             box-shadow: 0 4px 24px rgba(201,168,76,0.2), inset 0 1px 0 rgba(255,255,255,0.1);
             transition: all 0.25s ease;
         }
-
         .btn-main::before {
             content: '';
-            position: absolute;
-            inset: 0;
+            position: absolute; inset: 0;
             background: linear-gradient(135deg, transparent 0%, rgba(255,255,255,0.08) 50%, transparent 100%);
             transform: translateX(-100%);
             transition: transform 0.5s ease;
         }
-
         .btn-main:hover::before { transform: translateX(100%); }
         .btn-main:hover { box-shadow: 0 6px 28px rgba(201,168,76,0.35); transform: translateY(-1px); }
         .btn-main:active { transform: scale(0.98) translateY(0); }
 
-        /* ─── Action Grid ─── */
-        .grid-buttons {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 9px;
-            margin-top: 16px;
-        }
-
+        .grid-buttons { display: grid; grid-template-columns: repeat(2, 1fr); gap: 9px; margin-top: 16px; }
         .full-width { grid-column: span 2; }
 
         .btn-action {
@@ -511,970 +430,285 @@
             position: relative;
             overflow: hidden;
         }
-
-        .btn-action::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: rgba(255,255,255,0);
-            transition: background 0.15s;
-        }
-
+        .btn-action::after { content: ''; position: absolute; inset: 0; background: rgba(255,255,255,0); transition: background 0.15s; }
         .btn-action:hover::after { background: rgba(255,255,255,0.07); }
         .btn-action:active { transform: scale(0.97); }
 
-        /* ─── Table ─── */
-        .table-wrapper {
-            border-radius: var(--radius-sm);
-            overflow: hidden;
-            border: 1px solid var(--border);
-            margin-top: 14px;
-        }
+        .table-wrapper { border-radius: var(--radius-sm); overflow: hidden; border: 1px solid var(--border); margin-top: 14px; }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 14px;
-        }
-
-        thead {
-            background: linear-gradient(135deg, #0a1018, #0f1928);
-        }
-
-        th {
-            padding: 12px 8px;
-            color: var(--gold);
-            font-weight: 700;
-            text-align: center;
-            border-bottom: 1px solid rgba(201,168,76,0.2);
-            font-size: 12px;
-            letter-spacing: 0.5px;
-        }
-
-        td {
-            padding: 10px 8px;
-            border-bottom: 1px solid rgba(26,40,64,0.7);
-            text-align: center;
-            transition: background 0.15s;
-            font-size: 14px;
-        }
-
+        table { width: 100%; border-collapse: collapse; font-size: 14px; }
+        thead { background: linear-gradient(135deg, #0a1018, #0f1928); }
+        th { padding: 12px 8px; color: var(--gold); font-weight: 700; text-align: center; border-bottom: 1px solid rgba(201,168,76,0.2); font-size: 12px; letter-spacing: 0.5px; }
+        td { padding: 10px 8px; border-bottom: 1px solid rgba(26,40,64,0.7); text-align: center; transition: background 0.15s; font-size: 14px; }
         tbody tr:last-child td { border-bottom: none; }
         tbody tr:hover td { background: rgba(201,168,76,0.04); }
         tbody tr:nth-child(even) td { background: rgba(255,255,255,0.015); }
         tbody tr:nth-child(even):hover td { background: rgba(201,168,76,0.05); }
-
         td:nth-child(2) { text-align: right; padding-right: 14px; }
         #resultTable td:nth-child(3) { font-weight: 700; color: var(--gold-light); }
 
         .row-num {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
+            display: inline-flex; align-items: center; justify-content: center;
             width: 24px; height: 24px;
             background: rgba(201,168,76,0.1);
             border-radius: 50%;
-            font-size: 11px;
-            color: var(--gold-dim);
-            font-weight: 700;
+            font-size: 11px; color: var(--gold-dim); font-weight: 700;
             border: 1px solid rgba(201,168,76,0.15);
         }
 
-        .action-btn {
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-size: 15px;
-            padding: 5px 6px;
-            border-radius: 6px;
-            transition: all 0.15s;
-            opacity: 0.6;
-        }
+        .action-btn { background: none; border: none; cursor: pointer; font-size: 15px; padding: 5px 6px; border-radius: 6px; transition: all 0.15s; opacity: 0.6; }
         .action-btn:hover { opacity: 1; transform: scale(1.1); }
         .action-btn.edit { color: var(--edit); }
         .action-btn.del { color: var(--danger); }
 
-        /* ─── Dropdown Results ─── */
         .results-box {
             position: absolute;
             background: var(--card2);
             border: 1px solid rgba(201,168,76,0.25);
-            width: 100%;
-            z-index: 1100;
-            max-height: 220px;
-            overflow-y: auto;
+            width: 100%; z-index: 1100;
+            max-height: 220px; overflow-y: auto;
             border-radius: var(--radius-sm);
             top: calc(100% + 6px);
             box-shadow: 0 16px 48px rgba(0,0,0,0.7), 0 0 0 1px rgba(201,168,76,0.08);
         }
-
         .results-box::-webkit-scrollbar { width: 3px; }
         .results-box::-webkit-scrollbar-thumb { background: var(--gold-dim); border-radius: 4px; }
 
         .result-item {
-            padding: 11px 16px;
-            cursor: pointer;
+            padding: 11px 16px; cursor: pointer;
             border-bottom: 1px solid rgba(26,40,64,0.5);
-            text-align: right;
-            transition: all 0.15s;
-            font-size: 14px;
-            color: var(--text-soft);
+            text-align: right; transition: all 0.15s;
+            font-size: 14px; color: var(--text-soft);
         }
-
         .result-item:last-child { border-bottom: none; }
-        .result-item:hover {
-            background: var(--gold-subtle);
-            color: var(--gold-light);
-            padding-right: 20px;
-        }
+        .result-item:hover { background: var(--gold-subtle); color: var(--gold-light); padding-right: 20px; }
 
-        /* ─── History ─── */
         .history-item {
-            background: var(--card2);
-            padding: 16px;
-            border-radius: var(--radius-sm);
-            margin-bottom: 10px;
-            border: 1px solid var(--border);
-            border-right: 3px solid transparent;
-            transition: all 0.25s ease;
-            position: relative;
-            overflow: hidden;
+            background: var(--card2); padding: 16px;
+            border-radius: var(--radius-sm); margin-bottom: 10px;
+            border: 1px solid var(--border); border-right: 3px solid transparent;
+            transition: all 0.25s ease; position: relative; overflow: hidden;
         }
-
         .history-item::before {
-            content: '';
-            position: absolute;
-            right: 0; top: 0;
+            content: ''; position: absolute; right: 0; top: 0;
             width: 3px; height: 100%;
             background: linear-gradient(180deg, var(--gold), var(--gold-dim));
             border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
         }
+        .history-item:hover { border-color: rgba(201,168,76,0.2); box-shadow: 0 4px 24px rgba(0,0,0,0.3); transform: translateX(-2px); background: var(--card-hover); }
 
-        .history-item:hover {
-            border-color: rgba(201,168,76,0.2);
-            box-shadow: 0 4px 24px rgba(0,0,0,0.3);
-            transform: translateX(-2px);
-            background: var(--card-hover);
-        }
-
-        .history-meta {
-            display: flex;
-            justify-content: space-between;
-            font-size: 11px;
-            color: var(--text-muted);
-            margin-bottom: 6px;
-            letter-spacing: 0.3px;
-        }
-
-        .history-name {
-            font-weight: 700;
-            font-size: 17px;
-            color: var(--gold-light);
-            margin: 4px 0 12px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            transition: color 0.2s;
-        }
-
+        .history-meta { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted); margin-bottom: 6px; letter-spacing: 0.3px; }
+        .history-name { font-weight: 700; font-size: 17px; color: var(--gold-light); margin: 4px 0 12px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: color 0.2s; }
         .history-name:hover { color: var(--gold); }
-
-        .history-actions {
-            display: flex;
-            gap: 8px;
-            margin-top: 2px;
-            border-top: 1px solid rgba(26,40,64,0.8);
-            padding-top: 10px;
-        }
-
-        .history-btn {
-            flex: 1;
-            padding: 8px;
-            border: none;
-            border-radius: var(--radius-xs);
-            cursor: pointer;
-            font-family: 'Cairo';
-            font-size: 13px;
-            font-weight: 600;
-            transition: all 0.2s;
-        }
+        .history-actions { display: flex; gap: 8px; margin-top: 2px; border-top: 1px solid rgba(26,40,64,0.8); padding-top: 10px; }
+        .history-btn { flex: 1; padding: 8px; border: none; border-radius: var(--radius-xs); cursor: pointer; font-family: 'Cairo'; font-size: 13px; font-weight: 600; transition: all 0.2s; }
         .history-btn:hover { filter: brightness(1.15); transform: translateY(-1px); }
         .history-btn:active { transform: scale(0.97); }
 
-        /* ─── Items Grid ─── */
-        .item-row {
-            background: var(--card2);
-            border: 1px solid var(--border);
-            padding: 12px 14px;
-            border-radius: var(--radius-sm);
-            margin-bottom: 7px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: all 0.2s;
-            font-size: 14px;
-        }
-
-        .item-row:hover {
-            border-color: rgba(201,168,76,0.2);
-            background: var(--card-hover);
-        }
-
+        .item-row { background: var(--card2); border: 1px solid var(--border); padding: 12px 14px; border-radius: var(--radius-sm); margin-bottom: 7px; display: flex; justify-content: space-between; align-items: center; transition: all 0.2s; font-size: 14px; }
+        .item-row:hover { border-color: rgba(201,168,76,0.2); background: var(--card-hover); }
         .item-actions { display: flex; gap: 7px; }
-
-        .item-btn {
-            border: none;
-            padding: 6px 14px;
-            border-radius: var(--radius-xs);
-            cursor: pointer;
-            font-family: 'Cairo';
-            font-size: 12px;
-            font-weight: 600;
-            transition: all 0.2s;
-        }
+        .item-btn { border: none; padding: 6px 14px; border-radius: var(--radius-xs); cursor: pointer; font-family: 'Cairo'; font-size: 12px; font-weight: 600; transition: all 0.2s; }
         .item-btn:hover { filter: brightness(1.15); transform: translateY(-1px); }
 
-        /* ─── Modals ─── */
         #multiShareModal, #detailsModal {
-            position: fixed;
-            inset: 0;
+            position: fixed; inset: 0;
             background: rgba(4, 8, 16, 0.88);
-            z-index: 2000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            padding: 20px;
+            z-index: 2000; display: flex;
+            align-items: center; justify-content: center;
+            flex-direction: column; padding: 20px;
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             animation: fadeIn 0.25s ease;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to   { opacity: 1; }
-        }
-
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to   { opacity: 1; transform: translateY(0); }
-        }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
         .modal-card {
-            background: var(--card);
-            padding: 30px;
-            border-radius: 18px;
-            text-align: center;
+            background: var(--card); padding: 30px;
+            border-radius: 18px; text-align: center;
             border: 1px solid rgba(201,168,76,0.2);
-            width: 100%;
-            max-width: 360px;
+            width: 100%; max-width: 360px;
             box-shadow: 0 24px 64px rgba(0,0,0,0.8);
             animation: slideUp 0.3s ease;
         }
+        .modal-card::before { content: ''; display: block; height: 2px; background: linear-gradient(90deg, transparent, var(--gold), transparent); margin: -30px -30px 26px; border-radius: 18px 18px 0 0; }
+        .modal-title { color: var(--gold-light); font-size: 20px; font-weight: 700; margin-bottom: 12px; font-family: 'Aref Ruqaa'; }
 
-        .modal-card::before {
-            content: '';
-            display: block;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, var(--gold), transparent);
-            margin: -30px -30px 26px;
-            border-radius: 18px 18px 0 0;
-        }
-
-        .modal-title {
-            color: var(--gold-light);
-            font-size: 20px;
-            font-weight: 700;
-            margin-bottom: 12px;
-            font-family: 'Aref Ruqaa';
-        }
-
-        /* ─── Details Modal ─── */
         .details-modal-inner {
-            width: 100%;
-            max-width: 500px;
-            max-height: 85vh;
-            overflow-y: auto;
-            position: relative;
-            background: var(--card);
-            border-radius: 18px;
-            border: 1px solid rgba(201,168,76,0.2);
-            padding: 28px;
-            box-shadow: 0 24px 64px rgba(0,0,0,0.8);
+            width: 100%; max-width: 500px; max-height: 85vh; overflow-y: auto;
+            position: relative; background: var(--card);
+            border-radius: 18px; border: 1px solid rgba(201,168,76,0.2);
+            padding: 28px; box-shadow: 0 24px 64px rgba(0,0,0,0.8);
             animation: slideUp 0.3s ease;
         }
-
         .details-modal-inner::-webkit-scrollbar { width: 3px; }
         .details-modal-inner::-webkit-scrollbar-thumb { background: var(--gold-dim); border-radius: 4px; }
 
         .close-btn {
-            position: absolute;
-            left: 16px; top: 16px;
-            background: rgba(224,82,82,0.15);
-            color: var(--danger);
-            border: 1px solid rgba(224,82,82,0.2);
-            border-radius: 50%;
-            width: 32px; height: 32px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 14px;
-            z-index: 10;
-            transition: all 0.2s;
-            display: flex; align-items: center; justify-content: center;
+            position: absolute; left: 16px; top: 16px;
+            background: rgba(224,82,82,0.15); color: var(--danger);
+            border: 1px solid rgba(224,82,82,0.2); border-radius: 50%;
+            width: 32px; height: 32px; cursor: pointer;
+            font-weight: bold; font-size: 14px; z-index: 10;
+            transition: all 0.2s; display: flex; align-items: center; justify-content: center;
         }
         .close-btn:hover { background: var(--danger); color: white; transform: scale(1.1); }
 
-        /* ─── Sync btn ─── */
-        .sync-btn {
-            padding: 7px 16px;
-            font-size: 12px;
-            font-weight: 700;
-            background: rgba(61,186,140,0.12);
-            color: var(--success);
-            border: 1px solid rgba(61,186,140,0.25);
-            border-radius: 20px;
-            cursor: pointer;
-            font-family: 'Cairo';
-            transition: all 0.2s;
-            letter-spacing: 0.3px;
-        }
-        .sync-btn:hover {
-            background: rgba(61,186,140,0.2);
-            box-shadow: 0 4px 16px rgba(61,186,140,0.2);
-        }
+        .sync-btn { padding: 7px 16px; font-size: 12px; font-weight: 700; background: rgba(61,186,140,0.12); color: var(--success); border: 1px solid rgba(61,186,140,0.25); border-radius: 20px; cursor: pointer; font-family: 'Cairo'; transition: all 0.2s; letter-spacing: 0.3px; }
+        .sync-btn:hover { background: rgba(61,186,140,0.2); box-shadow: 0 4px 16px rgba(61,186,140,0.2); }
 
-        /* ─── Back to top ─── */
-        #backToTop {
-            position: fixed;
-            bottom: 28px;
-            left: 20px;
-            width: 44px; height: 44px;
-            background: linear-gradient(135deg, var(--gold), var(--gold-dim));
-            color: #000;
-            border: none;
-            border-radius: 50%;
-            cursor: pointer;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            font-weight: 900;
-            box-shadow: 0 4px 20px rgba(201,168,76,0.4);
-            z-index: 1500;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
+        #backToTop { position: fixed; bottom: 28px; left: 20px; width: 44px; height: 44px; background: linear-gradient(135deg, var(--gold), var(--gold-dim)); color: #000; border: none; border-radius: 50%; cursor: pointer; display: none; align-items: center; justify-content: center; font-size: 18px; font-weight: 900; box-shadow: 0 4px 20px rgba(201,168,76,0.4); z-index: 1500; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         #backToTop:hover { transform: scale(1.12) translateY(-2px); }
 
-        /* ─── Login ─── */
         #loginOverlay {
-            position: fixed;
-            inset: 0;
+            position: fixed; inset: 0;
             background: radial-gradient(ellipse 100% 100% at 30% 20%, #0d1626 0%, #05090f 70%);
-            z-index: 9999;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            z-index: 9999; display: flex; align-items: center; justify-content: center;
         }
-
-        #loginOverlay::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background-image:
-                radial-gradient(ellipse 50% 30% at 80% 80%, rgba(74,144,217,0.04) 0%, transparent 60%);
-        }
+        #loginOverlay::before { content: ''; position: absolute; inset: 0; background-image: radial-gradient(ellipse 50% 30% at 80% 80%, rgba(74,144,217,0.04) 0%, transparent 60%); }
 
         .login-card {
-            width: 320px;
-            text-align: center;
-            background: var(--card);
-            padding: 40px 30px;
-            border-radius: 22px;
-            border: 1px solid rgba(201,168,76,0.2);
-            box-shadow:
-                0 30px 80px rgba(0,0,0,0.8),
-                0 0 80px rgba(201,168,76,0.04),
-                inset 0 1px 0 rgba(201,168,76,0.1);
+            width: 320px; text-align: center;
+            background: var(--card); padding: 40px 30px;
+            border-radius: 22px; border: 1px solid rgba(201,168,76,0.2);
+            box-shadow: 0 30px 80px rgba(0,0,0,0.8), 0 0 80px rgba(201,168,76,0.04), inset 0 1px 0 rgba(201,168,76,0.1);
             animation: loginFade 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            position: relative;
-            z-index: 1;
+            position: relative; z-index: 1;
         }
-
-        .login-card::before {
-            content: '';
-            position: absolute;
-            top: -1px; left: 20%; right: 20%;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, var(--gold), transparent);
-            border-radius: 22px 22px 0 0;
-        }
-
-        @keyframes loginFade {
-            from { opacity: 0; transform: translateY(30px) scale(0.96); }
-            to   { opacity: 1; transform: translateY(0) scale(1); }
-        }
-
-        .login-avatar {
-            width: 90px; height: 90px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid rgba(201,168,76,0.35);
-            box-shadow: 0 0 32px rgba(201,168,76,0.2), 0 8px 20px rgba(0,0,0,0.4);
-            margin-bottom: 16px;
-        }
-
+        .login-card::before { content: ''; position: absolute; top: -1px; left: 20%; right: 20%; height: 2px; background: linear-gradient(90deg, transparent, var(--gold), transparent); border-radius: 22px 22px 0 0; }
+        @keyframes loginFade { from { opacity: 0; transform: translateY(30px) scale(0.96); } to { opacity: 1; transform: translateY(0) scale(1); } }
+        .login-avatar { width: 90px; height: 90px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(201,168,76,0.35); box-shadow: 0 0 32px rgba(201,168,76,0.2), 0 8px 20px rgba(0,0,0,0.4); margin-bottom: 16px; }
         .login-brand { font-size: 42px; display: block; margin-bottom: 4px; }
+        .login-version { font-size: 10px; color: var(--text-muted); letter-spacing: 3px; text-transform: uppercase; margin-bottom: 24px; font-weight: 600; }
+        .login-divider { height: 1px; background: linear-gradient(90deg, transparent, rgba(201,168,76,0.25), transparent); margin: 18px 0; }
 
-        .login-version {
-            font-size: 10px;
-            color: var(--text-muted);
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            margin-bottom: 24px;
-            font-weight: 600;
-        }
-
-        .login-divider {
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(201,168,76,0.25), transparent);
-            margin: 18px 0;
-        }
-
-        /* ─── Hidden ─── */
         .hidden { display: none !important; }
 
-        /* ─── Export container ─── */
-        #exportContainer {
-            position: absolute;
-            left: -9999px;
-            top: 0;
-            width: 794px;
-            background: white;
-            visibility: hidden;
-        }
-
+        #exportContainer { position: absolute; left: -9999px; top: 0; width: 794px; background: white; visibility: hidden; }
         .export-page { background: white !important; padding: 30px; color: black !important; }
         .invoice-table { width: 100%; border-collapse: collapse; margin-top: 10px; border: 2px solid #000; }
-        .invoice-table th, .invoice-table td {
-            padding: 5px 8px; font-size: 16px; font-weight: bold; text-align: center;
-            border: 1px solid #000; background: #fff !important; color: #000 !important;
-        }
+        .invoice-table th, .invoice-table td { padding: 5px 8px; font-size: 16px; font-weight: bold; text-align: center; border: 1px solid #000; background: #fff !important; color: #000 !important; }
 
-        /* ─── Scrollbar ─── */
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: rgba(201,168,76,0.2); border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: var(--gold-dim); }
 
-        /* ─── Empty state ─── */
-        .empty-state {
-            text-align: center;
-            padding: 40px 20px;
-            color: var(--text-muted);
-        }
+        .empty-state { text-align: center; padding: 40px 20px; color: var(--text-muted); }
         .empty-state .icon { font-size: 38px; margin-bottom: 10px; opacity: 0.35; }
         .empty-state p { font-size: 14px; letter-spacing: 0.3px; }
 
-        /* ─── Toast ─── */
-        #toast {
-            position: fixed;
-            bottom: 30px;
-            right: 20px;
-            background: var(--card2);
-            border: 1px solid rgba(201,168,76,0.2);
-            color: var(--gold-light);
-            padding: 12px 22px;
-            border-radius: 12px;
-            font-size: 14px;
-            font-weight: 600;
-            z-index: 3000;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.6);
-            transform: translateY(80px);
-            opacity: 0;
-            transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            backdrop-filter: blur(10px);
-            letter-spacing: 0.3px;
-        }
+        #toast { position: fixed; bottom: 30px; right: 20px; background: var(--card2); border: 1px solid rgba(201,168,76,0.2); color: var(--gold-light); padding: 12px 22px; border-radius: 12px; font-size: 14px; font-weight: 600; z-index: 3000; box-shadow: 0 8px 32px rgba(0,0,0,0.6); transform: translateY(80px); opacity: 0; transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275); backdrop-filter: blur(10px); letter-spacing: 0.3px; }
         #toast.show { transform: translateY(0); opacity: 1; }
 
-        /* ─── Stats bar ─── */
-        .stats-bar {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 16px;
-        }
-
-        .stat-pill {
-            flex: 1;
-            background: var(--card2);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-sm);
-            padding: 12px;
-            text-align: center;
-            transition: border-color 0.2s;
-        }
-
+        .stats-bar { display: flex; gap: 10px; margin-bottom: 16px; }
+        .stat-pill { flex: 1; background: var(--card2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 12px; text-align: center; transition: border-color 0.2s; }
         .stat-pill:hover { border-color: rgba(201,168,76,0.2); }
+        .stat-num { font-size: 22px; font-weight: 900; color: var(--gold-light); line-height: 1; margin-bottom: 4px; font-family: 'Aref Ruqaa'; }
+        .stat-label { font-size: 11px; color: var(--text-muted); letter-spacing: 0.5px; }
 
-        .stat-num {
-            font-size: 22px;
-            font-weight: 900;
-            color: var(--gold-light);
-            line-height: 1;
-            margin-bottom: 4px;
-            font-family: 'Aref Ruqaa';
-        }
+        .danger-area { background: rgba(224,82,82,0.05); border: 1px solid rgba(224,82,82,0.15); border-radius: var(--radius-sm); padding: 14px; margin-top: 14px; }
 
-        .stat-label {
-            font-size: 11px;
-            color: var(--text-muted);
-            letter-spacing: 0.5px;
-        }
-
-        /* ─── Danger area ─── */
-        .danger-area {
-            background: rgba(224,82,82,0.05);
-            border: 1px solid rgba(224,82,82,0.15);
-            border-radius: var(--radius-sm);
-            padding: 14px;
-            margin-top: 14px;
-        }
-
-        /* ─── Font Size Scales ─── */
-        body.font-sm input, body.font-sm td, body.font-sm .result-item,
-        body.font-sm .history-name, body.font-sm .item-row,
-        body.font-sm .card-title, body.font-sm .btn-main,
-        body.font-sm .btn-action, body.font-sm .history-btn { font-size: 13px !important; }
+        body.font-sm input, body.font-sm td, body.font-sm .result-item, body.font-sm .history-name, body.font-sm .item-row, body.font-sm .card-title, body.font-sm .btn-main, body.font-sm .btn-action, body.font-sm .history-btn { font-size: 13px !important; }
         body.font-sm .nav-tabs button { font-size: 11px; }
-        body.font-sm .section-label  { font-size: 10px; }
-
-        body.font-lg input, body.font-lg td, body.font-lg .result-item,
-        body.font-lg .history-name, body.font-lg .item-row,
-        body.font-lg .card-title, body.font-lg .btn-main,
-        body.font-lg .btn-action, body.font-lg .history-btn { font-size: 17px !important; }
+        body.font-sm .section-label { font-size: 10px; }
+        body.font-lg input, body.font-lg td, body.font-lg .result-item, body.font-lg .history-name, body.font-lg .item-row, body.font-lg .card-title, body.font-lg .btn-main, body.font-lg .btn-action, body.font-lg .history-btn { font-size: 17px !important; }
         body.font-lg .nav-tabs button { font-size: 15px; }
-        body.font-lg .section-label  { font-size: 13px; }
+        body.font-lg .section-label { font-size: 13px; }
 
-        /* ─── Menu divider ─── */
-        .mode-menu-divider {
-            height: 1px;
-            background: var(--border);
-            margin: 4px 0;
-        }
-
-        /* ─── Font size picker row ─── */
-        .font-size-row {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 11px 14px;
-        }
-        .font-size-label {
-            font-size: 12px;
-            color: var(--text-muted);
-            flex: 1;
-            white-space: nowrap;
-        }
+        .mode-menu-divider { height: 1px; background: var(--border); margin: 4px 0; }
+        .font-size-row { display: flex; align-items: center; gap: 10px; padding: 11px 14px; }
+        .font-size-label { font-size: 12px; color: var(--text-muted); flex: 1; white-space: nowrap; }
         .font-btns { display: flex; gap: 5px; }
-        .font-btn {
-            width: 32px; height: 32px;
-            border-radius: 8px;
-            border: 1px solid var(--border);
-            background: var(--bg3);
-            color: var(--text-soft);
-            cursor: pointer;
-            font-family: 'Cairo';
-            font-weight: 700;
-            transition: all 0.15s;
-            display: flex; align-items: center; justify-content: center;
-            line-height: 1;
-        }
+        .font-btn { width: 32px; height: 32px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg3); color: var(--text-soft); cursor: pointer; font-family: 'Cairo'; font-weight: 700; transition: all 0.15s; display: flex; align-items: center; justify-content: center; line-height: 1; }
         .font-btn:hover { border-color: var(--gold-dim); color: var(--gold); }
-        .font-btn.active {
-            background: rgba(201,168,76,0.12);
-            border-color: var(--gold-dim);
-            color: var(--gold-light);
-        }
+        .font-btn.active { background: rgba(201,168,76,0.12); border-color: var(--gold-dim); color: var(--gold-light); }
 
-        /* ─── Accent color picker row ─── */
-        .accent-row {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 11px 14px;
-        }
-        .accent-label {
-            font-size: 12px;
-            color: var(--text-muted);
-            flex: 1;
-            white-space: nowrap;
-        }
+        .accent-row { display: flex; align-items: center; gap: 10px; padding: 11px 14px; }
+        .accent-label { font-size: 12px; color: var(--text-muted); flex: 1; white-space: nowrap; }
         .accent-swatches { display: flex; gap: 7px; align-items: center; }
-        .accent-swatch {
-            width: 22px; height: 22px;
-            border-radius: 50%;
-            cursor: pointer;
-            border: 2px solid transparent;
-            transition: all 0.18s;
-            flex-shrink: 0;
-            position: relative;
-        }
+        .accent-swatch { width: 22px; height: 22px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: all 0.18s; flex-shrink: 0; position: relative; }
         .accent-swatch:hover { transform: scale(1.18); }
-        .accent-swatch.active {
-            border-color: var(--text);
-            box-shadow: 0 0 0 2px var(--bg3);
-        }
-        .accent-swatch.active::after {
-            content: '✓';
-            position: absolute;
-            inset: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 11px;
-            font-weight: 900;
-            color: rgba(0,0,0,0.55);
-        }
+        .accent-swatch.active { border-color: var(--text); box-shadow: 0 0 0 2px var(--bg3); }
+        .accent-swatch.active::after { content: '✓'; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 900; color: rgba(0,0,0,0.55); }
 
-        /* ─── Settings Page ─── */
-        .settings-row {
-            display: flex;
-            align-items: center;
-            gap: 13px;
-            padding: 13px 4px;
-            border-bottom: 1px solid rgba(26,40,64,0.6);
-            cursor: pointer;
-            transition: all 0.18s;
-            border-radius: var(--radius-xs);
-        }
+        .settings-row { display: flex; align-items: center; gap: 13px; padding: 13px 4px; border-bottom: 1px solid rgba(26,40,64,0.6); cursor: pointer; transition: all 0.18s; border-radius: var(--radius-xs); }
         .settings-row:last-child { border-bottom: none; }
         .settings-row:hover { background: var(--gold-subtle); padding-right: 8px; }
-
-        .settings-row-icon {
-            width: 38px; height: 38px;
-            border-radius: 10px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 17px;
-            flex-shrink: 0;
-        }
+        .settings-row-icon { width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 17px; flex-shrink: 0; }
         .settings-row-text { flex: 1; }
         .settings-row-title { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 2px; }
-        .settings-row-sub   { font-size: 12px; color: var(--text-muted); }
+        .settings-row-sub { font-size: 12px; color: var(--text-muted); }
         .settings-row-arrow { font-size: 20px; color: var(--text-muted); font-weight: 300; }
 
-        /* Settings mode buttons */
-        .settings-mode-btn {
-            padding: 14px 8px;
-            border: 1px solid var(--border);
-            border-radius: var(--radius-sm);
-            background: var(--card2);
-            color: var(--text-muted);
-            cursor: pointer;
-            font-family: 'Cairo';
-            font-size: 12px;
-            font-weight: 600;
-            text-align: center;
-            transition: all 0.2s;
-        }
+        .settings-mode-btn { padding: 14px 8px; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--card2); color: var(--text-muted); cursor: pointer; font-family: 'Cairo'; font-size: 12px; font-weight: 600; text-align: center; transition: all 0.2s; }
         .settings-mode-btn:hover { border-color: var(--gold-dim); color: var(--text); }
-        .settings-mode-btn.active {
-            border-color: var(--gold-dim);
-            background: var(--gold-subtle);
-            color: var(--gold-light);
-            box-shadow: inset 0 0 0 1px var(--gold-dim);
-        }
+        .settings-mode-btn.active { border-color: var(--gold-dim); background: var(--gold-subtle); color: var(--gold-light); box-shadow: inset 0 0 0 1px var(--gold-dim); }
 
-        /* Settings accent buttons */
-        .settings-accent-btn {
-            padding: 10px 6px;
-            border: 1px solid var(--border);
-            border-radius: var(--radius-sm);
-            background: var(--card2);
-            color: var(--text-muted);
-            cursor: pointer;
-            font-family: 'Cairo';
-            font-size: 11px;
-            font-weight: 600;
-            text-align: center;
-            transition: all 0.2s;
-            display: flex; flex-direction: column; align-items: center; gap: 6px;
-        }
+        .settings-accent-btn { padding: 10px 6px; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--card2); color: var(--text-muted); cursor: pointer; font-family: 'Cairo'; font-size: 11px; font-weight: 600; text-align: center; transition: all 0.2s; display: flex; flex-direction: column; align-items: center; gap: 6px; }
         .settings-accent-btn:hover { border-color: var(--c, var(--gold-dim)); }
-        .settings-accent-btn.active {
-            border-color: var(--c, var(--gold-dim));
-            background: rgba(255,255,255,0.04);
-            box-shadow: inset 0 0 0 1px var(--c, var(--gold-dim));
-        }
-        .s-swatch {
-            width: 20px; height: 20px;
-            border-radius: 50%;
-            display: block;
-            flex-shrink: 0;
-        }
+        .settings-accent-btn.active { border-color: var(--c, var(--gold-dim)); background: rgba(255,255,255,0.04); box-shadow: inset 0 0 0 1px var(--c, var(--gold-dim)); }
+        .s-swatch { width: 20px; height: 20px; border-radius: 50%; display: block; flex-shrink: 0; }
 
-        /* Settings font buttons */
-        .settings-font-btn {
-            padding: 12px 8px;
-            border: 1px solid var(--border);
-            border-radius: var(--radius-sm);
-            background: var(--card2);
-            color: var(--text-muted);
-            cursor: pointer;
-            font-family: 'Cairo';
-            font-size: 12px;
-            font-weight: 600;
-            text-align: center;
-            transition: all 0.2s;
-        }
+        .settings-font-btn { padding: 12px 8px; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--card2); color: var(--text-muted); cursor: pointer; font-family: 'Cairo'; font-size: 12px; font-weight: 600; text-align: center; transition: all 0.2s; }
         .settings-font-btn:hover { border-color: var(--gold-dim); color: var(--text); }
-        .settings-font-btn.active {
-            border-color: var(--gold-dim);
-            background: var(--gold-subtle);
-            color: var(--gold-light);
-            box-shadow: inset 0 0 0 1px var(--gold-dim);
-        }
+        .settings-font-btn.active { border-color: var(--gold-dim); background: var(--gold-subtle); color: var(--gold-light); box-shadow: inset 0 0 0 1px var(--gold-dim); }
 
-        /* ─── Swipe Indicator ─── */
-            position: fixed;
-            top: 50%;
-            transform: translateY(-50%);
-            z-index: 1800;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 10px 16px;
-            background: rgba(9,13,24,0.92);
-            border: 1px solid var(--border-gold);
-            border-radius: 30px;
-            backdrop-filter: blur(12px);
-            color: var(--gold-light);
-            font-size: 14px;
-            font-weight: 700;
-            font-family: 'Cairo';
+        .swipe-indicator {
+            position: fixed; top: 50%; transform: translateY(-50%);
+            z-index: 1800; display: flex; align-items: center; gap: 8px;
+            padding: 10px 16px; background: rgba(9,13,24,0.92);
+            border: 1px solid var(--border-gold); border-radius: 30px;
+            backdrop-filter: blur(12px); color: var(--gold-light);
+            font-size: 14px; font-weight: 700; font-family: 'Cairo';
             box-shadow: 0 8px 32px rgba(0,0,0,0.5);
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.15s ease;
-            white-space: nowrap;
+            opacity: 0; pointer-events: none; transition: opacity 0.15s ease; white-space: nowrap;
         }
-        .swipe-indicator.left  { left: 16px;  }
+        .swipe-indicator.left { left: 16px; }
         .swipe-indicator.right { right: 16px; }
         .swipe-indicator.visible { opacity: 1; }
+        .swipe-arrow { font-size: 18px; animation: swipePulse 0.6s ease-in-out infinite alternate; }
+        @keyframes swipePulse { from { transform: translateX(0); } to { transform: translateX(4px); } }
+        .swipe-indicator.left .swipe-arrow { animation-name: swipePulseLeft; }
+        @keyframes swipePulseLeft { from { transform: translateX(0); } to { transform: translateX(-4px); } }
 
-        .swipe-arrow {
-            font-size: 18px;
-            animation: swipePulse 0.6s ease-in-out infinite alternate;
-        }
-        @keyframes swipePulse {
-            from { transform: translateX(0); }
-            to   { transform: translateX(4px); }
-        }
-        .swipe-indicator.left .swipe-arrow {
-            animation-name: swipePulseLeft;
-        }
-        @keyframes swipePulseLeft {
-            from { transform: translateX(0); }
-            to   { transform: translateX(-4px); }
-        }
-
-        /* page slide transition */
-        .page-slide-enter {
-            animation: pageSlideIn 0.28s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
-        }
-        .page-slide-enter-left {
-            animation: pageSlideInLeft 0.28s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
-        }
-        @keyframes pageSlideIn {
-            from { opacity: 0; transform: translateX(28px); }
-            to   { opacity: 1; transform: translateX(0); }
-        }
-        @keyframes pageSlideInLeft {
-            from { opacity: 0; transform: translateX(-28px); }
-            to   { opacity: 1; transform: translateX(0); }
-        }
-
-        /* swipe hint dots on nav */
-        .nav-swipe-hint {
-            position: absolute;
-            bottom: 3px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 3px;
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-        .nav-swipe-hint span {
-            width: 3px; height: 3px;
-            border-radius: 50%;
-            background: var(--gold-dim);
-        }
+        .page-slide-enter { animation: pageSlideIn 0.28s cubic-bezier(0.25, 0.46, 0.45, 0.94) both; }
+        .page-slide-enter-left { animation: pageSlideInLeft 0.28s cubic-bezier(0.25, 0.46, 0.45, 0.94) both; }
+        @keyframes pageSlideIn { from { opacity: 0; transform: translateX(28px); } to { opacity: 1; transform: translateX(0); } }
+        @keyframes pageSlideInLeft { from { opacity: 0; transform: translateX(-28px); } to { opacity: 1; transform: translateX(0); } }
 
         /* ─── Splash Screen ─── */
         #splashScreen {
-            position: fixed;
-            inset: 0;
-            z-index: 99999;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            position: fixed; inset: 0; z-index: 99999;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
             background: radial-gradient(ellipse 120% 100% at 50% 0%, #0d1626 0%, #05090f 70%);
             overflow: hidden;
         }
-
-        #splashScreen::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background:
-                radial-gradient(ellipse 60% 40% at 20% 80%, rgba(201,168,76,0.06) 0%, transparent 60%),
-                radial-gradient(ellipse 50% 30% at 80% 20%, rgba(74,144,217,0.04) 0%, transparent 55%);
-            pointer-events: none;
-        }
-
-        /* animated gold particles */
-        #splashScreen::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background-image:
-                radial-gradient(circle 1.5px at 20% 30%, rgba(201,168,76,0.5) 0%, transparent 100%),
-                radial-gradient(circle 1px  at 75% 20%, rgba(201,168,76,0.4) 0%, transparent 100%),
-                radial-gradient(circle 2px  at 55% 70%, rgba(201,168,76,0.3) 0%, transparent 100%),
-                radial-gradient(circle 1px  at 85% 65%, rgba(201,168,76,0.4) 0%, transparent 100%),
-                radial-gradient(circle 1.5px at 10% 60%, rgba(201,168,76,0.3) 0%, transparent 100%),
-                radial-gradient(circle 1px  at 40% 15%, rgba(201,168,76,0.5) 0%, transparent 100%),
-                radial-gradient(circle 2px  at 90% 45%, rgba(201,168,76,0.25) 0%, transparent 100%),
-                radial-gradient(circle 1px  at 30% 85%, rgba(201,168,76,0.35) 0%, transparent 100%);
-            pointer-events: none;
-            animation: particleFloat 6s ease-in-out infinite alternate;
-        }
-
-        @keyframes particleFloat {
-            0%   { transform: translateY(0px); }
-            100% { transform: translateY(-12px); }
-        }
-
-        .splash-logo-wrap {
-            position: relative;
-            margin-bottom: 28px;
-            animation: splashLogoIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.2s both;
-        }
-
-        @keyframes splashLogoIn {
-            from { opacity: 0; transform: scale(0.6) translateY(20px); }
-            to   { opacity: 1; transform: scale(1) translateY(0); }
-        }
-
-        .splash-logo {
-            width: 100px; height: 100px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 3px solid rgba(201,168,76,0.4);
-            box-shadow:
-                0 0 0 8px rgba(201,168,76,0.06),
-                0 0 0 16px rgba(201,168,76,0.03),
-                0 0 40px rgba(201,168,76,0.25),
-                0 8px 32px rgba(0,0,0,0.5);
-        }
-
-        /* pulsing ring */
-        .splash-ring {
-            position: absolute;
-            inset: -14px;
-            border-radius: 50%;
-            border: 1.5px solid rgba(201,168,76,0.2);
-            animation: splashRing 2s ease-in-out infinite;
-        }
-        .splash-ring:nth-child(2) {
-            inset: -26px;
-            border-color: rgba(201,168,76,0.1);
-            animation-delay: 0.4s;
-        }
-
-        @keyframes splashRing {
-            0%, 100% { transform: scale(1);   opacity: 1; }
-            50%       { transform: scale(1.05); opacity: 0.5; }
-        }
-
-        .splash-brand {
-            font-family: 'Aref Ruqaa', serif;
-            font-size: 48px;
-            background: linear-gradient(135deg, #f0d98a 0%, #c9a84c 45%, #8a6830 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 2px 12px rgba(201,168,76,0.4));
-            letter-spacing: 2px;
-            animation: splashBrandIn 0.7s ease 0.5s both;
-        }
-
-        @keyframes splashBrandIn {
-            from { opacity: 0; transform: translateY(16px); }
-            to   { opacity: 1; transform: translateY(0); }
-        }
-
-        .splash-tagline {
-            font-size: 13px;
-            color: rgba(201,168,76,0.5);
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            margin-top: 6px;
-            font-weight: 600;
-            animation: splashBrandIn 0.7s ease 0.7s both;
-        }
-
-        /* loading bar */
-        .splash-bar-wrap {
-            width: 160px;
-            height: 3px;
-            background: rgba(255,255,255,0.06);
-            border-radius: 3px;
-            margin-top: 48px;
-            overflow: hidden;
-            animation: splashBrandIn 0.5s ease 0.9s both;
-        }
-
-        .splash-bar {
-            height: 100%;
-            width: 0%;
-            background: linear-gradient(90deg, var(--gold-dim), var(--gold-light), var(--gold-dim));
-            border-radius: 3px;
-            animation: splashBarFill 1.8s cubic-bezier(0.4, 0, 0.2, 1) 1s forwards;
-        }
-
-        @keyframes splashBarFill {
-            0%   { width: 0%;   opacity: 1; }
-            80%  { width: 90%;  opacity: 1; }
-            95%  { width: 100%; opacity: 1; }
-            100% { width: 100%; opacity: 0; }
-        }
-
-        /* version */
-        .splash-version {
-            position: absolute;
-            bottom: 32px;
-            font-size: 11px;
-            color: rgba(201,168,76,0.25);
-            letter-spacing: 2px;
-            animation: splashBrandIn 0.5s ease 1s both;
-        }
-
-        /* exit animation */
-        #splashScreen.hide {
-            animation: splashOut 0.55s cubic-bezier(0.4, 0, 1, 1) forwards;
-        }
-
-        @keyframes splashOut {
-            0%   { opacity: 1; transform: scale(1); }
-            100% { opacity: 0; transform: scale(1.04); pointer-events: none; }
-        }
+        #splashScreen::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 60% 40% at 20% 80%, rgba(201,168,76,0.06) 0%, transparent 60%), radial-gradient(ellipse 50% 30% at 80% 20%, rgba(74,144,217,0.04) 0%, transparent 55%); pointer-events: none; }
+        #splashScreen::after { content: ''; position: absolute; inset: 0; background-image: radial-gradient(circle 1.5px at 20% 30%, rgba(201,168,76,0.5) 0%, transparent 100%), radial-gradient(circle 1px at 75% 20%, rgba(201,168,76,0.4) 0%, transparent 100%), radial-gradient(circle 2px at 55% 70%, rgba(201,168,76,0.3) 0%, transparent 100%), radial-gradient(circle 1px at 85% 65%, rgba(201,168,76,0.4) 0%, transparent 100%), radial-gradient(circle 1.5px at 10% 60%, rgba(201,168,76,0.3) 0%, transparent 100%), radial-gradient(circle 1px at 40% 15%, rgba(201,168,76,0.5) 0%, transparent 100%), radial-gradient(circle 2px at 90% 45%, rgba(201,168,76,0.25) 0%, transparent 100%), radial-gradient(circle 1px at 30% 85%, rgba(201,168,76,0.35) 0%, transparent 100%); pointer-events: none; animation: particleFloat 6s ease-in-out infinite alternate; }
+        @keyframes particleFloat { 0% { transform: translateY(0px); } 100% { transform: translateY(-12px); } }
+        .splash-logo-wrap { position: relative; margin-bottom: 28px; animation: splashLogoIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.2s both; }
+        @keyframes splashLogoIn { from { opacity: 0; transform: scale(0.6) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+        .splash-logo { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid rgba(201,168,76,0.4); box-shadow: 0 0 0 8px rgba(201,168,76,0.06), 0 0 0 16px rgba(201,168,76,0.03), 0 0 40px rgba(201,168,76,0.25), 0 8px 32px rgba(0,0,0,0.5); }
+        .splash-ring { position: absolute; inset: -14px; border-radius: 50%; border: 1.5px solid rgba(201,168,76,0.2); animation: splashRing 2s ease-in-out infinite; }
+        .splash-ring:nth-child(2) { inset: -26px; border-color: rgba(201,168,76,0.1); animation-delay: 0.4s; }
+        @keyframes splashRing { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.05); opacity: 0.5; } }
+        .splash-brand { font-family: 'Aref Ruqaa', serif; font-size: 48px; background: linear-gradient(135deg, #f0d98a 0%, #c9a84c 45%, #8a6830 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 2px 12px rgba(201,168,76,0.4)); letter-spacing: 2px; animation: splashBrandIn 0.7s ease 0.5s both; }
+        @keyframes splashBrandIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+        .splash-tagline { font-size: 13px; color: rgba(201,168,76,0.5); letter-spacing: 3px; text-transform: uppercase; margin-top: 6px; font-weight: 600; animation: splashBrandIn 0.7s ease 0.7s both; }
+        .splash-bar-wrap { width: 160px; height: 3px; background: rgba(255,255,255,0.06); border-radius: 3px; margin-top: 48px; overflow: hidden; animation: splashBrandIn 0.5s ease 0.9s both; }
+        .splash-bar { height: 100%; width: 0%; background: linear-gradient(90deg, var(--gold-dim), var(--gold-light), var(--gold-dim)); border-radius: 3px; animation: splashBarFill 1.8s cubic-bezier(0.4, 0, 0.2, 1) 1s forwards; }
+        @keyframes splashBarFill { 0% { width: 0%; opacity: 1; } 80% { width: 90%; opacity: 1; } 95% { width: 100%; opacity: 1; } 100% { width: 100%; opacity: 0; } }
+        .splash-version { position: absolute; bottom: 32px; font-size: 11px; color: rgba(201,168,76,0.25); letter-spacing: 2px; animation: splashBrandIn 0.5s ease 1s both; }
+        #splashScreen.hide { animation: splashOut 0.55s cubic-bezier(0.4, 0, 1, 1) forwards; }
+        @keyframes splashOut { 0% { opacity: 1; transform: scale(1); } 100% { opacity: 0; transform: scale(1.04); pointer-events: none; } }
     </style>
 </head>
 <body>
 
-<!-- ─── Splash Screen ─── -->
+<!-- Splash -->
 <div id="splashScreen">
     <div class="splash-logo-wrap">
         <div class="splash-ring"></div>
@@ -1483,21 +717,13 @@
     </div>
     <div class="splash-brand">المحلاوي</div>
     <div class="splash-tagline">نظام إدارة الطلبيات</div>
-    <div class="splash-bar-wrap">
-        <div class="splash-bar"></div>
-    </div>
+    <div class="splash-bar-wrap"><div class="splash-bar"></div></div>
     <div class="splash-version">V 4.0</div>
 </div>
 
 <!-- Swipe Indicators -->
-<div class="swipe-indicator left"  id="swipeIndLeft">
-    <span class="swipe-arrow">←</span>
-    <span id="swipeLeftLabel">الأصناف</span>
-</div>
-<div class="swipe-indicator right" id="swipeIndRight">
-    <span id="swipeRightLabel">الطلبية</span>
-    <span class="swipe-arrow">→</span>
-</div>
+<div class="swipe-indicator left" id="swipeIndLeft"><span class="swipe-arrow">←</span><span id="swipeLeftLabel">الأصناف</span></div>
+<div class="swipe-indicator right" id="swipeIndRight"><span id="swipeRightLabel">الطلبية</span><span class="swipe-arrow">→</span></div>
 
 <!-- Login -->
 <div id="loginOverlay">
@@ -1513,6 +739,7 @@
     </div>
 </div>
 
+<div id="toast"></div>
 <button id="backToTop" onclick="scrollToTop()">↑</button>
 
 <!-- Share Modal -->
@@ -1530,7 +757,7 @@
     <div class="details-modal-inner">
         <button class="close-btn" onclick="document.getElementById('detailsModal').classList.add('hidden')">✕</button>
         <h3 id="modalClientName" style="color:var(--gold-light); font-family:'Aref Ruqaa'; font-size:24px; margin-bottom:4px; padding-left:40px;"></h3>
-        <p id="modalDate" style="font-size:12px; color:var(--text-muted); margin-bottom:12px; letter-spacing:0.3px;"></p>
+        <p id="modalDate" style="font-size:12px; color:var(--text-muted); margin-bottom:12px;"></p>
         <div id="modalNotes" style="font-size:13px; color:var(--text-soft); background:rgba(0,0,0,0.25); padding:10px 14px; border-radius:8px; border-right:2px solid var(--gold-dim); margin-bottom:16px;"></div>
         <div id="modalItemsList"></div>
     </div>
@@ -1544,7 +771,6 @@
             <span class="brand-name">المحلاوي</span>
         </div>
         <div class="header-controls">
-            <!-- Mode Dropdown -->
             <div style="position:relative;">
                 <button class="mode-dropdown-btn" id="modeBtn" onclick="toggleModeMenu()">
                     <span id="modeBtnIcon">🌙</span>
@@ -1553,26 +779,17 @@
                 </button>
                 <div class="mode-menu hidden" id="modeMenu">
                     <div class="mode-menu-header">اختر المظهر</div>
-                    <div class="mode-item active" id="modeItemDark" onclick="setMode('dark')">
-                        <span class="mode-item-icon" style="background:rgba(201,168,76,0.1);">🌙</span>
-                        الوضع الداكن
-                    </div>
-                    <div class="mode-item" id="modeItemLight" onclick="setMode('light')">
-                        <span class="mode-item-icon" style="background:rgba(255,200,50,0.12);">☀️</span>
-                        الوضع الفاتح
-                    </div>
-                    <div class="mode-item" id="modeItemCompact" onclick="setMode('compact')">
-                        <span class="mode-item-icon" style="background:rgba(74,144,217,0.1);">⚡</span>
-                        الوضع المضغوط
-                    </div>
+                    <div class="mode-item active" id="modeItemDark" onclick="setMode('dark')"><span class="mode-item-icon" style="background:rgba(201,168,76,0.1);">🌙</span>الوضع الداكن</div>
+                    <div class="mode-item" id="modeItemLight" onclick="setMode('light')"><span class="mode-item-icon" style="background:rgba(255,200,50,0.12);">☀️</span>الوضع الفاتح</div>
+                    <div class="mode-item" id="modeItemCompact" onclick="setMode('compact')"><span class="mode-item-icon" style="background:rgba(74,144,217,0.1);">⚡</span>الوضع المضغوط</div>
                     <div class="mode-menu-divider"></div>
                     <div class="mode-menu-header">حجم الخط</div>
                     <div class="font-size-row">
                         <span class="font-size-label">الحجم</span>
                         <div class="font-btns">
-                            <button class="font-btn" id="fontBtnSm" onclick="setFontSize('sm')" title="صغير" style="font-size:11px;">ص</button>
-                            <button class="font-btn active" id="fontBtnMd" onclick="setFontSize('md')" title="متوسط" style="font-size:13px;">م</button>
-                            <button class="font-btn" id="fontBtnLg" onclick="setFontSize('lg')" title="كبير" style="font-size:16px;">ك</button>
+                            <button class="font-btn" id="fontBtnSm" onclick="setFontSize('sm')" style="font-size:11px;">ص</button>
+                            <button class="font-btn active" id="fontBtnMd" onclick="setFontSize('md')" style="font-size:13px;">م</button>
+                            <button class="font-btn" id="fontBtnLg" onclick="setFontSize('lg')" style="font-size:16px;">ك</button>
                         </div>
                     </div>
                     <div class="mode-menu-divider"></div>
@@ -1580,33 +797,24 @@
                     <div class="accent-row">
                         <span class="accent-label">اللون</span>
                         <div class="accent-swatches">
-                            <div class="accent-swatch active" id="accentGold"   onclick="setAccent('gold')"   title="ذهبي"  style="background:#c9a84c;"></div>
-                            <div class="accent-swatch"        id="accentBlue"   onclick="setAccent('blue')"   title="أزرق"  style="background:#4a90d9;"></div>
-                            <div class="accent-swatch"        id="accentGreen"  onclick="setAccent('green')"  title="أخضر"  style="background:#3dba8c;"></div>
-                            <div class="accent-swatch"        id="accentPurple" onclick="setAccent('purple')" title="بنفسجي" style="background:#9b72e8;"></div>
-                            <div class="accent-swatch"        id="accentRose"   onclick="setAccent('rose')"   title="وردي"  style="background:#e07a8c;"></div>
+                            <div class="accent-swatch active" id="accentGold"   onclick="setAccent('gold')"   style="background:#c9a84c;"></div>
+                            <div class="accent-swatch"        id="accentBlue"   onclick="setAccent('blue')"   style="background:#4a90d9;"></div>
+                            <div class="accent-swatch"        id="accentGreen"  onclick="setAccent('green')"  style="background:#3dba8c;"></div>
+                            <div class="accent-swatch"        id="accentPurple" onclick="setAccent('purple')" style="background:#9b72e8;"></div>
+                            <div class="accent-swatch"        id="accentRose"   onclick="setAccent('rose')"   style="background:#e07a8c;"></div>
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- Logout -->
             <button class="logout-btn" onclick="logout()" title="تسجيل الخروج">⏻</button>
         </div>
     </header>
 
     <div class="nav-tabs">
-        <button id="tab1" class="active" onclick="switchPage('order')">
-            <span class="nav-icon">📋</span>الطلبية
-        </button>
-        <button id="tab2" onclick="switchPage('browse')">
-            <span class="nav-icon">📦</span>الأصناف
-        </button>
-        <button id="tab3" onclick="switchPage('history')">
-            <span class="nav-icon">🕒</span>السجل
-        </button>
-        <button id="tab4" onclick="switchPage('settings')">
-            <span class="nav-icon">⚙️</span>الإعدادات
-        </button>
+        <button id="tab1" class="active" onclick="switchPage('order')"><span class="nav-icon">📋</span>الطلبية</button>
+        <button id="tab2" onclick="switchPage('browse')"><span class="nav-icon">📦</span>الأصناف</button>
+        <button id="tab3" onclick="switchPage('history')"><span class="nav-icon">🕒</span>السجل</button>
+        <button id="tab4" onclick="switchPage('settings')"><span class="nav-icon">⚙️</span>الإعدادات</button>
     </div>
 
     <div class="container">
@@ -1615,13 +823,8 @@
         <div id="orderPage">
             <div class="card">
                 <div class="section-label">بيانات العميل</div>
-                <div class="input-wrapper">
-                    <input type="text" id="clientName" placeholder="👤  اسم العميل...">
-                </div>
-                <div class="input-wrapper">
-                    <input type="text" id="clientNotes" placeholder="📝  ملاحظات للعميل...">
-                </div>
-
+                <div class="input-wrapper"><input type="text" id="clientName" placeholder="👤  اسم العميل..."></div>
+                <div class="input-wrapper"><input type="text" id="clientNotes" placeholder="📝  ملاحظات للعميل..."></div>
                 <div class="section-label" style="margin-top:4px;">إضافة صنف</div>
                 <div class="input-wrapper" style="position:relative;">
                     <input type="text" id="itemSearch" placeholder="🔍  ابحث عن مادة..." autocomplete="off">
@@ -1631,23 +834,13 @@
                 <div class="input-wrapper">
                     <input type="number" id="qty" placeholder="الكمية" inputmode="numeric" min="1" onkeydown="if(event.key==='Enter') addItem()">
                 </div>
-
                 <button class="btn-main" onclick="addItem()">➕  إضافة للجدول</button>
-
                 <div class="table-wrapper">
                     <table id="resultTable">
-                        <thead>
-                            <tr>
-                                <th style="width:40px">م</th>
-                                <th>المادة</th>
-                                <th style="width:80px">الكمية</th>
-                                <th style="width:70px">إجراء</th>
-                            </tr>
-                        </thead>
+                        <thead><tr><th style="width:40px">م</th><th>المادة</th><th style="width:80px">الكمية</th><th style="width:70px">إجراء</th></tr></thead>
                         <tbody></tbody>
                     </table>
                 </div>
-
                 <div class="grid-buttons">
                     <button class="btn-action full-width" style="background:linear-gradient(135deg,#7c5cbf,#5a3d9e); color:white;" onclick="prepareAndShowShare()">🔗  مشاركة وحفظ (صور)</button>
                     <button class="btn-action" style="background:linear-gradient(135deg,#d95c3a,#b03020); color:white;" onclick="exportToPDF()">📑  تصدير PDF</button>
@@ -1669,14 +862,9 @@
                     <button class="sync-btn" id="syncBtn" onclick="syncFromCloud()">🔄 مزامنة</button>
                 </div>
                 <div class="stats-bar" id="browseStats">
-                    <div class="stat-pill">
-                        <div class="stat-num" id="totalItemsCount">0</div>
-                        <div class="stat-label">إجمالي الأصناف</div>
-                    </div>
+                    <div class="stat-pill"><div class="stat-num" id="totalItemsCount">0</div><div class="stat-label">إجمالي الأصناف</div></div>
                 </div>
-                <div class="input-wrapper">
-                    <input type="text" id="newItemName" placeholder="🔍  بحث أو إضافة صنف جديد..." oninput="renderCloudItems(this.value)">
-                </div>
+                <div class="input-wrapper"><input type="text" id="newItemName" placeholder="🔍  بحث أو إضافة صنف جديد..." oninput="renderCloudItems(this.value)"></div>
                 <button class="btn-main" onclick="addCloudItemManual()">💾  حفظ صنف جديد</button>
                 <div id="itemsGrid" style="margin-top:16px;"></div>
             </div>
@@ -1689,9 +877,7 @@
                     <span class="card-title" style="margin-bottom:0;">🕒 الفواتير المحفوظة</span>
                     <span id="historyCount" style="font-size:12px; color:var(--text-muted); background:var(--card2); padding:4px 12px; border-radius:20px; border:1px solid var(--border);">0 فاتورة</span>
                 </div>
-                <div class="input-wrapper">
-                    <input type="text" id="historySearch" placeholder="🔍  ابحث باسم العميل..." oninput="renderHistory(this.value)">
-                </div>
+                <div class="input-wrapper"><input type="text" id="historySearch" placeholder="🔍  ابحث باسم العميل..." oninput="renderHistory(this.value)"></div>
                 <div id="historyList" style="margin-top:14px;"></div>
                 <div class="danger-area">
                     <button class="btn-action full-width" style="background:none; color:var(--danger); border:none; font-size:14px; padding:6px;" onclick="clearHistory()">🗑️  مسح السجل بالكامل</button>
@@ -1701,165 +887,56 @@
 
         <!-- Settings Page -->
         <div id="settingsPage" class="hidden">
-
-            <!-- Profile Card -->
             <div class="card" style="text-align:center; padding:28px 22px;">
                 <img src="https://i.ibb.co/4R44srhj/image.jpg" style="width:72px;height:72px;border-radius:50%;border:2px solid var(--gold-dim);box-shadow:0 0 20px var(--gold-glow);margin-bottom:12px;">
                 <div style="font-family:'Aref Ruqaa';font-size:24px;color:var(--gold-light);margin-bottom:4px;">نظام المحلاوي</div>
                 <div class="version-badge" style="display:inline-block;">V 4.0</div>
                 <div style="margin-top:16px; display:flex; justify-content:center; gap:20px;">
-                    <div style="text-align:center;">
-                        <div id="statsItemsCount" style="font-size:22px;font-weight:900;color:var(--gold-light);font-family:'Aref Ruqaa';">0</div>
-                        <div style="font-size:11px;color:var(--text-muted);">صنف محفوظ</div>
-                    </div>
+                    <div style="text-align:center;"><div id="statsItemsCount" style="font-size:22px;font-weight:900;color:var(--gold-light);font-family:'Aref Ruqaa';">0</div><div style="font-size:11px;color:var(--text-muted);">صنف محفوظ</div></div>
                     <div style="width:1px;background:var(--border);"></div>
-                    <div style="text-align:center;">
-                        <div id="statsInvoiceCount" style="font-size:22px;font-weight:900;color:var(--gold-light);font-family:'Aref Ruqaa';">0</div>
-                        <div style="font-size:11px;color:var(--text-muted);">فاتورة</div>
-                    </div>
+                    <div style="text-align:center;"><div id="statsInvoiceCount" style="font-size:22px;font-weight:900;color:var(--gold-light);font-family:'Aref Ruqaa';">0</div><div style="font-size:11px;color:var(--text-muted);">فاتورة</div></div>
                 </div>
             </div>
-
-            <!-- Appearance Section -->
             <div class="card">
                 <div class="card-title">🎨 المظهر</div>
-
                 <div class="section-label">وضع العرض</div>
                 <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:9px; margin-bottom:18px;">
-                    <button class="settings-mode-btn active" id="sModeItemDark" onclick="setMode('dark'); updateSettingsModeUI()">
-                        <span style="font-size:20px;display:block;margin-bottom:4px;">🌙</span>
-                        <span>داكن</span>
-                    </button>
-                    <button class="settings-mode-btn" id="sModeItemLight" onclick="setMode('light'); updateSettingsModeUI()">
-                        <span style="font-size:20px;display:block;margin-bottom:4px;">☀️</span>
-                        <span>فاتح</span>
-                    </button>
-                    <button class="settings-mode-btn" id="sModeItemCompact" onclick="setMode('compact'); updateSettingsModeUI()">
-                        <span style="font-size:20px;display:block;margin-bottom:4px;">⚡</span>
-                        <span>مضغوط</span>
-                    </button>
+                    <button class="settings-mode-btn active" id="sModeItemDark" onclick="setMode('dark'); updateSettingsModeUI()"><span style="font-size:20px;display:block;margin-bottom:4px;">🌙</span><span>داكن</span></button>
+                    <button class="settings-mode-btn" id="sModeItemLight" onclick="setMode('light'); updateSettingsModeUI()"><span style="font-size:20px;display:block;margin-bottom:4px;">☀️</span><span>فاتح</span></button>
+                    <button class="settings-mode-btn" id="sModeItemCompact" onclick="setMode('compact'); updateSettingsModeUI()"><span style="font-size:20px;display:block;margin-bottom:4px;">⚡</span><span>مضغوط</span></button>
                 </div>
-
                 <div class="section-label">لون التمييز</div>
                 <div style="display:grid; grid-template-columns:repeat(5,1fr); gap:9px; margin-bottom:18px;">
-                    <button class="settings-accent-btn active" id="sAccentGold"   onclick="setAccent('gold');   updateSettingsAccentUI()" style="--c:#c9a84c">
-                        <span class="s-swatch" style="background:#c9a84c;"></span>
-                        <span>ذهبي</span>
-                    </button>
-                    <button class="settings-accent-btn" id="sAccentBlue"   onclick="setAccent('blue');   updateSettingsAccentUI()" style="--c:#4a90d9">
-                        <span class="s-swatch" style="background:#4a90d9;"></span>
-                        <span>أزرق</span>
-                    </button>
-                    <button class="settings-accent-btn" id="sAccentGreen"  onclick="setAccent('green');  updateSettingsAccentUI()" style="--c:#3dba8c">
-                        <span class="s-swatch" style="background:#3dba8c;"></span>
-                        <span>أخضر</span>
-                    </button>
-                    <button class="settings-accent-btn" id="sAccentPurple" onclick="setAccent('purple'); updateSettingsAccentUI()" style="--c:#9b72e8">
-                        <span class="s-swatch" style="background:#9b72e8;"></span>
-                        <span>بنفسجي</span>
-                    </button>
-                    <button class="settings-accent-btn" id="sAccentRose"   onclick="setAccent('rose');   updateSettingsAccentUI()" style="--c:#e07a8c">
-                        <span class="s-swatch" style="background:#e07a8c;"></span>
-                        <span>وردي</span>
-                    </button>
+                    <button class="settings-accent-btn active" id="sAccentGold" onclick="setAccent('gold'); updateSettingsAccentUI()" style="--c:#c9a84c"><span class="s-swatch" style="background:#c9a84c;"></span><span>ذهبي</span></button>
+                    <button class="settings-accent-btn" id="sAccentBlue" onclick="setAccent('blue'); updateSettingsAccentUI()" style="--c:#4a90d9"><span class="s-swatch" style="background:#4a90d9;"></span><span>أزرق</span></button>
+                    <button class="settings-accent-btn" id="sAccentGreen" onclick="setAccent('green'); updateSettingsAccentUI()" style="--c:#3dba8c"><span class="s-swatch" style="background:#3dba8c;"></span><span>أخضر</span></button>
+                    <button class="settings-accent-btn" id="sAccentPurple" onclick="setAccent('purple'); updateSettingsAccentUI()" style="--c:#9b72e8"><span class="s-swatch" style="background:#9b72e8;"></span><span>بنفسجي</span></button>
+                    <button class="settings-accent-btn" id="sAccentRose" onclick="setAccent('rose'); updateSettingsAccentUI()" style="--c:#e07a8c"><span class="s-swatch" style="background:#e07a8c;"></span><span>وردي</span></button>
                 </div>
-
                 <div class="section-label">حجم الخط</div>
                 <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:9px;">
-                    <button class="settings-font-btn" id="sFontSm" onclick="setFontSize('sm'); updateSettingsFontUI()">
-                        <span style="font-size:13px;display:block;font-weight:700;margin-bottom:3px;">أ</span>
-                        <span>صغير</span>
-                    </button>
-                    <button class="settings-font-btn active" id="sFontMd" onclick="setFontSize('md'); updateSettingsFontUI()">
-                        <span style="font-size:17px;display:block;font-weight:700;margin-bottom:3px;">أ</span>
-                        <span>متوسط</span>
-                    </button>
-                    <button class="settings-font-btn" id="sFontLg" onclick="setFontSize('lg'); updateSettingsFontUI()">
-                        <span style="font-size:21px;display:block;font-weight:700;margin-bottom:3px;">أ</span>
-                        <span>كبير</span>
-                    </button>
+                    <button class="settings-font-btn" id="sFontSm" onclick="setFontSize('sm'); updateSettingsFontUI()"><span style="font-size:13px;display:block;font-weight:700;margin-bottom:3px;">أ</span><span>صغير</span></button>
+                    <button class="settings-font-btn active" id="sFontMd" onclick="setFontSize('md'); updateSettingsFontUI()"><span style="font-size:17px;display:block;font-weight:700;margin-bottom:3px;">أ</span><span>متوسط</span></button>
+                    <button class="settings-font-btn" id="sFontLg" onclick="setFontSize('lg'); updateSettingsFontUI()"><span style="font-size:21px;display:block;font-weight:700;margin-bottom:3px;">أ</span><span>كبير</span></button>
                 </div>
             </div>
-
-            <!-- Data Section -->
             <div class="card">
                 <div class="card-title">💾 إدارة البيانات</div>
-
-                <div class="settings-row" onclick="syncFromCloud()">
-                    <div class="settings-row-icon" style="background:rgba(61,186,140,0.12); color:var(--success);">🔄</div>
-                    <div class="settings-row-text">
-                        <div class="settings-row-title">مزامنة الأصناف</div>
-                        <div class="settings-row-sub">تحديث قائمة الأصناف من السحابة</div>
-                    </div>
-                    <div class="settings-row-arrow">›</div>
-                </div>
-
-                <div class="settings-row" onclick="exportBackup()">
-                    <div class="settings-row-icon" style="background:rgba(74,144,217,0.12); color:var(--edit);">📤</div>
-                    <div class="settings-row-text">
-                        <div class="settings-row-title">تصدير نسخة احتياطية</div>
-                        <div class="settings-row-sub">حفظ جميع البيانات كملف JSON</div>
-                    </div>
-                    <div class="settings-row-arrow">›</div>
-                </div>
-
-                <div class="settings-row" onclick="document.getElementById('importFile').click()">
-                    <div class="settings-row-icon" style="background:rgba(201,168,76,0.1); color:var(--gold);">📥</div>
-                    <div class="settings-row-text">
-                        <div class="settings-row-title">استيراد نسخة احتياطية</div>
-                        <div class="settings-row-sub">استعادة البيانات من ملف JSON</div>
-                    </div>
-                    <div class="settings-row-arrow">›</div>
-                </div>
+                <div class="settings-row" onclick="syncFromCloud()"><div class="settings-row-icon" style="background:rgba(61,186,140,0.12); color:var(--success);">🔄</div><div class="settings-row-text"><div class="settings-row-title">مزامنة الأصناف</div><div class="settings-row-sub">تحديث قائمة الأصناف من السحابة</div></div><div class="settings-row-arrow">›</div></div>
+                <div class="settings-row" onclick="exportBackup()"><div class="settings-row-icon" style="background:rgba(74,144,217,0.12); color:var(--edit);">📤</div><div class="settings-row-text"><div class="settings-row-title">تصدير نسخة احتياطية</div><div class="settings-row-sub">حفظ جميع البيانات كملف JSON</div></div><div class="settings-row-arrow">›</div></div>
+                <div class="settings-row" onclick="document.getElementById('importFile').click()"><div class="settings-row-icon" style="background:rgba(201,168,76,0.1); color:var(--gold);">📥</div><div class="settings-row-text"><div class="settings-row-title">استيراد نسخة احتياطية</div><div class="settings-row-sub">استعادة البيانات من ملف JSON</div></div><div class="settings-row-arrow">›</div></div>
                 <input type="file" id="importFile" accept=".json" class="hidden" onchange="importBackup(event)">
-
                 <div class="danger-area" style="margin-top:14px;">
-                    <div class="settings-row" onclick="clearHistory()" style="border:none;padding:6px 0;background:none;">
-                        <div class="settings-row-icon" style="background:rgba(224,82,82,0.1); color:var(--danger);">🗑️</div>
-                        <div class="settings-row-text">
-                            <div class="settings-row-title" style="color:var(--danger);">مسح السجل</div>
-                            <div class="settings-row-sub">حذف جميع الفواتير المحفوظة</div>
-                        </div>
-                        <div class="settings-row-arrow" style="color:var(--danger);">›</div>
-                    </div>
-                    <div class="settings-row" onclick="resetAllData()" style="border:none;padding:6px 0;background:none;margin-top:4px;">
-                        <div class="settings-row-icon" style="background:rgba(224,82,82,0.1); color:var(--danger);">⚠️</div>
-                        <div class="settings-row-text">
-                            <div class="settings-row-title" style="color:var(--danger);">إعادة ضبط المصنع</div>
-                            <div class="settings-row-sub">حذف جميع البيانات والإعدادات</div>
-                        </div>
-                        <div class="settings-row-arrow" style="color:var(--danger);">›</div>
-                    </div>
+                    <div class="settings-row" onclick="clearHistory()" style="border:none;padding:6px 0;background:none;"><div class="settings-row-icon" style="background:rgba(224,82,82,0.1); color:var(--danger);">🗑️</div><div class="settings-row-text"><div class="settings-row-title" style="color:var(--danger);">مسح السجل</div><div class="settings-row-sub">حذف جميع الفواتير المحفوظة</div></div><div class="settings-row-arrow" style="color:var(--danger);">›</div></div>
+                    <div class="settings-row" onclick="resetAllData()" style="border:none;padding:6px 0;background:none;margin-top:4px;"><div class="settings-row-icon" style="background:rgba(224,82,82,0.1); color:var(--danger);">⚠️</div><div class="settings-row-text"><div class="settings-row-title" style="color:var(--danger);">إعادة ضبط المصنع</div><div class="settings-row-sub">حذف جميع البيانات والإعدادات</div></div><div class="settings-row-arrow" style="color:var(--danger);">›</div></div>
                 </div>
             </div>
-
-            <!-- About Section -->
             <div class="card">
                 <div class="card-title">ℹ️ عن التطبيق</div>
-                <div class="settings-row" style="cursor:default;">
-                    <div class="settings-row-icon" style="background:var(--gold-subtle); color:var(--gold);">📱</div>
-                    <div class="settings-row-text">
-                        <div class="settings-row-title">الإصدار</div>
-                        <div class="settings-row-sub">نظام المحلاوي — V 4.0</div>
-                    </div>
-                </div>
-                <div class="settings-row" style="cursor:default;">
-                    <div class="settings-row-icon" style="background:rgba(74,144,217,0.1); color:var(--edit);">☁️</div>
-                    <div class="settings-row-text">
-                        <div class="settings-row-title">نظام التخزين</div>
-                        <div class="settings-row-sub">Google Sheets + Local Storage</div>
-                    </div>
-                </div>
-                <div class="settings-row" onclick="logout()" style="margin-top:4px;">
-                    <div class="settings-row-icon" style="background:rgba(224,82,82,0.1); color:var(--danger);">⏻</div>
-                    <div class="settings-row-text">
-                        <div class="settings-row-title" style="color:var(--danger);">تسجيل الخروج</div>
-                        <div class="settings-row-sub">العودة لشاشة الدخول</div>
-                    </div>
-                    <div class="settings-row-arrow" style="color:var(--danger);">›</div>
-                </div>
+                <div class="settings-row" style="cursor:default;"><div class="settings-row-icon" style="background:var(--gold-subtle); color:var(--gold);">📱</div><div class="settings-row-text"><div class="settings-row-title">الإصدار</div><div class="settings-row-sub">نظام المحلاوي — V 4.0</div></div></div>
+                <div class="settings-row" style="cursor:default;"><div class="settings-row-icon" style="background:rgba(74,144,217,0.1); color:var(--edit);">☁️</div><div class="settings-row-text"><div class="settings-row-title">نظام التخزين</div><div class="settings-row-sub">Google Sheets + Local Storage</div></div></div>
+                <div class="settings-row" onclick="logout()" style="margin-top:4px;"><div class="settings-row-icon" style="background:rgba(224,82,82,0.1); color:var(--danger);">⏻</div><div class="settings-row-text"><div class="settings-row-title" style="color:var(--danger);">تسجيل الخروج</div><div class="settings-row-sub">العودة لشاشة الدخول</div></div><div class="settings-row-arrow" style="color:var(--danger);">›</div></div>
             </div>
-
         </div>
 
     </div>
@@ -1874,16 +951,12 @@
     let invoiceHistory = JSON.parse(localStorage.getItem("invoiceHistory")) || [];
     let shareQueue = [];
 
-    // ─── Splash Screen ───
-    (function initSplash() {
+    // Splash
+    (function() {
         const splash = document.getElementById('splashScreen');
-        // Total splash duration: bar animation (1s delay + 1.8s fill) + exit
-        // We trigger exit at ~2.6s so bar finishes just before fade
         setTimeout(() => {
             splash.classList.add('hide');
-            splash.addEventListener('animationend', () => {
-                splash.style.display = 'none';
-            }, { once: true });
+            splash.addEventListener('animationend', () => splash.style.display = 'none', { once: true });
         }, 2700);
     })();
 
@@ -1906,9 +979,7 @@
             document.getElementById("loginOverlay").style.display = "none";
             document.getElementById("appContent").classList.remove("hidden");
             if (pass === "4040") document.getElementById("adminTestBtn").classList.remove("hidden");
-            renderCloudItems();
-            renderHistory();
-            updateStats();
+            renderCloudItems(); renderHistory(); updateStats();
         } else {
             showToast("❌ الرمز خطأ، حاول مجدداً");
             document.getElementById("passInput").style.borderColor = "var(--danger)";
@@ -1936,8 +1007,8 @@
             <td style="text-align:right">${item}</td>
             <td>${qty}</td>
             <td>
-                <button class="action-btn edit" onclick="editRow(this)" title="تعديل">📝</button>
-                <button class="action-btn del" onclick="removeRow(this)" title="حذف">✖</button>
+                <button class="action-btn edit" onclick="editRow(this)">📝</button>
+                <button class="action-btn del" onclick="removeRow(this)">✖</button>
             </td>`;
         itemInput.value = ""; document.getElementById("qty").value = "";
         document.getElementById("results").classList.add("hidden");
@@ -1969,51 +1040,29 @@
         const invoice = { id: Date.now(), client, notes, date: new Date().toLocaleString('ar-EG'), items, totalItems: items.length };
         invoiceHistory.unshift(invoice);
         localStorage.setItem("invoiceHistory", JSON.stringify(invoiceHistory));
-        updateStats();
-        renderHistory();
+        updateStats(); renderHistory();
     }
 
     function renderHistory(filter = "") {
         const list = document.getElementById("historyList"); list.innerHTML = "";
         const filtered = invoiceHistory.filter(h => h.client.toLowerCase().includes(filter.toLowerCase()));
         document.getElementById("historyCount").textContent = filtered.length + " فاتورة";
-        if (filtered.length === 0) {
-            list.innerHTML = `<div class="empty-state"><div class="icon">📋</div><p>لا توجد فواتير محفوظة</p></div>`;
-            return;
-        }
+        if (filtered.length === 0) { list.innerHTML = `<div class="empty-state"><div class="icon">📋</div><p>لا توجد فواتير محفوظة</p></div>`; return; }
         filtered.forEach(inv => {
-            const div = document.createElement("div");
-            div.className = "history-item";
-
-            const meta = document.createElement("div");
-            meta.className = "history-meta";
+            const div = document.createElement("div"); div.className = "history-item";
+            const meta = document.createElement("div"); meta.className = "history-meta";
             meta.innerHTML = `<span>📅 ${inv.date}</span><span>📦 ${inv.totalItems} صنف</span>`;
-
-            const name = document.createElement("div");
-            name.className = "history-name";
-            name.textContent = `👤 ${inv.client}`;
-            name.onclick = () => showInvoiceDetails(inv);
-
-            const actions = document.createElement("div");
-            actions.className = "history-actions";
-
-            const editBtn = document.createElement("button");
-            editBtn.className = "history-btn";
+            const name = document.createElement("div"); name.className = "history-name";
+            name.textContent = `👤 ${inv.client}`; name.onclick = () => showInvoiceDetails(inv);
+            const actions = document.createElement("div"); actions.className = "history-actions";
+            const editBtn = document.createElement("button"); editBtn.className = "history-btn";
             editBtn.style.cssText = "background:rgba(74,144,217,0.15);color:var(--edit);border:1px solid rgba(74,144,217,0.2);";
-            editBtn.textContent = "📝 تعديل";
-            editBtn.onclick = () => editInvoiceFromHistory(inv.id);
-
-            const delBtn = document.createElement("button");
-            delBtn.className = "history-btn";
+            editBtn.textContent = "📝 تعديل"; editBtn.onclick = () => editInvoiceFromHistory(inv.id);
+            const delBtn = document.createElement("button"); delBtn.className = "history-btn";
             delBtn.style.cssText = "background:rgba(224,82,82,0.12);color:var(--danger);border:1px solid rgba(224,82,82,0.2);";
-            delBtn.textContent = "🗑️ حذف";
-            delBtn.onclick = () => deleteInvoiceFromHistory(inv.id);
-
-            actions.appendChild(editBtn);
-            actions.appendChild(delBtn);
-            div.appendChild(meta);
-            div.appendChild(name);
-            div.appendChild(actions);
+            delBtn.textContent = "🗑️ حذف"; delBtn.onclick = () => deleteInvoiceFromHistory(inv.id);
+            actions.appendChild(editBtn); actions.appendChild(delBtn);
+            div.appendChild(meta); div.appendChild(name); div.appendChild(actions);
             list.appendChild(div);
         });
     }
@@ -2022,8 +1071,7 @@
         if (confirm("حذف هذه الفاتورة نهائياً؟")) {
             invoiceHistory = invoiceHistory.filter(i => i.id !== id);
             localStorage.setItem("invoiceHistory", JSON.stringify(invoiceHistory));
-            renderHistory(); updateStats();
-            showToast("🗑️ تم حذف الفاتورة");
+            renderHistory(); updateStats(); showToast("🗑️ تم حذف الفاتورة");
         }
     }
 
@@ -2033,18 +1081,10 @@
         if (confirm("نقل بيانات الفاتورة للتعديل؟")) {
             document.getElementById("clientName").value = inv.client;
             document.getElementById("clientNotes").value = inv.notes || "";
-            const tbody = document.querySelector("#resultTable tbody");
-            tbody.innerHTML = "";
+            const tbody = document.querySelector("#resultTable tbody"); tbody.innerHTML = "";
             inv.items.forEach((item, idx) => {
                 const row = tbody.insertRow(-1);
-                row.innerHTML = `
-                    <td><span class="row-num">${idx+1}</span></td>
-                    <td style="text-align:right">${item.name}</td>
-                    <td>${item.qty}</td>
-                    <td>
-                        <button class="action-btn edit" onclick="editRow(this)">📝</button>
-                        <button class="action-btn del" onclick="removeRow(this)">✖</button>
-                    </td>`;
+                row.innerHTML = `<td><span class="row-num">${idx+1}</span></td><td style="text-align:right">${item.name}</td><td>${item.qty}</td><td><button class="action-btn edit" onclick="editRow(this)">📝</button><button class="action-btn del" onclick="removeRow(this)">✖</button></td>`;
             });
             switchPage('order');
         }
@@ -2055,18 +1095,20 @@
         document.getElementById("modalDate").innerText = "📅 " + inv.date;
         document.getElementById("modalNotes").innerText = inv.notes ? `📝 ملاحظات: ${inv.notes}` : "لا توجد ملاحظات";
         let html = `<div class="table-wrapper"><table><thead><tr><th>م</th><th>الصنف</th><th>الكمية</th></tr></thead><tbody>`;
-        inv.items.forEach((item, idx) => {
-            html += `<tr><td><span class="row-num">${idx+1}</span></td><td style="text-align:right;padding-right:14px">${item.name}</td><td style="font-weight:700;color:var(--gold-light)">${item.qty}</td></tr>`;
-        });
+        inv.items.forEach((item, idx) => { html += `<tr><td><span class="row-num">${idx+1}</span></td><td style="text-align:right;padding-right:14px">${item.name}</td><td style="font-weight:700;color:var(--gold-light)">${item.qty}</td></tr>`; });
         html += `</tbody></table></div>`;
         document.getElementById("modalItemsList").innerHTML = html;
         document.getElementById("detailsModal").classList.remove("hidden");
     }
 
+    // ✅ PDF FIXED
     async function exportToPDF() {
         const rows = Array.from(document.querySelectorAll("#resultTable tbody tr"));
         if (rows.length === 0) return showToast("⚠️ الجدول فارغ!");
-        if (!window.jspdf) return showToast("❌ مكتبة PDF غير محملة");
+
+        // ✅ الإصلاح: التحقق الصحيح من المكتبة
+        const jsPDFLib = (window.jspdf && window.jspdf.jsPDF) || window.jsPDF;
+        if (!jsPDFLib) return showToast("❌ مكتبة PDF غير محملة");
 
         saveInvoiceToHistory();
         showToast("⏳ جاري إنشاء PDF...");
@@ -2074,20 +1116,16 @@
         const clientName  = document.getElementById("clientName").value  || "عميل";
         const clientNotes = document.getElementById("clientNotes").value || "";
         const dateStr     = new Date().toLocaleDateString("ar-EG");
-        const { jsPDF }   = window.jspdf;
 
-        // ── build one big HTML page, render with html2canvas, slice into PDF pages ──
         const itemsPerPage = 28;
         const totalPages   = Math.ceil(rows.length / itemsPerPage);
-
-        const doc  = new jsPDF({ orientation: "p", unit: "mm", format: "a4" });
+        const doc  = new jsPDFLib({ orientation: "p", unit: "mm", format: "a4" });
         const pdfW = doc.internal.pageSize.getWidth();
         const pdfH = doc.internal.pageSize.getHeight();
 
         for (let pg = 0; pg < totalPages; pg++) {
             const pageRows = rows.slice(pg * itemsPerPage, (pg + 1) * itemsPerPage);
 
-            // build a visible, in-document div
             const wrap = document.createElement("div");
             wrap.style.cssText = `
                 position:fixed; top:0; left:0; z-index:99998;
@@ -2118,7 +1156,7 @@
                 <div style="display:flex;justify-content:space-between;align-items:flex-end;
                             padding-bottom:10px;margin-bottom:14px;border-bottom:3px solid #b08d57">
                     <div>
-                        <div style="font-size:26px;font-weight:900;color:#b08d57;font-family:'Aref Ruqaa',serif">المحلاوي</div>
+                        <div style="font-size:26px;font-weight:900;color:#b08d57;">المحلاوي</div>
                         <div style="font-size:10px;color:#aaa;margin-top:3px">نظام إدارة الطلبيات السحابي</div>
                     </div>
                     <div style="text-align:left;font-size:10px;color:#888;line-height:1.8">
@@ -2156,11 +1194,7 @@
                 backgroundColor: "#ffffff",
                 width: 780,
                 windowWidth: 1200,
-                logging: false,
-                onclone: (clonedDoc) => {
-                    // ensure fonts load in clone
-                    clonedDoc.body.style.fontFamily = "'Cairo', sans-serif";
-                }
+                logging: false
             });
 
             document.body.removeChild(wrap);
@@ -2251,14 +1285,11 @@
     let _currentPage = 'order';
 
     function switchPage(p, dir) {
-        // slide animation
         if (dir) {
             const container = document.querySelector('.container');
             container.classList.remove('page-slide-enter', 'page-slide-enter-left');
             container.classList.add(dir === 'ltr' ? 'page-slide-enter' : 'page-slide-enter-left');
-            container.addEventListener('animationend', () =>
-                container.classList.remove('page-slide-enter', 'page-slide-enter-left'),
-            { once: true });
+            container.addEventListener('animationend', () => container.classList.remove('page-slide-enter', 'page-slide-enter-left'), { once: true });
         }
         _currentPage = p;
         ['order','browse','history','settings'].forEach(name => {
@@ -2298,49 +1329,31 @@
     }
 
     function exportBackup() {
-        const data = {
-            version: '4.0',
-            exportDate: new Date().toLocaleString('ar-EG'),
-            items: localItems,
-            invoiceHistory: invoiceHistory
-        };
+        const data = { version: '4.0', exportDate: new Date().toLocaleString('ar-EG'), items: localItems, invoiceHistory };
         const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-        const a = document.createElement('a');
-        a.href = URL.createObjectURL(blob);
-        a.download = `محلاوي_backup_${Date.now()}.json`;
-        a.click();
+        const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+        a.download = `محلاوي_backup_${Date.now()}.json`; a.click();
         showToast('✅ تم تصدير النسخة الاحتياطية');
     }
 
     function importBackup(event) {
-        const file = event.target.files[0];
-        if (!file) return;
+        const file = event.target.files[0]; if (!file) return;
         const reader = new FileReader();
         reader.onload = (e) => {
             try {
                 const data = JSON.parse(e.target.result);
-                if (data.items) {
-                    localItems = [...new Set([...localItems, ...data.items])];
-                    localStorage.setItem('items', JSON.stringify(localItems));
-                }
-                if (data.invoiceHistory) {
-                    invoiceHistory = [...data.invoiceHistory, ...invoiceHistory];
-                    localStorage.setItem('invoiceHistory', JSON.stringify(invoiceHistory));
-                }
+                if (data.items) { localItems = [...new Set([...localItems, ...data.items])]; localStorage.setItem('items', JSON.stringify(localItems)); }
+                if (data.invoiceHistory) { invoiceHistory = [...data.invoiceHistory, ...invoiceHistory]; localStorage.setItem('invoiceHistory', JSON.stringify(invoiceHistory)); }
                 renderCloudItems(); renderHistory(); updateStats(); refreshSettingsStats();
                 showToast('✅ تم استيراد البيانات بنجاح');
-            } catch(err) {
-                showToast('❌ الملف غير صالح');
-            }
+            } catch(err) { showToast('❌ الملف غير صالح'); }
         };
-        reader.readAsText(file);
-        event.target.value = '';
+        reader.readAsText(file); event.target.value = '';
     }
 
     function resetAllData() {
         if (confirm('⚠️ سيتم حذف جميع البيانات والإعدادات نهائياً. هل أنت متأكد؟')) {
-            localStorage.clear();
-            localItems = []; invoiceHistory = [];
+            localStorage.clear(); localItems = []; invoiceHistory = [];
             renderCloudItems(); renderHistory(); updateStats(); refreshSettingsStats();
             applyMode('dark'); applyFontSize('md'); applyAccent('gold');
             updateSettingsModeUI(); updateSettingsFontUI(); updateSettingsAccentUI();
@@ -2356,8 +1369,7 @@
             if (Array.isArray(data)) {
                 localItems = [...new Set([...localItems, ...data])];
                 localStorage.setItem("items", JSON.stringify(localItems));
-                renderCloudItems(); updateStats();
-                showToast("✅ تم التحديث بنجاح");
+                renderCloudItems(); updateStats(); showToast("✅ تم التحديث بنجاح");
             }
         } catch(e) { showToast("❌ خطأ في المزامنة"); }
         btn.innerText = "🔄 مزامنة";
@@ -2376,33 +1388,19 @@
         const grid = document.getElementById("itemsGrid"); grid.innerHTML = "";
         const filtered = localItems.filter(i => i.toLowerCase().includes(filter.toLowerCase()));
         document.getElementById("totalItemsCount").textContent = localItems.length;
-        if (filtered.length === 0) {
-            grid.innerHTML = `<div class="empty-state"><div class="icon">📦</div><p>لا توجد أصناف محفوظة</p></div>`;
-            return;
-        }
+        if (filtered.length === 0) { grid.innerHTML = `<div class="empty-state"><div class="icon">📦</div><p>لا توجد أصناف محفوظة</p></div>`; return; }
         filtered.forEach(item => {
-            const div = document.createElement("div");
-            div.className = "item-row";
-            const span = document.createElement("span");
-            span.style.fontSize = "14px";
-            span.textContent = item;
-            const actions = document.createElement("div");
-            actions.className = "item-actions";
-            const editBtn = document.createElement("button");
-            editBtn.className = "item-btn";
+            const div = document.createElement("div"); div.className = "item-row";
+            const span = document.createElement("span"); span.style.fontSize = "14px"; span.textContent = item;
+            const actions = document.createElement("div"); actions.className = "item-actions";
+            const editBtn = document.createElement("button"); editBtn.className = "item-btn";
             editBtn.style.cssText = "background:rgba(74,144,217,0.12);color:var(--edit);border:1px solid rgba(74,144,217,0.2);";
-            editBtn.textContent = "تعديل";
-            editBtn.onclick = () => editItem(item);
-            const delBtn = document.createElement("button");
-            delBtn.className = "item-btn";
+            editBtn.textContent = "تعديل"; editBtn.onclick = () => editItem(item);
+            const delBtn = document.createElement("button"); delBtn.className = "item-btn";
             delBtn.style.cssText = "background:rgba(224,82,82,0.1);color:var(--danger);border:1px solid rgba(224,82,82,0.18);";
-            delBtn.textContent = "حذف";
-            delBtn.onclick = () => deleteItem(item);
-            actions.appendChild(editBtn);
-            actions.appendChild(delBtn);
-            div.appendChild(span);
-            div.appendChild(actions);
-            grid.appendChild(div);
+            delBtn.textContent = "حذف"; delBtn.onclick = () => deleteItem(item);
+            actions.appendChild(editBtn); actions.appendChild(delBtn);
+            div.appendChild(span); div.appendChild(actions); grid.appendChild(div);
         });
     }
 
@@ -2415,19 +1413,13 @@
         if (confirm("حذف هذا الصنف؟")) {
             localItems = localItems.filter(i => i !== n);
             localStorage.setItem("items", JSON.stringify(localItems));
-            renderCloudItems(); updateStats();
-            showToast("🗑️ تم حذف الصنف");
+            renderCloudItems(); updateStats(); showToast("🗑️ تم حذف الصنف");
         }
     }
 
     function editItem(o) {
         const n = prompt("تعديل الصنف:", o);
-        if (n) {
-            localItems[localItems.indexOf(o)] = n;
-            localStorage.setItem("items", JSON.stringify(localItems));
-            renderCloudItems();
-            showToast("✅ تم تعديل الصنف");
-        }
+        if (n) { localItems[localItems.indexOf(o)] = n; localStorage.setItem("items", JSON.stringify(localItems)); renderCloudItems(); showToast("✅ تم تعديل الصنف"); }
     }
 
     function clearTable() { if (confirm("مسح الجدول بالكامل؟")) { document.querySelector("#resultTable tbody").innerHTML = ""; showToast("🗑️ تم مسح الجدول"); } }
@@ -2436,12 +1428,8 @@
     function startVoice(id) {
         const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
         if (!SpeechRec) { showToast("❌ المتصفح لا يدعم التعرف على الصوت"); return; }
-        const rec = new SpeechRec();
-        rec.lang = 'ar-SA'; rec.start();
-        rec.onresult = (e) => {
-            document.getElementById(id).value = e.results[0][0].transcript;
-            document.getElementById(id).dispatchEvent(new Event('input'));
-        };
+        const rec = new SpeechRec(); rec.lang = 'ar-SA'; rec.start();
+        rec.onresult = (e) => { document.getElementById(id).value = e.results[0][0].transcript; document.getElementById(id).dispatchEvent(new Event('input')); };
         rec.onerror = () => showToast("❌ تعذّر التقاط الصوت");
     }
 
@@ -2449,14 +1437,7 @@
         const tbody = document.querySelector("#resultTable tbody");
         for (let i = 1; i <= 35; i++) {
             const row = tbody.insertRow(-1);
-            row.innerHTML = `
-                <td><span class="row-num">${tbody.rows.length}</span></td>
-                <td style="text-align:right">صنف تجريبي ${i}</td>
-                <td>${Math.floor(Math.random()*10)+1}</td>
-                <td>
-                    <button class="action-btn edit" onclick="editRow(this)">📝</button>
-                    <button class="action-btn del" onclick="removeRow(this)">✖</button>
-                </td>`;
+            row.innerHTML = `<td><span class="row-num">${tbody.rows.length}</span></td><td style="text-align:right">صنف تجريبي ${i}</td><td>${Math.floor(Math.random()*10)+1}</td><td><button class="action-btn edit" onclick="editRow(this)">📝</button><button class="action-btn del" onclick="removeRow(this)">✖</button></td>`;
         }
     }
 
@@ -2475,24 +1456,18 @@
     };
 
     document.addEventListener('click', (e) => {
-        if (!e.target.closest('#itemSearch') && !e.target.closest('#results')) {
-            document.getElementById('results').classList.add('hidden');
-        }
-        if (!e.target.closest('.mode-dropdown-btn') && !e.target.closest('#modeMenu')) {
-            closeModeMenu();
-        }
+        if (!e.target.closest('#itemSearch') && !e.target.closest('#results')) document.getElementById('results').classList.add('hidden');
+        if (!e.target.closest('.mode-dropdown-btn') && !e.target.closest('#modeMenu')) closeModeMenu();
     });
 
-    // ─── Mode Dropdown ───
+    // Mode
     let modeMenuOpen = false;
     let currentMode = localStorage.getItem('appMode') || 'dark';
-
     const modeConfig = {
         dark:    { icon: '🌙', label: 'داكن',  bodyClass: '' },
         light:   { icon: '☀️', label: 'فاتح',  bodyClass: 'light-mode' },
         compact: { icon: '⚡', label: 'مضغوط', bodyClass: 'compact-mode' }
     };
-
     function applyMode(mode) {
         document.body.classList.remove('light-mode', 'compact-mode');
         const cfg = modeConfig[mode];
@@ -2503,66 +1478,27 @@
             const id = 'modeItem' + m.charAt(0).toUpperCase() + m.slice(1);
             document.getElementById(id).classList.toggle('active', m === mode);
         });
-        currentMode = mode;
-        localStorage.setItem('appMode', mode);
+        currentMode = mode; localStorage.setItem('appMode', mode);
     }
-
-    function setMode(mode) {
-        applyMode(mode);
-        closeModeMenu();
-        const labels = { dark: '🌙 الوضع الداكن', light: '☀️ الوضع الفاتح', compact: '⚡ الوضع المضغوط' };
-        showToast('تم تفعيل ' + labels[mode]);
-    }
-
-    function toggleModeMenu() {
-        modeMenuOpen = !modeMenuOpen;
-        document.getElementById('modeMenu').classList.toggle('hidden', !modeMenuOpen);
-        document.getElementById('modeBtn').classList.toggle('open', modeMenuOpen);
-    }
-
-    function closeModeMenu() {
-        modeMenuOpen = false;
-        document.getElementById('modeMenu').classList.add('hidden');
-        document.getElementById('modeBtn').classList.remove('open');
-    }
-
-    // ─── Logout ───
-    function logout() {
-        if (confirm('هل تريد تسجيل الخروج؟')) {
-            document.getElementById('appContent').classList.add('hidden');
-            document.getElementById('loginOverlay').style.display = 'flex';
-            document.getElementById('passInput').value = '';
-            document.getElementById('adminTestBtn').classList.add('hidden');
-            showToast('👋 تم تسجيل الخروج');
-        }
-    }
-
-    // Apply saved mode on load
+    function setMode(mode) { applyMode(mode); closeModeMenu(); const labels = { dark: '🌙 الوضع الداكن', light: '☀️ الوضع الفاتح', compact: '⚡ الوضع المضغوط' }; showToast('تم تفعيل ' + labels[mode]); }
+    function toggleModeMenu() { modeMenuOpen = !modeMenuOpen; document.getElementById('modeMenu').classList.toggle('hidden', !modeMenuOpen); document.getElementById('modeBtn').classList.toggle('open', modeMenuOpen); }
+    function closeModeMenu() { modeMenuOpen = false; document.getElementById('modeMenu').classList.add('hidden'); document.getElementById('modeBtn').classList.remove('open'); }
+    function logout() { if (confirm('هل تريد تسجيل الخروج؟')) { document.getElementById('appContent').classList.add('hidden'); document.getElementById('loginOverlay').style.display = 'flex'; document.getElementById('passInput').value = ''; document.getElementById('adminTestBtn').classList.add('hidden'); showToast('👋 تم تسجيل الخروج'); } }
     applyMode(currentMode);
 
-    // ─── Font Size ───
+    // Font
     let currentFont = localStorage.getItem('appFont') || 'md';
-
     function applyFontSize(size) {
         document.body.classList.remove('font-sm', 'font-lg');
         if (size === 'sm') document.body.classList.add('font-sm');
         if (size === 'lg') document.body.classList.add('font-lg');
-        ['Sm','Md','Lg'].forEach(s => {
-            document.getElementById('fontBtn'+s).classList.toggle('active', s.toLowerCase() === size);
-        });
-        currentFont = size;
-        localStorage.setItem('appFont', size);
+        ['Sm','Md','Lg'].forEach(s => { document.getElementById('fontBtn'+s).classList.toggle('active', s.toLowerCase() === size); });
+        currentFont = size; localStorage.setItem('appFont', size);
     }
-
-    function setFontSize(size) {
-        applyFontSize(size);
-        const labels = { sm: '🔡 خط صغير', md: '🔤 خط متوسط', lg: '🔠 خط كبير' };
-        showToast('تم تفعيل ' + labels[size]);
-    }
-
+    function setFontSize(size) { applyFontSize(size); const labels = { sm: '🔡 خط صغير', md: '🔤 خط متوسط', lg: '🔠 خط كبير' }; showToast('تم تفعيل ' + labels[size]); }
     applyFontSize(currentFont);
 
-    // ─── Accent Color ───
+    // Accent
     const accentPalette = {
         gold:   { main: '#c9a84c', light: '#f0d98a', dim: '#8a6830', glow: 'rgba(201,168,76,0.15)', subtle: 'rgba(201,168,76,0.08)', border: 'rgba(201,168,76,0.25)' },
         blue:   { main: '#4a90d9', light: '#82bbf0', dim: '#2a5f9e', glow: 'rgba(74,144,217,0.15)', subtle: 'rgba(74,144,217,0.08)', border: 'rgba(74,144,217,0.25)' },
@@ -2572,84 +1508,48 @@
     };
     const accentNames = { gold: '✨ ذهبي', blue: '💙 أزرق', green: '💚 أخضر', purple: '💜 بنفسجي', rose: '🌸 وردي' };
     let currentAccent = localStorage.getItem('appAccent') || 'gold';
-
     function applyAccent(key) {
-        const p = accentPalette[key];
-        const r = document.documentElement.style;
-        r.setProperty('--gold',        p.main);
-        r.setProperty('--gold-light',  p.light);
-        r.setProperty('--gold-dim',    p.dim);
-        r.setProperty('--gold-glow',   p.glow);
-        r.setProperty('--gold-subtle', p.subtle);
-        r.setProperty('--border-gold', p.border);
-        Object.keys(accentPalette).forEach(k => {
-            document.getElementById('accent' + k.charAt(0).toUpperCase() + k.slice(1))
-                    .classList.toggle('active', k === key);
-        });
-        currentAccent = key;
-        localStorage.setItem('appAccent', key);
+        const p = accentPalette[key]; const r = document.documentElement.style;
+        r.setProperty('--gold', p.main); r.setProperty('--gold-light', p.light); r.setProperty('--gold-dim', p.dim);
+        r.setProperty('--gold-glow', p.glow); r.setProperty('--gold-subtle', p.subtle); r.setProperty('--border-gold', p.border);
+        Object.keys(accentPalette).forEach(k => { document.getElementById('accent' + k.charAt(0).toUpperCase() + k.slice(1)).classList.toggle('active', k === key); });
+        currentAccent = key; localStorage.setItem('appAccent', key);
     }
-
-    function setAccent(key) {
-        applyAccent(key);
-        showToast('تم تفعيل اللون ' + accentNames[key]);
-    }
-
+    function setAccent(key) { applyAccent(key); showToast('تم تفعيل اللون ' + accentNames[key]); }
     applyAccent(currentAccent);
 
-    // Sync settings page UI to match saved state
-    updateSettingsModeUI();
-    updateSettingsFontUI();
-    updateSettingsAccentUI();
+    updateSettingsModeUI(); updateSettingsFontUI(); updateSettingsAccentUI();
 
-    // ─── Swipe Gestures ───
-    (function initSwipe() {
+    // Swipe
+    (function() {
         const pages  = ['order', 'browse', 'history', 'settings'];
         const labels = { order: 'الطلبية', browse: 'الأصناف', history: 'السجل', settings: 'الإعدادات' };
-        let touchStartX = 0, touchStartY = 0, touchStartTime = 0;
-        let indicatorTimer = null;
-
+        let touchStartX = 0, touchStartY = 0, touchStartTime = 0, indicatorTimer = null;
         function showIndicator(side, label) {
             clearTimeout(indicatorTimer);
-            const el      = document.getElementById(side === 'left' ? 'swipeIndLeft'   : 'swipeIndRight');
+            const el = document.getElementById(side === 'left' ? 'swipeIndLeft' : 'swipeIndRight');
             const labelEl = document.getElementById(side === 'left' ? 'swipeLeftLabel' : 'swipeRightLabel');
             if (!el || !labelEl) return;
-            labelEl.textContent = label;
-            el.classList.add('visible');
+            labelEl.textContent = label; el.classList.add('visible');
             indicatorTimer = setTimeout(() => el.classList.remove('visible'), 800);
         }
-
-        function hideIndicators() {
-            ['swipeIndLeft','swipeIndRight'].forEach(id => {
-                const el = document.getElementById(id);
-                if (el) el.classList.remove('visible');
-            });
-        }
-
+        function hideIndicators() { ['swipeIndLeft','swipeIndRight'].forEach(id => { const el = document.getElementById(id); if (el) el.classList.remove('visible'); }); }
         document.addEventListener('touchstart', (e) => {
             if (e.target.closest('input,button,select,.results-box,.mode-menu,#multiShareModal,#detailsModal')) return;
-            touchStartX    = e.touches[0].clientX;
-            touchStartY    = e.touches[0].clientY;
-            touchStartTime = Date.now();
+            touchStartX = e.touches[0].clientX; touchStartY = e.touches[0].clientY; touchStartTime = Date.now();
         }, { passive: true });
-
         document.addEventListener('touchmove', (e) => {
             if (!touchStartX) return;
-            const dx = e.touches[0].clientX - touchStartX;
-            const dy = e.touches[0].clientY - touchStartY;
+            const dx = e.touches[0].clientX - touchStartX; const dy = e.touches[0].clientY - touchStartY;
             if (Math.abs(dy) > Math.abs(dx) * 1.2 || Math.abs(dx) < 30) return;
             const idx = pages.indexOf(_currentPage);
             if      (dx < -30 && idx < pages.length - 1) showIndicator('left',  labels[pages[idx + 1]]);
             else if (dx >  30 && idx > 0)                showIndicator('right', labels[pages[idx - 1]]);
         }, { passive: true });
-
         document.addEventListener('touchend', (e) => {
             if (!touchStartX) return;
-            const dx = e.changedTouches[0].clientX - touchStartX;
-            const dy = e.changedTouches[0].clientY - touchStartY;
-            const dt = Date.now() - touchStartTime;
-            touchStartX = 0;
-            hideIndicators();
+            const dx = e.changedTouches[0].clientX - touchStartX; const dy = e.changedTouches[0].clientY - touchStartY; const dt = Date.now() - touchStartTime;
+            touchStartX = 0; hideIndicators();
             if (dt >= 400 || Math.abs(dx) < 55 || Math.abs(dy) >= Math.abs(dx) * 0.9) return;
             if (e.target.closest('input,button,select,.results-box,.mode-menu,#multiShareModal,#detailsModal,table')) return;
             const idx = pages.indexOf(_currentPage);
