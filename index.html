@@ -6,6 +6,7 @@
     <title>نظام المحلاوي - V 3.0</title>
     <link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
     <style>
         :root {
@@ -825,9 +826,10 @@
                 </div>
 
                 <div class="grid-buttons">
-                    <button class="btn btn-action full-width" style="background:linear-gradient(135deg,var(--share),#5a3d9e); color:white;" onclick="prepareAndShowShare()">🔗  مشاركة وحفظ</button>
+                    <button class="btn btn-action full-width" style="background:linear-gradient(135deg,var(--share),#5a3d9e); color:white;" onclick="prepareAndShowShare()">🔗  مشاركة وحفظ (صور)</button>
                     <button class="btn btn-action" style="background:linear-gradient(135deg,var(--pdf),#b03020); color:white;" onclick="exportToPDF()">📑  تصدير PDF</button>
-                    <button class="btn btn-action" style="background:linear-gradient(135deg,#25D366,#1a9e4a); color:white;" onclick="processExport()">📸  حفظ كصور</button>
+                    <button class="btn btn-action" style="background:linear-gradient(135deg,#25D366,#1a9e4a); color:white;" onclick="shareToWhatsApp()">💬  واتساب</button>
+                    <button class="btn btn-action" style="background:linear-gradient(135deg,#1d9ce0,#0f6fa8); color:white;" onclick="processExport()">📸  حفظ كصور</button>
                     <button id="adminTestBtn" class="btn btn-action full-width hidden" style="background:#2a3040; color:var(--gold-dim); border:1px dashed var(--border-gold);" onclick="addRandomItems()">🧪  أصناف تجريبية</button>
                     <button class="btn btn-action full-width" style="background:#1a2235; color:var(--danger); border:1px solid rgba(224,82,82,0.3);" onclick="clearTable()">🗑️  مسح الجدول</button>
                 </div>
@@ -1044,41 +1046,138 @@
         document.getElementById("detailsModal").classList.remove("hidden");
     }
 
-    // PDF Export
-    function exportToPDF() {
+    // ─── PDF Export (real PDF via jsPDF + html2canvas) ───
+    async function exportToPDF() {
         const rows = Array.from(document.querySelectorAll("#resultTable tbody tr"));
         if (rows.length === 0) return showToast("⚠️ الجدول فارغ!");
         saveInvoiceToHistory();
-        const clientName = document.getElementById("clientName").value || "عميل";
+
+        const clientName  = document.getElementById("clientName").value  || "عميل";
         const clientNotes = document.getElementById("clientNotes").value || "لا يوجد ملاحظات";
-        const dateStr = new Date().toLocaleString('ar-EG', { hour12: true });
-        const printWindow = window.open('', '_blank');
-        printWindow.document.write(`
-            <html dir="rtl"><head>
-            <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>فاتورة - ${clientName}</title>
-            <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
-            <style>
-                body { font-family: 'Cairo', sans-serif; padding: 10px; margin: 0; color: #000; background: #fff; }
-                .header-box { border-bottom: 3px solid #b08d57; padding-bottom: 10px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; }
-                .brand { color: #b08d57; margin: 0; font-size: 24px; }
-                .info { font-size: 14px; margin-bottom: 15px; line-height: 1.6; }
-                table { width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 14px; }
-                th, td { border: 1px solid #000; padding: 10px 5px; text-align: center; }
-                th { background: #f2f2f2; font-weight: bold; }
-                .footer { font-size: 12px; margin-top: 20px; border-top: 1px dashed #ccc; padding-top: 10px; text-align: center; }
-                .close-btn { display: block; width: 100%; padding: 15px; background: #e74c3c; color: white; text-align: center; text-decoration: none; font-weight: bold; border-radius: 5px; margin-bottom: 20px; }
-                @media print { .close-btn { display: none; } body { padding: 0; } @page { margin: 0.5cm; } }
-            </style></head><body>
-            <a href="#" class="close-btn" onclick="window.close()">إغلاق هذه الصفحة والعودة للنظام</a>
-            <div class="header-box"><h1 class="brand">المحلاوي</h1><div style="text-align:left;font-size:12px;">${dateStr}</div></div>
-            <div class="info"><div>السيد/ <b>${clientName}</b></div><div>ملاحظات: ${clientNotes}</div></div>
-            <table><thead><tr><th style="width:10%">م</th><th>الصنف</th><th style="width:20%">الكمية</th></tr></thead>
-            <tbody>${rows.map(r => `<tr><td>${r.cells[0].innerText}</td><td style="text-align:right;padding-right:10px;">${r.cells[1].innerText}</td><td style="font-weight:bold;">${r.cells[2].innerText}</td></tr>`).join('')}</tbody></table>
-            <div class="footer">شكراً لتعاملكم معنا - نظام المحلاوي السحابي</div>
-            <script>window.onload=function(){setTimeout(()=>{window.print();},500);};<\/script>
-            </body></html>`);
-        printWindow.document.close();
+        const dateStr     = new Date().toLocaleString('ar-EG', { hour12: true });
+
+        showToast("⏳ جاري إنشاء PDF...");
+
+        // Build off-screen page(s)
+        const container   = document.getElementById("exportContainer");
+        container.innerHTML = "";
+        const itemsPerPage = 30;
+        const totalPages   = Math.ceil(rows.length / itemsPerPage);
+
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+        const pageW = pdf.internal.pageSize.getWidth();
+        const pageH = pdf.internal.pageSize.getHeight();
+
+        for (let i = 0; i < totalPages; i++) {
+            const pageItems = rows.slice(i * itemsPerPage, (i + 1) * itemsPerPage);
+            const pageDiv   = document.createElement("div");
+            pageDiv.className = "export-page";
+            pageDiv.style.width  = "750px";
+            pageDiv.style.minHeight = "1060px";
+            pageDiv.style.padding   = "30px";
+            pageDiv.style.background = "#fff";
+            pageDiv.style.fontFamily = "'Cairo', sans-serif";
+            pageDiv.style.direction  = "rtl";
+
+            pageDiv.innerHTML = `
+                <div style="display:flex;justify-content:space-between;align-items:center;
+                            border-bottom:4px solid #b08d57;padding-bottom:12px;margin-bottom:16px;">
+                    <div>
+                        <div style="font-size:28px;font-weight:900;color:#b08d57;font-family:'Aref Ruqaa',serif;">المحلاوي</div>
+                        <div style="font-size:11px;color:#888;margin-top:3px;">نظام إدارة الطلبيات السحابي</div>
+                    </div>
+                    <div style="text-align:left;font-size:11px;color:#555;line-height:1.7;">
+                        <div>${dateStr}</div>
+                        <div>صفحة ${i+1} / ${totalPages}</div>
+                    </div>
+                </div>
+
+                <div style="background:#fffbf2;border:1px solid #e8d8a0;border-radius:6px;
+                            padding:10px 14px;margin-bottom:14px;font-size:14px;line-height:1.8;">
+                    <div>السيد / <b>${clientName}</b></div>
+                    <div style="color:#666;">ملاحظات: ${clientNotes}</div>
+                </div>
+
+                <table style="width:100%;border-collapse:collapse;font-size:13px;">
+                    <thead>
+                        <tr style="background:#b08d57;">
+                            <th style="padding:9px 6px;color:#fff;border:1px solid #8a6830;width:8%;">م</th>
+                            <th style="padding:9px 6px;color:#fff;border:1px solid #8a6830;text-align:right;">الصنف</th>
+                            <th style="padding:9px 6px;color:#fff;border:1px solid #8a6830;width:18%;">الكمية</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${pageItems.map((r, idx) => {
+                            const bg = idx % 2 === 0 ? '#fff' : '#faf8f3';
+                            return `<tr style="background:${bg};">
+                                <td style="padding:8px 6px;border:1px solid #ddd;text-align:center;">${(i*itemsPerPage)+idx+1}</td>
+                                <td style="padding:8px 10px;border:1px solid #ddd;text-align:right;">${r.cells[1].innerText}</td>
+                                <td style="padding:8px 6px;border:1px solid #ddd;text-align:center;font-weight:bold;">${r.cells[2].innerText}</td>
+                            </tr>`;
+                        }).join('')}
+                    </tbody>
+                </table>
+
+                ${i === totalPages - 1 ? `
+                <div style="margin-top:auto;padding-top:20px;border-top:1px dashed #ccc;
+                            text-align:center;font-size:11px;color:#999;position:absolute;
+                            bottom:30px;left:30px;right:30px;">
+                    شكراً لتعاملكم معنا — نظام المحلاوي السحابي
+                </div>` : ''}
+            `;
+
+            container.appendChild(pageDiv);
+
+            const canvas = await html2canvas(pageDiv, {
+                scale: 2, useCORS: true,
+                backgroundColor: '#ffffff',
+                width: 750, windowWidth: 750
+            });
+
+            const imgData = canvas.toDataURL('image/jpeg', 0.95);
+            const imgW    = pageW - 10;
+            const imgH    = (canvas.height * imgW) / canvas.width;
+
+            if (i > 0) pdf.addPage();
+            pdf.addImage(imgData, 'JPEG', 5, 5, imgW, Math.min(imgH, pageH - 10));
+        }
+
+        container.innerHTML = "";
+        pdf.save(`فاتورة_${clientName}_${Date.now()}.pdf`);
+        showToast("✅ تم تحميل PDF بنجاح!");
+    }
+
+    // ─── WhatsApp Share ───
+    function shareToWhatsApp() {
+        const rows = Array.from(document.querySelectorAll("#resultTable tbody tr"));
+        if (rows.length === 0) return showToast("⚠️ الجدول فارغ!");
+
+        const clientName  = document.getElementById("clientName").value  || "عميل";
+        const clientNotes = document.getElementById("clientNotes").value || "";
+        const dateStr     = new Date().toLocaleString('ar-EG', { hour12: true });
+
+        let msg = `🏪 *نظام المحلاوي*\n`;
+        msg    += `━━━━━━━━━━━━━━━\n`;
+        msg    += `👤 *العميل:* ${clientName}\n`;
+        msg    += `📅 *التاريخ:* ${dateStr}\n`;
+        if (clientNotes) msg += `📝 *ملاحظات:* ${clientNotes}\n`;
+        msg    += `━━━━━━━━━━━━━━━\n`;
+        msg    += `📦 *قائمة الطلبية:*\n\n`;
+
+        rows.forEach((r, idx) => {
+            msg += `${idx+1}. ${r.cells[1].innerText}  ──  *${r.cells[2].innerText}*\n`;
+        });
+
+        msg += `\n━━━━━━━━━━━━━━━\n`;
+        msg += `📊 *إجمالي الأصناف:* ${rows.length} صنف\n`;
+        msg += `_شكراً لتعاملكم معنا_ 🌟`;
+
+        const encoded = encodeURIComponent(msg);
+
+        // فتح واتساب مباشرة
+        const waUrl = `https://wa.me/?text=${encoded}`;
+        window.open(waUrl, '_blank');
     }
 
     // Share
