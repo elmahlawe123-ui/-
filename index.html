@@ -1,366 +1,488 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>نظام المحلاوي - V 2.3.8</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>نظام المحلاوي - V 2.3.7</title>
 
-    <link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@700&family=Cairo:wght@400;700&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    
-    <style>
-        :root { 
-            --primary: #b08d57; 
-            --gold-gradient: linear-gradient(to bottom, #f1c40f, #b08d57);
-            --bg: #0f172a; --text: #f1f5f9; --card: #1e293b; --border: #334155; 
-            --dark: #000000; --danger: #ef4444; --edit: #3b82f6; --share: #8b5cf6;
-            --success: #10b981; --pdf: #e74c3c;
-        }
+    <link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@700&family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    
+    <style>
+        :root { 
+            --primary: #b08d57; 
+            --gold-gradient: linear-gradient(to bottom, #f1c40f, #b08d57);
+            --bg: #0f172a; --text: #f1f5f9; --card: #1e293b; --border: #334155; 
+            --dark: #000000; --danger: #ef4444; --edit: #3b82f6; --share: #8b5cf6;
+            --success: #10b981; --pdf: #e74c3c;
+        }
 
-        body { 
-            font-family: 'Cairo', sans-serif; 
-            background: var(--bg); 
-            color: var(--text); 
-            margin: 0; 
-            padding-bottom: 30px; 
-            overflow-x: hidden;
-            -webkit-font-smoothing: antialiased;
-            text-rendering: optimizeLegibility;
-        }
-        
-        .brand-name {
-            font-family: 'Aref Ruqaa', serif; font-size: 32px; font-weight: bold;
-            background: var(--gold-gradient); -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent; filter: drop-shadow(0px 2px 2px rgba(0,0,0,0.5));
-            display: inline-block;
-        }
+        body { font-family: 'Cairo', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding-bottom: 30px; overflow-x: hidden; }
+        
+        .brand-name {
+            font-family: 'Aref Ruqaa', serif; font-size: 32px; font-weight: bold;
+            background: var(--gold-gradient); -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent; filter: drop-shadow(0px 2px 2px rgba(0,0,0,0.5));
+            display: inline-block;
+        }
 
-        header { 
-            background: linear-gradient(145deg, #000, #1a1a1a); padding: 12px 20px; 
-            display: flex; justify-content: space-between; align-items: center; 
-            border-bottom: 3px solid var(--primary); position: sticky; top: 0; z-index: 1000;
-        }
+        header { 
+            background: linear-gradient(145deg, #000, #1a1a1a); padding: 12px 20px; 
+            display: flex; justify-content: space-between; align-items: center; 
+            border-bottom: 3px solid var(--primary); position: sticky; top: 0; z-index: 1000;
+        }
 
-        .nav-tabs { display: flex; background: var(--card); border-bottom: 1px solid var(--border); }
-        .nav-tabs button { flex: 1; padding: 15px; border: none; background: none; color: #94a3b8; font-weight: bold; cursor: pointer; font-family: 'Cairo'; font-size: 13px; transition: 0.3s; }
-        .nav-tabs button.active { color: var(--primary); border-bottom: 3px solid var(--primary); background: rgba(176, 141, 87, 0.1); }
+        .nav-tabs { display: flex; background: var(--card); border-bottom: 1px solid var(--border); }
+        .nav-tabs button { flex: 1; padding: 15px; border: none; background: none; color: #94a3b8; font-weight: bold; cursor: pointer; font-family: 'Cairo'; font-size: 13px; transition: 0.3s; }
+        .nav-tabs button.active { color: var(--primary); border-bottom: 3px solid var(--primary); background: rgba(176, 141, 87, 0.1); }
 
-        .container { padding: 15px; max-width: 800px; margin: 0 auto; }
-        .card { background: var(--card); padding: 25px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 20px; position: relative; }
-        
-        input { 
-            width: 100%; padding: 14px; margin: 8px 0; border: 1px solid var(--border); 
-            border-radius: 8px; background: rgba(255,255,255,0.05); color: var(--text); 
-            box-sizing: border-box; font-size: 16px; outline: none; font-family: 'Cairo'; 
-        }
-        input:focus { border-color: var(--primary); background: rgba(255,255,255,0.1); }
-        
-        .voice-btn { position: absolute; left: 10px; top: 22px; background: none; border: none; color: var(--primary); font-size: 20px; cursor: pointer; padding: 5px; z-index: 5; }
+        .container { padding: 15px; max-width: 800px; margin: 0 auto; }
+        .card { background: var(--card); padding: 25px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 20px; position: relative; }
+        
+        input { 
+            width: 100%; padding: 14px; margin: 8px 0; border: 1px solid var(--border); 
+            border-radius: 8px; background: rgba(255,255,255,0.05); color: var(--text); 
+            box-sizing: border-box; font-size: 16px; outline: none; font-family: 'Cairo'; 
+        }
+        input:focus { border-color: var(--primary); background: rgba(255,255,255,0.1); }
+        
+        .voice-btn { position: absolute; left: 10px; top: 22px; background: none; border: none; color: var(--primary); font-size: 20px; cursor: pointer; padding: 5px; z-index: 5; }
 
-        .btn { padding: 12px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.3s; font-family: 'Cairo'; }
-        .btn-main { background: var(--primary); color: white; width: 100%; margin: 10px 0; font-size: 18px; }
-        .btn:active { transform: scale(0.98); }
-        
-        .grid-buttons { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 20px; }
-        .full-width { grid-column: span 2; }
+        .btn { padding: 12px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.3s; font-family: 'Cairo'; }
+        .btn-main { background: var(--primary); color: white; width: 100%; margin: 10px 0; font-size: 18px; }
+        .btn:active { transform: scale(0.98); }
+        
+        .grid-buttons { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 20px; }
+        .full-width { grid-column: span 2; }
 
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; background: var(--card); border-radius: 8px; overflow: hidden; font-size: 14px; }
-        th, td { padding: 10px; border: 1px solid var(--border); text-align: center; }
-        th { background: rgba(0,0,0,0.3); color: var(--primary); }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; background: var(--card); border-radius: 8px; overflow: hidden; font-size: 14px; }
+        th, td { padding: 10px; border: 1px solid var(--border); text-align: center; }
+        th { background: rgba(0,0,0,0.3); color: var(--primary); }
 
-        .results-box { position: absolute; background: var(--card); border: 1px solid var(--primary); width: 100%; z-index: 1100; max-height: 250px; overflow-y: auto; border-radius: 8px; top: 60px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
-        .result-item { padding: 15px; cursor: pointer; border-bottom: 1px solid var(--border); text-align: right; transition: 0.2s; }
-        .result-item:hover { background: rgba(176, 141, 87, 0.2); }
+        .results-box { position: absolute; background: var(--card); border: 1px solid var(--primary); width: 100%; z-index: 1100; max-height: 250px; overflow-y: auto; border-radius: 8px; top: 60px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
+        .result-item { padding: 15px; cursor: pointer; border-bottom: 1px solid var(--border); text-align: right; transition: 0.2s; }
+        .result-item:hover { background: rgba(176, 141, 87, 0.2); }
 
-        #scrollToTop {
-            position: fixed; bottom: 20px; right: 20px; 
-            background: var(--primary); color: white; border: none; 
-            border-radius: 50%; width: 50px; height: 50px; cursor: pointer; 
-            display: none; z-index: 2000; box-shadow: 0 4px 10px rgba(0,0,0,0.3); font-size: 20px;
-        }
+        .hidden { display: none !important; }
 
-        .hidden { display: none !important; }
+        #exportContainer { position: fixed; left: -9999px; top: 0; width: 750px; background: white; }
+        .export-page { background: white !important; padding: 30px; color: black !important; }
+        .invoice-table { width: 100%; border-collapse: collapse; margin-top: 10px; border: 2px solid #000; }
+        .invoice-table th, .invoice-table td { 
+            padding: 5px 8px; font-size: 16px; font-weight: bold; text-align: center; 
+            border: 1px solid #000; background: #fff !important; color: #000 !important;
+        }
 
-        /* تسيق الطباعة والصور */
-        #exportContainer { position: fixed; left: -9999px; top: 0; width: 750px; background: white; }
-        .export-page { background: white !important; padding: 30px; color: black !important; }
-        .invoice-table { width: 100%; border-collapse: collapse; margin-top: 10px; border: 2px solid #000; }
-        .invoice-table th, .invoice-table td { 
-            padding: 5px 8px; font-size: 16px; font-weight: bold; text-align: center; 
-            border: 1px solid #000; background: #fff !important; color: #000 !important;
-        }
+        #multiShareModal, #detailsModal {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2000;
+            display: flex; align-items: center; justify-content: center; flex-direction: column; padding: 20px;
+            backdrop-filter: blur(5px);
+        }
 
-        #multiShareModal, #detailsModal {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2000;
-            display: flex; align-items: center; justify-content: center; flex-direction: column; padding: 20px;
-            backdrop-filter: blur(5px);
-        }
-
-        .history-item { 
-            background: #2d3748; padding: 15px; border-radius: 10px; margin-bottom: 15px; 
-            border-right: 5px solid var(--primary); transition: 0.3s;
-        }
-    </style>
+        .history-item { 
+            background: #2d3748; padding: 15px; border-radius: 10px; margin-bottom: 15px; 
+            border-right: 5px solid var(--primary); transition: 0.3s;
+        }
+        .history-meta { display: flex; justify-content: space-between; font-size: 12px; color: #a0aec0; margin-bottom: 5px;}
+        .history-name { font-weight: bold; font-size: 18px; color: var(--primary); margin: 5px 0; cursor: pointer; }
+    </style>
 </head>
 <body>
 
 <div id="loginOverlay" style="position:fixed; inset:0; background:var(--dark); z-index:9999; display:flex; align-items:center; justify-content:center; flex-direction:column;">
-    <div class="card" style="width:320px; text-align:center; border: 2px solid var(--primary); background: #111;">
-        <img src="https://i.ibb.co/4R44srhj/image.jpg" style="width: 110px; height:110px; border-radius: 50%; border: 3px solid var(--primary); margin-bottom: 15px; object-fit: cover;">
-        <div class="brand-name" style="font-size: 40px; margin-bottom: 5px;">المحلاوي</div>
-        <div style="color: var(--primary); font-size: 12px; margin-bottom: 15px;">VERSION 2.3.8</div>
-        <input type="password" id="passInput" placeholder="الرمز (123)" style="text-align:center;" onkeydown="if(event.key==='Enter') checkPassword()">
-        <button class="btn btn-main" onclick="checkPassword()">دخول</button>
-    </div>
+    <div class="card" style="width:320px; text-align:center; border: 2px solid var(--primary); background: #111;">
+        <img src="https://i.ibb.co/4R44srhj/image.jpg" style="width: 110px; height:110px; border-radius: 50%; border: 3px solid var(--primary); margin-bottom: 15px; object-fit: cover;">
+        <div class="brand-name" style="font-size: 40px; margin-bottom: 5px;">المحلاوي</div>
+        <div style="color: var(--primary); font-size: 12px; margin-bottom: 15px;">VERSION 2.3.7</div>
+        <input type="password" id="passInput" placeholder="الرمز (123)" style="text-align:center;" onkeydown="if(event.key==='Enter') checkPassword()">
+        <button class="btn btn-main" onclick="checkPassword()">دخول</button>
+    </div>
 </div>
 
-<div id="appContent" class="hidden">
-    <header>
-        <div style="display: flex; align-items: center; gap: 12px;">
-            <img src="https://i.ibb.co/4R44srhj/image.jpg" style="width: 45px; height:45px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary);">
-            <div class="brand-name" style="font-size: 24px;">المحلاوي</div>
-        </div>
-        <span style="font-size: 11px; color: var(--primary);">V 2.3.8</span>
-    </header>
-
-    <div class="nav-tabs">
-        <button id="tab1" class="active" onclick="switchPage('order')">الطلبية</button>
-        <button id="tab2" onclick="switchPage('browse')">الأصناف</button>
-        <button id="tab3" onclick="switchPage('history')">السجل</button>
-    </div>
-
-    <div class="container">
-        <div id="orderPage">
-            <div class="card">
-                <input type="text" id="clientName" placeholder="اسم العميل...">
-                <input type="text" id="clientNotes" placeholder="ملاحظات للعميل...">
-                <div style="position:relative;">
-                    <input type="text" id="itemSearch" placeholder="ابحث عن مادة..." autocomplete="off">
-                    <button class="voice-btn" onclick="startVoice('itemSearch')">🎤</button>
-                    <div id="results" class="results-box hidden"></div>
-                </div>
-                <input type="number" id="qty" placeholder="الكمية" inputmode="numeric" onkeydown="if(event.key==='Enter') addItem()">
-                <button class="btn btn-main" onclick="addItem()">➕ إضافة للجدول</button>
-                <table id="resultTable">
-                    <thead><tr><th style="width:40px">م</th><th>المادة</th><th style="width:80px">الكمية</th><th>الإجراءات</th></tr></thead>
-                    <tbody></tbody>
-                </table>
-                <div class="grid-buttons">
-                    <button class="btn full-width" style="background:var(--share); color:white;" onclick="prepareAndShowShare()">🔗 مشاركة وحفظ</button>
-                    <button class="btn" style="background:var(--pdf); color:white;" onclick="exportToPDF()">📑 تصدير PDF</button>
-                    <button class="btn" style="background:#25D366; color:white;" onclick="processExport()">📸 حفظ كصور</button>
-                    <button id="adminTestBtn" class="btn full-width hidden" style="background:#555; color:white;" onclick="addRandomItems()">🧪 إضافة أصناف عشوائية</button>
-                    <button class="btn full-width" style="background:#444; color:white;" onclick="clearTable()">🗑️ مسح الجدول</button>
-                </div>
-            </div>
-        </div>
-
-        <div id="browsePage" class="hidden">
-            <div class="card">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                    <h3 style="color:var(--primary); margin:0;">إدارة الأصناف</h3>
-                    <button id="syncBtn" class="btn" style="background:var(--success); color:white; padding: 6px 12px; font-size: 13px;" onclick="syncFromCloud()">🔄 مزامنة</button>
-                </div>
-                <input type="text" id="newItemName" placeholder="بحث أو إضافة صنف..." oninput="renderCloudItems(this.value)">
-                <button class="btn btn-main" onclick="addCloudItemManual()">حفظ صنف جديد</button>
-                <div id="itemsGrid" style="margin-top: 20px;"></div>
-            </div>
-        </div>
-
-        <div id="historyPage" class="hidden">
-            <div class="card">
-                <h3 style="color:var(--primary); margin-top:0;">الفواتير المحفوظة</h3>
-                <input type="text" id="historySearch" placeholder="ابحث باسم العميل..." oninput="renderHistory(this.value)">
-                <div id="historyList" style="margin-top: 15px;"></div>
-                <button class="btn full-width" style="background:var(--danger); color:white; margin-top:20px;" onclick="clearHistory()">🗑️ مسح السجل بالكامل</button>
-            </div>
-        </div>
-    </div>
+<div id="multiShareModal" class="hidden">
+    <div style="background:var(--card); padding:30px; border-radius:15px; text-align:center; border:1px solid var(--primary); width:100%; max-width:350px;">
+        <h2 id="shareTitle" style="color:var(--primary); margin-top:0;">إرسال الفاتورة</h2>
+        <div id="shareStatus" style="color:white; font-size:18px; margin-bottom:20px;"></div>
+        <button id="nextShareBtn" class="btn btn-main" style="width:100%; height:60px; font-size:20px; margin-bottom:10px;">بدء الإرسال</button>
+        <button onclick="document.getElementById('multiShareModal').classList.add('hidden')" style="background:none; border:none; color:#94a3b8; cursor:pointer; font-size:14px;">إلغاء العملية</button>
+    </div>
 </div>
 
 <div id="detailsModal" class="hidden">
-    <div class="card" style="width:100%; max-width:500px; max-height:85vh; overflow-y:auto; background:var(--card);">
-        <button onclick="document.getElementById('detailsModal').classList.add('hidden')" style="position:absolute; left:15px; top:15px; background:var(--danger); color:white; border:none; border-radius:50%; width:35px; height:35px; cursor:pointer;">✕</button>
-        <h3 id="modalClientName" style="color:var(--primary); margin-top:0; font-family:'Aref Ruqaa'; font-size:28px;"></h3>
-        <p id="modalDate" style="font-size:12px; color:#94a3b8;"></p>
-        <div id="modalItemsList"></div>
-    </div>
+    <div class="card" style="width:100%; max-width:500px; max-height:85vh; overflow-y:auto; position:relative; background:var(--card);">
+        <button onclick="document.getElementById('detailsModal').classList.add('hidden')" style="position:absolute; left:15px; top:15px; background:var(--danger); color:white; border:none; border-radius:50%; width:35px; height:35px; cursor:pointer; font-weight:bold; z-index:10;">✕</button>
+        <h3 id="modalClientName" style="color:var(--primary); margin-top:0; font-family:'Aref Ruqaa'; font-size:28px;"></h3>
+        <p id="modalDate" style="font-size:12px; color:#94a3b8; margin-bottom:10px;"></p>
+        <div id="modalNotes" style="font-size:14px; color:var(--text); background:rgba(0,0,0,0.2); padding:10px; border-radius:5px; margin-bottom:15px;"></div>
+        <div id="modalItemsList"></div>
+    </div>
 </div>
 
-<button id="scrollToTop" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">↑</button>
+<div id="appContent" class="hidden">
+    <header>
+        <div style="display: flex; align-items: center; gap: 12px;">
+            <img src="https://i.ibb.co/4R44srhj/image.jpg" style="width: 45px; height:45px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary);">
+            <div class="brand-name" style="font-size: 24px;">المحلاوي</div>
+        </div>
+        <span style="font-size: 11px; color: var(--primary);">V 2.3.7</span>
+    </header>
+
+    <div class="nav-tabs">
+        <button id="tab1" class="active" onclick="switchPage('order')">الطلبية</button>
+        <button id="tab2" onclick="switchPage('browse')">الأصناف</button>
+        <button id="tab3" onclick="switchPage('history')">السجل</button>
+    </div>
+
+    <div class="container">
+        <div id="orderPage">
+            <div class="card">
+                <input type="text" id="clientName" placeholder="اسم العميل...">
+                <input type="text" id="clientNotes" placeholder="ملاحظات للعميل...">
+                <div style="position:relative;">
+                    <input type="text" id="itemSearch" placeholder="ابحث عن مادة..." autocomplete="off">
+                    <button class="voice-btn" onclick="startVoice('itemSearch')">🎤</button>
+                    <div id="results" class="results-box hidden"></div>
+                </div>
+                <input type="number" id="qty" placeholder="الكمية" inputmode="numeric" onkeydown="if(event.key==='Enter') addItem()">
+                <button class="btn btn-main" onclick="addItem()">➕ إضافة للجدول</button>
+                <table id="resultTable">
+                    <thead><tr><th style="width:40px">م</th><th>المادة</th><th style="width:80px">الكمية</th><th>الإجراءات</th></tr></thead>
+                    <tbody></tbody>
+                </table>
+                <div class="grid-buttons">
+                    <button class="btn full-width" style="background:var(--share); color:white;" onclick="prepareAndShowShare()">🔗 مشاركة وحفظ</button>
+                    <button class="btn" style="background:var(--pdf); color:white;" onclick="exportToPDF()">📑 تصدير PDF</button>
+                    <button class="btn" style="background:#25D366; color:white;" onclick="processExport()">📸 حفظ كصور</button>
+                    <button id="adminTestBtn" class="btn full-width hidden" style="background:#555; color:white; border: 1px dashed var(--primary);" onclick="addRandomItems()">🧪 إضافة أصناف عشوائية</button>
+                    <button class="btn full-width" style="background:#444; color:white;" onclick="clearTable()">🗑️ مسح الجدول</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="browsePage" class="hidden">
+            <div class="card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                    <h3 style="color:var(--primary); margin:0;">إدارة الأصناف</h3>
+                    <button id="syncBtn" class="btn" style="background:var(--success); color:white; padding: 6px 12px; font-size: 13px;" onclick="syncFromCloud()">🔄 مزامنة</button>
+                </div>
+                <input type="text" id="newItemName" placeholder="بحث أو إضافة صنف..." oninput="renderCloudItems(this.value)">
+                <button class="btn btn-main" onclick="addCloudItemManual()">حفظ صنف جديد</button>
+                <div id="itemsGrid" style="margin-top: 20px;"></div>
+            </div>
+        </div>
+
+        <div id="historyPage" class="hidden">
+            <div class="card">
+                <h3 style="color:var(--primary); margin-top:0;">الفواتير المحفوظة</h3>
+                <input type="text" id="historySearch" placeholder="ابحث باسم العميل..." oninput="renderHistory(this.value)">
+                <div id="historyList" style="margin-top: 15px;"></div>
+                <button class="btn full-width" style="background:var(--danger); color:white; margin-top:20px;" onclick="clearHistory()">🗑️ مسح السجل بالكامل</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="exportContainer"></div>
 
 <script>
-    const GOOGLE_URL = 'رابط_سكربت_جوجل_الخاص_بك';
-    const LOGO_URL = 'https://i.ibb.co/4R44srhj/image.jpg';
-    let localItems = JSON.parse(localStorage.getItem("items")) || [];
-    let invoiceHistory = JSON.parse(localStorage.getItem("invoiceHistory")) || [];
+    const GOOGLE_URL = 'https://script.google.com/macros/s/AKfycby94J0O_uH3WIFzLoelLDAVMagTZEGbo0LAfbVaVR_52wgSoCtbqJ-6ZHjbnUBujlfc/exec';
+    const LOGO_URL = 'https://i.ibb.co/4R44srhj/image.jpg';
+    let localItems = JSON.parse(localStorage.getItem("items")) || [];
+    let invoiceHistory = JSON.parse(localStorage.getItem("invoiceHistory")) || [];
+    let shareQueue = []; 
 
-    // --- نظام الدخول ---
-    function checkPassword() {
-        const pass = document.getElementById("passInput").value;
-        if(pass === "123" || pass === "4040") {
-            document.getElementById("loginOverlay").style.display = "none";
-            document.getElementById("appContent").classList.remove("hidden");
-            if(pass === "4040") document.getElementById("adminTestBtn").classList.remove("hidden");
-            renderCloudItems();
-            renderHistory();
-        } else { alert("الرمز خطأ"); }
-    }
+    function checkPassword() {
+        const pass = document.getElementById("passInput").value;
+        if(pass === "123" || pass === "4040") {
+            document.getElementById("loginOverlay").style.display = "none";
+            document.getElementById("appContent").classList.remove("hidden");
+            if(pass === "4040") document.getElementById("adminTestBtn").classList.remove("hidden");
+            renderCloudItems();
+            renderHistory();
+        } else { alert("الرمز خطأ"); }
+    }
 
-    // --- إدارة الجدول ---
-    function addItem() {
-        const itemInput = document.getElementById("itemSearch");
-        const item = itemInput.value.trim();
-        const qty = document.getElementById("qty").value;
-        if(!item || !qty) return;
-        
-        saveItemToCloud(item);
-        const tbody = document.querySelector("#resultTable tbody");
-        const row = tbody.insertRow(-1);
-        row.innerHTML = `
-            <td>${tbody.rows.length}</td>
-            <td style="text-align:right">${item}</td>
-            <td style="font-weight:bold">${qty}</td>
-            <td>
-                <button onclick="editRow(this)" style="background:none; border:none; color:var(--edit); margin-left:10px; cursor:pointer;">📝</button>
-                <button onclick="removeRow(this)" style="background:none; border:none; color:red; cursor:pointer;">✖</button>
-            </td>`;
-        
-        itemInput.value = ""; document.getElementById("qty").value = ""; itemInput.focus();
-        
-        // تأثير بصري للزر
-        const btn = document.querySelector('.btn-main');
-        btn.style.background = 'var(--success)';
-        setTimeout(() => { btn.style.background = 'var(--primary)'; }, 200);
-    }
+    function addItem() {
+        const itemInput = document.getElementById("itemSearch");
+        const item = itemInput.value.trim();
+        const qty = document.getElementById("qty").value;
+        if(!item || !qty) return;
+        saveItemToCloud(item);
+        const tbody = document.querySelector("#resultTable tbody");
+        const row = tbody.insertRow(-1);
+        row.innerHTML = `
+            <td>${tbody.rows.length}</td>
+            <td style="text-align:right">${item}</td>
+            <td style="font-weight:bold">${qty}</td>
+            <td>
+                <button onclick="editRow(this)" style="background:none; border:none; color:var(--edit); margin-left:10px; font-size:16px; cursor:pointer;">📝</button>
+                <button onclick="removeRow(this)" style="background:none; border:none; color:red; font-size:16px; cursor:pointer;">✖</button>
+            </td>`;
+        itemInput.value = ""; document.getElementById("qty").value = ""; itemInput.focus();
+    }
 
-    function editRow(btn) {
-        const row = btn.parentElement.parentElement;
-        document.getElementById("itemSearch").value = row.cells[1].innerText;
-        document.getElementById("qty").value = row.cells[2].innerText;
-        row.remove();
-        updateTableNumbers();
-    }
+    function editRow(btn) {
+        const row = btn.parentElement.parentElement;
+        document.getElementById("itemSearch").value = row.cells[1].innerText;
+        document.getElementById("qty").value = row.cells[2].innerText;
+        row.remove();
+        updateTableNumbers();
+        document.getElementById("qty").focus();
+    }
 
-    function removeRow(btn) { btn.parentElement.parentElement.remove(); updateTableNumbers(); }
-    function updateTableNumbers() {
-        document.querySelectorAll("#resultTable tbody tr").forEach((row, index) => { row.cells[0].innerText = index + 1; });
-    }
+    function removeRow(btn) {
+        btn.parentElement.parentElement.remove();
+        updateTableNumbers();
+    }
 
-    // --- تصدير PDF المطور (رسمي + متوافق مع الهاتف) ---
-    function exportToPDF() {
-        const rows = Array.from(document.querySelectorAll("#resultTable tbody tr"));
-        if (rows.length === 0) return alert("الجدول فارغ!");
-        
-        saveInvoiceToHistory();
-        const clientName = document.getElementById("clientName").value || "عميل غير مسمى";
-        const clientNotes = document.getElementById("clientNotes").value || "لا يوجد ملاحظات";
-        const dateStr = new Date().toLocaleString('ar-EG');
+    function updateTableNumbers() {
+        document.querySelectorAll("#resultTable tbody tr").forEach((row, index) => { row.cells[0].innerText = index + 1; });
+    }
 
-        const printContent = `
-            <div dir="rtl" style="font-family:'Cairo', sans-serif; padding:30px; color:#333; background:#fff;">
-                <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:3px solid #b08d57; padding-bottom:15px;">
-                    <div><h1 style="margin:0; color:#b08d57;">نظام المحلاوي</h1><p style="margin:0; color:#666;">فاتورة طلبية</p></div>
-                    <img src="${LOGO_URL}" style="width:80px; height:80px; border-radius:50%;">
-                </div>
-                <div style="margin:20px 0; padding:10px; background:#f9f9f9; border-radius:8px; display:flex; justify-content:space-between;">
-                    <div><b>العميل:</b> ${clientName}</div>
-                    <div><b>التاريخ:</b> ${dateStr}</div>
-                </div>
-                <table style="width:100%; border-collapse:collapse; margin-top:20px; border:1px solid #ddd;">
-                    <thead><tr style="background:#b08d57; color:white;">
-                        <th style="padding:10px; border:1px solid #ddd;">م</th>
-                        <th style="padding:10px; border:1px solid #ddd; text-align:right;">الصنف</th>
-                        <th style="padding:10px; border:1px solid #ddd;">الكمية</th>
-                    </tr></thead>
-                    <tbody>
-                        ${rows.map(r => `<tr>
-                            <td style="padding:8px; border:1px solid #ddd; text-align:center;">${r.cells[0].innerText}</td>
-                            <td style="padding:8px; border:1px solid #ddd; text-align:right;">${r.cells[1].innerText}</td>
-                            <td style="padding:8px; border:1px solid #ddd; text-align:center;">${r.cells[2].innerText}</td>
-                        </tr>`).join('')}
-                    </tbody>
-                </table>
-                <div style="margin-top:20px; padding:10px; border:1px dashed #b08d57;"><b>ملاحظات:</b> ${clientNotes}</div>
-            </div>`;
+    function saveInvoiceToHistory() {
+        const client = document.getElementById("clientName").value || "عميل غير مسمى";
+        const notes = document.getElementById("clientNotes").value || "";
+        const rows = Array.from(document.querySelectorAll("#resultTable tbody tr"));
+        if(rows.length === 0) return;
+        const items = rows.map(r => ({ name: r.cells[1].innerText, qty: r.cells[2].innerText }));
+        const invoice = { id: Date.now(), client: client, notes: notes, date: new Date().toLocaleString('ar-EG'), items: items, totalItems: items.length };
+        invoiceHistory.unshift(invoice);
+        localStorage.setItem("invoiceHistory", JSON.stringify(invoiceHistory));
+        renderHistory();
+    }
 
-        const pri = document.createElement('iframe');
-        pri.style.position = 'absolute'; pri.style.top = '-1000px';
-        document.body.appendChild(pri);
-        const doc = pri.contentWindow.document;
-        doc.write(`<html><head><link href="https://fonts.googleapis.com/css2?family=Cairo&display=swap" rel="stylesheet"><style>body{font-family:'Cairo',serif;}</style></head><body>${printContent}</body></html>`);
-        doc.close();
-        setTimeout(() => { pri.contentWindow.focus(); pri.contentWindow.print(); document.body.removeChild(pri); }, 500);
-    }
+    function renderHistory(filter = "") {
+        const list = document.getElementById("historyList"); list.innerHTML = "";
+        const filtered = invoiceHistory.filter(h => h.client.toLowerCase().includes(filter.toLowerCase()));
+        
+        filtered.forEach(inv => {
+            const div = document.createElement("div"); 
+            div.className = "history-item";
+            div.innerHTML = `
+                <div class="history-meta"><span>📅 ${inv.date}</span><span>📦 ${inv.totalItems} صنف</span></div>
+                <div class="history-name" onclick='showInvoiceDetails(${JSON.stringify(inv)})'>${inv.client}</div>
+                <div style="display: flex; gap: 10px; margin-top: 10px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 10px;">
+                    <button onclick="editInvoiceFromHistory(${inv.id})" style="flex: 1; background: var(--edit); color: white; border: none; padding: 7px; border-radius: 5px; cursor: pointer; font-family: 'Cairo';">📝 تعديل</button>
+                    <button onclick="deleteInvoiceFromHistory(${inv.id})" style="flex: 1; background: var(--danger); color: white; border: none; padding: 7px; border-radius: 5px; cursor: pointer; font-family: 'Cairo';">🗑️ حذف</button>
+                </div>
+            `;
+            list.appendChild(div);
+        });
+    }
 
-    // --- وظائف عامة ---
-    function switchPage(p) { 
-        ['orderPage', 'browsePage', 'historyPage'].forEach(id => document.getElementById(id).classList.add('hidden'));
-        document.getElementById(p + 'Page').classList.remove('hidden');
-        document.querySelectorAll('.nav-tabs button').forEach(b => b.classList.remove('active'));
-        event.target.classList.add('active');
-    }
+    function deleteInvoiceFromHistory(id) {
+        if(confirm("حذف هذه الفاتورة نهائياً؟")) {
+            invoiceHistory = invoiceHistory.filter(inv => inv.id !== id);
+            localStorage.setItem("invoiceHistory", JSON.stringify(invoiceHistory));
+            renderHistory();
+        }
+    }
 
-    // زر الرجوع للأعلى
-    window.onscroll = function() {
-        const btn = document.getElementById("scrollToTop");
-        if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) btn.style.display = "block";
-        else btn.style.display = "none";
-    };
+    function editInvoiceFromHistory(id) {
+        const inv = invoiceHistory.find(i => i.id === id);
+        if(!inv) return;
+        if(confirm("نقل بيانات الفاتورة للتعديل؟")) {
+            document.getElementById("clientName").value = inv.client;
+            document.getElementById("clientNotes").value = inv.notes || "";
+            const tbody = document.querySelector("#resultTable tbody");
+            tbody.innerHTML = "";
+            inv.items.forEach((item, idx) => {
+                const row = tbody.insertRow(-1);
+                row.innerHTML = `<td>${idx+1}</td><td style="text-align:right">${item.name}</td><td style="font-weight:bold">${item.qty}</td><td><button onclick="editRow(this)" style="background:none; border:none; color:var(--edit); margin-left:10px; font-size:16px; cursor:pointer;">📝</button><button onclick="removeRow(this)" style="background:none; border:none; color:red; font-size:16px; cursor:pointer;">✖</button></td>`;
+            });
+            switchPage('order');
+        }
+    }
 
-    // إغلاق قائمة البحث عند النقر خارجها
-    document.addEventListener('click', function(e) {
-        if (!document.getElementById('itemSearch').contains(e.target)) {
-            document.getElementById('results').classList.add('hidden');
-        }
-    });
+    function showInvoiceDetails(inv) {
+        const modal = document.getElementById("detailsModal");
+        document.getElementById("modalClientName").innerText = inv.client;
+        document.getElementById("modalDate").innerText = inv.date;
+        document.getElementById("modalNotes").innerText = inv.notes ? `ملاحظات: ${inv.notes}` : "لا توجد ملاحظات";
+        let tableHTML = `<table><thead><tr><th>م</th><th>الصنف</th><th>الكمية</th></tr></thead><tbody>`;
+        inv.items.forEach((item, idx) => {
+            tableHTML += `<tr><td>${idx+1}</td><td style="text-align:right">${item.name}</td><td style="font-weight:bold">${item.qty}</td></tr>`;
+        });
+        tableHTML += `</tbody></table>`;
+        document.getElementById("modalItemsList").innerHTML = tableHTML;
+        modal.classList.remove("hidden");
+    }
 
-    // إضافة أصناف عشوائية للتجربة
-    function addRandomItems() {
-        const tbody = document.querySelector("#resultTable tbody");
-        for (let i = 1; i <= 35; i++) {
-            const row = tbody.insertRow(-1);
-            row.innerHTML = `<td>${tbody.rows.length}</td><td style="text-align:right">صنف تجريبي ${i}</td><td style="font-weight:bold">${Math.floor(Math.random()*10)+1}</td><td><button onclick="editRow(this)" style="background:none; border:none; color:var(--edit); margin-left:10px; cursor:pointer;">📝</button><button onclick="removeRow(this)" style="color:red; background:none; border:none; cursor:pointer;">✖</button></td>`;
-        }
-    }
+    function exportToPDF() {
+        const rows = Array.from(document.querySelectorAll("#resultTable tbody tr"));
+        if (rows.length === 0) return alert("الجدول فارغ!");
+        saveInvoiceToHistory();
+        const clientName = document.getElementById("clientName").value || "عميل";
+        const clientNotes = document.getElementById("clientNotes").value || "لا يوجد ملاحظات";
+        const dateStr = new Date().toLocaleDateString('ar-EG');
+        const printWindow = window.open('', '_blank');
+        printWindow.document.write(`
+            <html dir="rtl">
+            <head>
+                <title>فاتورة - ${clientName}</title>
+                <style>
+                    body { font-family: 'Cairo', sans-serif; padding: 20px; direction: rtl; }
+                    .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #b08d57; padding-bottom: 10px; }
+                    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+                    th, td { border: 1px solid #000; padding: 8px; text-align: center; }
+                    th { background: #b08d57; color: white; }
+                </style>
+            </head>
+            <body>
+                <div class="header"><h1>المحلاوي</h1><div>التاريخ: ${dateStr}</div></div>
+                <p>السيد: <b>${clientName}</b></p>
+                <table><thead><tr><th>م</th><th>الصنف</th><th>الكمية</th></tr></thead><tbody>
+                ${rows.map(r => `<tr><td>${r.cells[0].innerText}</td><td>${r.cells[1].innerText}</td><td>${r.cells[2].innerText}</td></tr>`).join('')}
+                </tbody></table>
+                <p>ملاحظات: ${clientNotes}</p>
+                <script>window.onload = function() { window.print(); window.close(); };<\/script>
+            </body></html>`);
+        printWindow.document.close();
+    }
 
-    // (بقية وظائف الحفظ، السجل، والمزامنة تظل كما هي في كودك السابق)
-    function saveInvoiceToHistory() {
-        const client = document.getElementById("clientName").value || "عميل غير مسمى";
-        const notes = document.getElementById("clientNotes").value || "";
-        const rows = Array.from(document.querySelectorAll("#resultTable tbody tr"));
-        if(rows.length === 0) return;
-        const items = rows.map(r => ({ name: r.cells[1].innerText, qty: r.cells[2].innerText }));
-        const invoice = { id: Date.now(), client: client, notes: notes, date: new Date().toLocaleString('ar-EG'), items: items, totalItems: items.length };
-        invoiceHistory.unshift(invoice);
-        localStorage.setItem("invoiceHistory", JSON.stringify(invoiceHistory));
-        renderHistory();
-    }
+    async function prepareAndShowShare() {
+        const rows = Array.from(document.querySelectorAll("#resultTable tbody tr"));
+        if (rows.length === 0) return alert("الجدول فارغ!");
+        saveInvoiceToHistory();
+        const clientName = document.getElementById("clientName").value || "عميل";
+        const clientNotes = document.getElementById("clientNotes").value || "لا يوجد";
+        const container = document.getElementById("exportContainer");
+        container.innerHTML = ""; shareQueue = [];
+        const itemsPerPage = 32;
+        const totalPages = Math.ceil(rows.length / itemsPerPage);
+        const modal = document.getElementById("multiShareModal");
+        const status = document.getElementById("shareStatus");
+        const btn = document.getElementById("nextShareBtn");
+        modal.classList.remove("hidden"); btn.disabled = true; status.innerText = "جاري المعالجة...";
 
-    function renderHistory(filter = "") {
-        const list = document.getElementById("historyList"); list.innerHTML = "";
-        invoiceHistory.filter(h => h.client.toLowerCase().includes(filter.toLowerCase())).forEach(inv => {
-            const div = document.createElement("div"); 
-            div.className = "history-item";
-            div.innerHTML = `<div style="display:flex; justify-content:space-between; font-size:12px; color:#a0aec0;"><span>📅 ${inv.date}</span><span>📦 ${inv.totalItems} صنف</span></div><div style="font-weight:bold; color:var(--primary); font-size:18px; margin-top:5px;">${inv.client}</div>`;
-            list.appendChild(div);
-        });
-    }
+        for (let i = 0; i < totalPages; i++) {
+            const pageDiv = document.createElement("div");
+            pageDiv.className = "export-page";
+            const pageItems = rows.slice(i * itemsPerPage, (i + 1) * itemsPerPage);
+            pageDiv.innerHTML = `
+                <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:4px solid #b08d57; padding-bottom:10px; margin-bottom:15px;">
+                    <img src="${LOGO_URL}" crossorigin="anonymous" style="width:80px; height:80px; border-radius:50%;">
+                    <h1 style="color:#b08d57; font-family:'Aref Ruqaa';">المحلاوي</h1>
+                </div>
+                <div style="color:black;">السيد: <b>${clientName}</b> | صفحة ${i+1}/${totalPages}</div>
+                <table class="invoice-table"><thead><tr><th>م</th><th>الصنف</th><th>الكمية</th></tr></thead>
+                <tbody>${pageItems.map((r, idx) => `<tr><td>${(i*itemsPerPage)+idx+1}</td><td>${r.cells[1].innerText}</td><td>${r.cells[2].innerText}</td></tr>`).join('')}</tbody></table>
+                <div style="color:black; margin-top:10px;">ملاحظات: ${clientNotes}</div>`;
+            container.appendChild(pageDiv);
+            const canvas = await html2canvas(pageDiv, { scale: 2, useCORS: true });
+            const blob = await new Promise(res => canvas.toBlob(res, 'image/png'));
+            shareQueue.push(new File([blob], `فاتورة_${i+1}.png`, { type: 'image/png' }));
+        }
 
-    function clearTable() { if(confirm("مسح الجدول بالكامل؟")) document.querySelector("#resultTable tbody").innerHTML = ""; }
-    
-    // البحث التلقائي (Autocomplete)
-    document.getElementById("itemSearch").oninput = function() {
-        const val = this.value.toLowerCase();
-        const resDiv = document.getElementById("results"); resDiv.innerHTML = "";
-        if(!val) return resDiv.classList.add('hidden');
-        localItems.filter(i => i.toLowerCase().includes(val)).forEach(item => {
-            const d = document.createElement("div"); d.className = "result-item"; d.textContent = item;
-            d.onclick = () => { document.getElementById("itemSearch").value = item; resDiv.classList.add('hidden'); document.getElementById("qty").focus(); };
-            resDiv.appendChild(d);
-        });
-        resDiv.classList.remove('hidden');
-    };
+        let currentIdx = 0;
+        status.innerText = `جاهز لـ ${totalPages} صفحة`; btn.disabled = false; btn.innerText = `إرسال صفحة 1`;
+        btn.onclick = async () => {
+            try {
+                await navigator.share({ files: [shareQueue[currentIdx]], text: currentIdx === 0 ? `طلبية: ${clientName}` : '' });
+                currentIdx++;
+                if (currentIdx < shareQueue.length) { btn.innerText = `إرسال صفحة ${currentIdx+1}`; status.innerText = `تم إرسال ${currentIdx}/${totalPages}`; }
+                else { status.innerText = "تم بنجاح!"; btn.innerText = "إغلاق"; btn.onclick = () => modal.classList.add("hidden"); }
+            } catch (e) {}
+        };
+    }
+
+    async function processExport() {
+        const rows = Array.from(document.querySelectorAll("#resultTable tbody tr"));
+        if (rows.length === 0) return alert("الجدول فارغ!");
+        const container = document.getElementById("exportContainer");
+        container.innerHTML = "";
+        const totalPages = Math.ceil(rows.length / 32);
+        for (let i = 0; i < totalPages; i++) {
+            const pageDiv = document.createElement("div");
+            pageDiv.className = "export-page";
+            const pageItems = rows.slice(i * 32, (i + 1) * 32);
+            pageDiv.innerHTML = `<div style="padding:15px; background:white; color:black;"><h2>صفحة ${i+1}</h2><table class="invoice-table"><thead><tr><th>م</th><th>الصنف</th><th>الكمية</th></tr></thead><tbody>${pageItems.map((r, idx) => `<tr><td>${(i*32)+idx+1}</td><td>${r.cells[1].innerText}</td><td>${r.cells[2].innerText}</td></tr>`).join('')}</tbody></table></div>`;
+            container.appendChild(pageDiv);
+            const canvas = await html2canvas(pageDiv, { scale: 2, useCORS: true });
+            const link = document.createElement('a'); link.download = `فاتورة_${i+1}.png`; link.href = canvas.toDataURL(); link.click();
+        }
+    }
+
+    function switchPage(p) { 
+        document.getElementById("orderPage").classList.toggle("hidden", p !== 'order');
+        document.getElementById("browsePage").classList.toggle("hidden", p !== 'browse');
+        document.getElementById("historyPage").classList.toggle("hidden", p !== 'history');
+        document.getElementById("tab1").classList.toggle("active", p === 'order');
+        document.getElementById("tab2").classList.toggle("active", p === 'browse');
+        document.getElementById("tab3").classList.toggle("active", p === 'history');
+    }
+
+    async function syncFromCloud() {
+        const btn = document.getElementById("syncBtn"); btn.innerText = "جاري...";
+        try {
+            const res = await fetch(GOOGLE_URL);
+            const data = await res.json();
+            if (Array.isArray(data)) { 
+                localItems = [...new Set([...localItems, ...data])]; 
+                localStorage.setItem("items", JSON.stringify(localItems));
+                renderCloudItems(); alert("تم التحديث");
+            }
+        } catch (e) { alert("خطأ في المزامنة"); }
+        btn.innerText = "🔄 مزامنة";
+    }
+
+    function saveItemToCloud(name) {
+        if(name && !localItems.includes(name)) {
+            localItems.push(name); 
+            localStorage.setItem("items", JSON.stringify(localItems));
+            renderCloudItems();
+            fetch(GOOGLE_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: 'add', item: name }) });
+        }
+    }
+
+    function renderCloudItems(filter = "") {
+        const grid = document.getElementById("itemsGrid"); grid.innerHTML = "";
+        localItems.filter(i => i.toLowerCase().includes(filter.toLowerCase())).forEach(item => {
+            const div = document.createElement("div");
+            div.style = "background:var(--card); border:1px solid var(--border); padding:10px; border-radius:8px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;";
+            div.innerHTML = `<span>${item}</span><div><button onclick="editItem('${item}')" style="background:var(--edit); color:white; border:none; padding:5px; border-radius:4px;">تعديل</button><button onclick="deleteItem('${item}')" style="background:var(--danger); color:white; border:none; padding:5px; border-radius:4px; margin-right:5px;">حذف</button></div>`;
+            grid.appendChild(div);
+        });
+    }
+
+    function addCloudItemManual() {
+        const input = document.getElementById("newItemName");
+        if(input.value) { saveItemToCloud(input.value); input.value = ""; }
+    }
+
+    function deleteItem(n) { if(confirm("حذف؟")) { localItems = localItems.filter(i => i !== n); localStorage.setItem("items", JSON.stringify(localItems)); renderCloudItems(); } }
+    function editItem(o) { const n = prompt("تعديل الصنف:", o); if(n) { localItems[localItems.indexOf(o)] = n; localStorage.setItem("items", JSON.stringify(localItems)); renderCloudItems(); } }
+    function clearTable() { if(confirm("مسح الجدول بالكامل؟")) document.querySelector("#resultTable tbody").innerHTML = ""; }
+    function clearHistory() { if(confirm("حذف السجل بالكامل؟")) { invoiceHistory = []; localStorage.setItem("invoiceHistory", "[]"); renderHistory(); } }
+
+    function startVoice(id) {
+        const rec = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+        rec.lang = 'ar-SA'; rec.start();
+        rec.onresult = (e) => { 
+            document.getElementById(id).value = e.results[0][0].transcript; 
+            document.getElementById(id).dispatchEvent(new Event('input')); 
+        };
+    }
+
+    function addRandomItems() {
+        const tbody = document.querySelector("#resultTable tbody");
+        for (let i = 1; i <= 35; i++) {
+            const row = tbody.insertRow(-1);
+            row.innerHTML = `<td>${tbody.rows.length}</td><td style="text-align:right">صنف تجريبي ${i}</td><td style="font-weight:bold">${Math.floor(Math.random()*10)+1}</td><td><button onclick="editRow(this)" style="background:none; border:none; color:var(--edit); margin-left:10px; cursor:pointer;">📝</button><button onclick="removeRow(this)" style="color:red; background:none; border:none; cursor:pointer;">✖</button></td>`;
+        }
+    }
+
+    document.getElementById("itemSearch").oninput = function() {
+        const val = this.value.toLowerCase();
+        const resDiv = document.getElementById("results"); resDiv.innerHTML = "";
+        if(!val) return resDiv.classList.add('hidden');
+        localItems.filter(i => i.toLowerCase().includes(val)).forEach(item => {
+            const d = document.createElement("div"); d.className = "result-item"; d.textContent = item;
+            d.onclick = () => { document.getElementById("itemSearch").value = item; resDiv.classList.add('hidden'); document.getElementById("qty").focus(); };
+            resDiv.appendChild(d);
+        });
+        resDiv.classList.remove('hidden');
+    };
 </script>
 </body>
 </html>
