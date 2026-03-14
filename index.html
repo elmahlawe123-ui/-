@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>نظام المحلاوي — V 4.0</title>
+    <meta name="theme-color" content="#090d18">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="المحلاوي">
+    <meta name="description" content="نظام المحلاوي لإدارة الطلبيات">
+    <link rel="apple-touch-icon" href="https://i.ibb.co/4R44srhj/image.jpg">
     <link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -379,22 +385,12 @@
         .voice-btn:hover { color: var(--gold); background: var(--gold-subtle); }
 
         .btn-main {
-            width: 100%;
-            padding: 14px;
-            border: none;
-            border-radius: var(--radius-sm);
-            cursor: pointer;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            font-family: 'Cairo';
-            font-size: 15px;
-            letter-spacing: 0.5px;
-            margin: 12px 0;
-            position: relative;
-            overflow: hidden;
+            width: 100%; padding: 14px; border: none;
+            border-radius: var(--radius-sm); cursor: pointer;
+            font-weight: 700; display: flex; align-items: center;
+            justify-content: center; gap: 8px; font-family: 'Cairo';
+            font-size: 15px; letter-spacing: 0.5px; margin: 12px 0;
+            position: relative; overflow: hidden;
             background: linear-gradient(135deg, #c9a84c 0%, #a07828 50%, #8a6830 100%);
             color: #fff;
             box-shadow: 0 4px 24px rgba(201,168,76,0.2), inset 0 1px 0 rgba(255,255,255,0.1);
@@ -404,8 +400,7 @@
             content: '';
             position: absolute; inset: 0;
             background: linear-gradient(135deg, transparent 0%, rgba(255,255,255,0.08) 50%, transparent 100%);
-            transform: translateX(-100%);
-            transition: transform 0.5s ease;
+            transform: translateX(-100%); transition: transform 0.5s ease;
         }
         .btn-main:hover::before { transform: translateX(100%); }
         .btn-main:hover { box-shadow: 0 6px 28px rgba(201,168,76,0.35); transform: translateY(-1px); }
@@ -415,20 +410,12 @@
         .full-width { grid-column: span 2; }
 
         .btn-action {
-            padding: 12px 10px;
-            border: none;
-            border-radius: var(--radius-sm);
-            cursor: pointer;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            font-family: 'Cairo';
-            font-size: 13px;
-            transition: all 0.2s ease;
-            position: relative;
-            overflow: hidden;
+            padding: 12px 10px; border: none;
+            border-radius: var(--radius-sm); cursor: pointer;
+            font-weight: 700; display: flex; align-items: center;
+            justify-content: center; gap: 6px; font-family: 'Cairo';
+            font-size: 13px; transition: all 0.2s ease;
+            position: relative; overflow: hidden;
         }
         .btn-action::after { content: ''; position: absolute; inset: 0; background: rgba(255,255,255,0); transition: background 0.15s; }
         .btn-action:hover::after { background: rgba(255,255,255,0.07); }
@@ -450,8 +437,7 @@
         .row-num {
             display: inline-flex; align-items: center; justify-content: center;
             width: 24px; height: 24px;
-            background: rgba(201,168,76,0.1);
-            border-radius: 50%;
+            background: rgba(201,168,76,0.1); border-radius: 50%;
             font-size: 11px; color: var(--gold-dim); font-weight: 700;
             border: 1px solid rgba(201,168,76,0.15);
         }
@@ -517,8 +503,7 @@
             z-index: 2000; display: flex;
             align-items: center; justify-content: center;
             flex-direction: column; padding: 20px;
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
             animation: fadeIn 0.25s ease;
         }
 
@@ -538,10 +523,9 @@
 
         .details-modal-inner {
             width: 100%; max-width: 500px; max-height: 85vh; overflow-y: auto;
-            position: relative; background: var(--card);
-            border-radius: 18px; border: 1px solid rgba(201,168,76,0.2);
-            padding: 28px; box-shadow: 0 24px 64px rgba(0,0,0,0.8);
-            animation: slideUp 0.3s ease;
+            position: relative; background: var(--card); border-radius: 18px;
+            border: 1px solid rgba(201,168,76,0.2); padding: 28px;
+            box-shadow: 0 24px 64px rgba(0,0,0,0.8); animation: slideUp 0.3s ease;
         }
         .details-modal-inner::-webkit-scrollbar { width: 3px; }
         .details-modal-inner::-webkit-scrollbar-thumb { background: var(--gold-dim); border-radius: 4px; }
@@ -567,7 +551,6 @@
             background: radial-gradient(ellipse 100% 100% at 30% 20%, #0d1626 0%, #05090f 70%);
             z-index: 9999; display: flex; align-items: center; justify-content: center;
         }
-        #loginOverlay::before { content: ''; position: absolute; inset: 0; background-image: radial-gradient(ellipse 50% 30% at 80% 80%, rgba(74,144,217,0.04) 0%, transparent 60%); }
 
         .login-card {
             width: 320px; text-align: center;
@@ -578,9 +561,10 @@
             position: relative; z-index: 1;
         }
         .login-card::before { content: ''; position: absolute; top: -1px; left: 20%; right: 20%; height: 2px; background: linear-gradient(90deg, transparent, var(--gold), transparent); border-radius: 22px 22px 0 0; }
+
         @keyframes loginFade { from { opacity: 0; transform: translateY(30px) scale(0.96); } to { opacity: 1; transform: translateY(0) scale(1); } }
+
         .login-avatar { width: 90px; height: 90px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(201,168,76,0.35); box-shadow: 0 0 32px rgba(201,168,76,0.2), 0 8px 20px rgba(0,0,0,0.4); margin-bottom: 16px; }
-        .login-brand { font-size: 42px; display: block; margin-bottom: 4px; }
         .login-version { font-size: 10px; color: var(--text-muted); letter-spacing: 3px; text-transform: uppercase; margin-bottom: 24px; font-weight: 600; }
         .login-divider { height: 1px; background: linear-gradient(90deg, transparent, rgba(201,168,76,0.25), transparent); margin: 18px 0; }
 
@@ -687,8 +671,9 @@
             overflow: hidden;
         }
         #splashScreen::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 60% 40% at 20% 80%, rgba(201,168,76,0.06) 0%, transparent 60%), radial-gradient(ellipse 50% 30% at 80% 20%, rgba(74,144,217,0.04) 0%, transparent 55%); pointer-events: none; }
-        #splashScreen::after { content: ''; position: absolute; inset: 0; background-image: radial-gradient(circle 1.5px at 20% 30%, rgba(201,168,76,0.5) 0%, transparent 100%), radial-gradient(circle 1px at 75% 20%, rgba(201,168,76,0.4) 0%, transparent 100%), radial-gradient(circle 2px at 55% 70%, rgba(201,168,76,0.3) 0%, transparent 100%), radial-gradient(circle 1px at 85% 65%, rgba(201,168,76,0.4) 0%, transparent 100%), radial-gradient(circle 1.5px at 10% 60%, rgba(201,168,76,0.3) 0%, transparent 100%), radial-gradient(circle 1px at 40% 15%, rgba(201,168,76,0.5) 0%, transparent 100%), radial-gradient(circle 2px at 90% 45%, rgba(201,168,76,0.25) 0%, transparent 100%), radial-gradient(circle 1px at 30% 85%, rgba(201,168,76,0.35) 0%, transparent 100%); pointer-events: none; animation: particleFloat 6s ease-in-out infinite alternate; }
+        #splashScreen::after { content: ''; position: absolute; inset: 0; background-image: radial-gradient(circle 1.5px at 20% 30%, rgba(201,168,76,0.5) 0%, transparent 100%), radial-gradient(circle 1px at 75% 20%, rgba(201,168,76,0.4) 0%, transparent 100%), radial-gradient(circle 2px at 55% 70%, rgba(201,168,76,0.3) 0%, transparent 100%), radial-gradient(circle 1px at 85% 65%, rgba(201,168,76,0.4) 0%, transparent 100%), radial-gradient(circle 1.5px at 10% 60%, rgba(201,168,76,0.3) 0%, transparent 100%), radial-gradient(circle 1px at 40% 15%, rgba(201,168,76,0.5) 0%, transparent 100%); pointer-events: none; animation: particleFloat 6s ease-in-out infinite alternate; }
         @keyframes particleFloat { 0% { transform: translateY(0px); } 100% { transform: translateY(-12px); } }
+
         .splash-logo-wrap { position: relative; margin-bottom: 28px; animation: splashLogoIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.2s both; }
         @keyframes splashLogoIn { from { opacity: 0; transform: scale(0.6) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
         .splash-logo { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid rgba(201,168,76,0.4); box-shadow: 0 0 0 8px rgba(201,168,76,0.06), 0 0 0 16px rgba(201,168,76,0.03), 0 0 40px rgba(201,168,76,0.25), 0 8px 32px rgba(0,0,0,0.5); }
@@ -704,9 +689,62 @@
         .splash-version { position: absolute; bottom: 32px; font-size: 11px; color: rgba(201,168,76,0.25); letter-spacing: 2px; animation: splashBrandIn 0.5s ease 1s both; }
         #splashScreen.hide { animation: splashOut 0.55s cubic-bezier(0.4, 0, 1, 1) forwards; }
         @keyframes splashOut { 0% { opacity: 1; transform: scale(1); } 100% { opacity: 0; transform: scale(1.04); pointer-events: none; } }
+        /* ─── Offline Banner ─── */
+        #offlineBanner {
+            position: fixed;
+            top: 16px;
+            left: 130px;
+            z-index: 1201;
+            background: linear-gradient(135deg, #b03020, #8a1f10);
+            color: #fff;
+            font-size: 11px;
+            font-weight: 700;
+            font-family: 'Cairo';
+            padding: 5px 12px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            box-shadow: 0 4px 16px rgba(176,48,32,0.4);
+            opacity: 0;
+            transform: translateY(-6px) scale(0.92);
+            transition: all 0.3s cubic-bezier(0.175,0.885,0.32,1.275);
+            pointer-events: none;
+        }
+        #offlineBanner.show { opacity: 1; transform: translateY(0) scale(1); }
+
+        #onlineBanner {
+            position: fixed;
+            top: 16px;
+            left: 130px;
+            z-index: 1201;
+            background: linear-gradient(135deg, #1f8a60, #156644);
+            color: #fff;
+            font-size: 11px;
+            font-weight: 700;
+            font-family: 'Cairo';
+            padding: 5px 12px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            box-shadow: 0 4px 16px rgba(31,138,96,0.4);
+            opacity: 0;
+            transform: translateY(-6px) scale(0.92);
+            transition: all 0.3s cubic-bezier(0.175,0.885,0.32,1.275);
+            pointer-events: none;
+        }
+        #onlineBanner.show { opacity: 1; transform: translateY(0) scale(1); }
+
+        /* ─── Install PWA Button ─── */
+        #installPWARow { display: none; }
     </style>
 </head>
 <body>
+
+<!-- Offline Banner -->
+<div id="offlineBanner">🔴 انقطع الاتصال</div>
+<div id="onlineBanner">🟢 متصل مجدداً</div>
 
 <!-- Splash -->
 <div id="splashScreen">
@@ -729,7 +767,7 @@
 <div id="loginOverlay">
     <div class="login-card">
         <img src="https://i.ibb.co/4R44srhj/image.jpg" class="login-avatar" alt="logo">
-        <span class="brand-name login-brand">المحلاوي</span>
+        <span class="brand-name" style="display:block;margin-bottom:4px;">المحلاوي</span>
         <div class="login-version">Version 4.0</div>
         <div class="login-divider"></div>
         <div class="input-wrapper">
@@ -797,11 +835,11 @@
                     <div class="accent-row">
                         <span class="accent-label">اللون</span>
                         <div class="accent-swatches">
-                            <div class="accent-swatch active" id="accentGold"   onclick="setAccent('gold')"   style="background:#c9a84c;"></div>
-                            <div class="accent-swatch"        id="accentBlue"   onclick="setAccent('blue')"   style="background:#4a90d9;"></div>
-                            <div class="accent-swatch"        id="accentGreen"  onclick="setAccent('green')"  style="background:#3dba8c;"></div>
-                            <div class="accent-swatch"        id="accentPurple" onclick="setAccent('purple')" style="background:#9b72e8;"></div>
-                            <div class="accent-swatch"        id="accentRose"   onclick="setAccent('rose')"   style="background:#e07a8c;"></div>
+                            <div class="accent-swatch active" id="accentGold" onclick="setAccent('gold')" style="background:#c9a84c;"></div>
+                            <div class="accent-swatch" id="accentBlue" onclick="setAccent('blue')" style="background:#4a90d9;"></div>
+                            <div class="accent-swatch" id="accentGreen" onclick="setAccent('green')" style="background:#3dba8c;"></div>
+                            <div class="accent-swatch" id="accentPurple" onclick="setAccent('purple')" style="background:#9b72e8;"></div>
+                            <div class="accent-swatch" id="accentRose" onclick="setAccent('rose')" style="background:#e07a8c;"></div>
                         </div>
                     </div>
                 </div>
@@ -831,9 +869,7 @@
                     <button class="voice-btn" onclick="startVoice('itemSearch')">🎤</button>
                     <div id="results" class="results-box hidden"></div>
                 </div>
-                <div class="input-wrapper">
-                    <input type="number" id="qty" placeholder="الكمية" inputmode="numeric" min="1" onkeydown="if(event.key==='Enter') addItem()">
-                </div>
+                <div class="input-wrapper"><input type="number" id="qty" placeholder="الكمية" inputmode="numeric" min="1" onkeydown="if(event.key==='Enter') addItem()"></div>
                 <button class="btn-main" onclick="addItem()">➕  إضافة للجدول</button>
                 <div class="table-wrapper">
                     <table id="resultTable">
@@ -861,9 +897,7 @@
                     <span class="card-title" style="margin-bottom:0;">📦 إدارة الأصناف</span>
                     <button class="sync-btn" id="syncBtn" onclick="syncFromCloud()">🔄 مزامنة</button>
                 </div>
-                <div class="stats-bar" id="browseStats">
-                    <div class="stat-pill"><div class="stat-num" id="totalItemsCount">0</div><div class="stat-label">إجمالي الأصناف</div></div>
-                </div>
+                <div class="stats-bar"><div class="stat-pill"><div class="stat-num" id="totalItemsCount">0</div><div class="stat-label">إجمالي الأصناف</div></div></div>
                 <div class="input-wrapper"><input type="text" id="newItemName" placeholder="🔍  بحث أو إضافة صنف جديد..." oninput="renderCloudItems(this.value)"></div>
                 <button class="btn-main" onclick="addCloudItemManual()">💾  حفظ صنف جديد</button>
                 <div id="itemsGrid" style="margin-top:16px;"></div>
@@ -919,6 +953,20 @@
                     <button class="settings-font-btn active" id="sFontMd" onclick="setFontSize('md'); updateSettingsFontUI()"><span style="font-size:17px;display:block;font-weight:700;margin-bottom:3px;">أ</span><span>متوسط</span></button>
                     <button class="settings-font-btn" id="sFontLg" onclick="setFontSize('lg'); updateSettingsFontUI()"><span style="font-size:21px;display:block;font-weight:700;margin-bottom:3px;">أ</span><span>كبير</span></button>
                 </div>
+
+                <div class="section-label" style="margin-top:18px;">الأصوات التفاعلية</div>
+                <div onclick="toggleSFX()" style="display:flex; align-items:center; justify-content:space-between; padding:13px 14px; background:var(--card2); border:1px solid var(--border); border-radius:var(--radius-sm); cursor:pointer; transition:all 0.2s;" id="sfxSettingsRow">
+                    <div style="display:flex; align-items:center; gap:12px;">
+                        <div id="sfxSettingsIcon" style="width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;background:rgba(201,168,76,0.1);">🔊</div>
+                        <div>
+                            <div style="font-size:14px;font-weight:600;color:var(--text);">الأصوات التفاعلية</div>
+                            <div id="sfxSettingsLabel" style="font-size:12px;color:var(--success);margin-top:2px;">مفعّلة</div>
+                        </div>
+                    </div>
+                    <div id="sfxToggleTrack" style="width:46px;height:26px;border-radius:13px;background:var(--success);position:relative;transition:background 0.25s;flex-shrink:0;">
+                        <div id="sfxToggleThumb" style="width:20px;height:20px;border-radius:50%;background:#fff;position:absolute;top:3px;right:3px;transition:right 0.25s;box-shadow:0 1px 4px rgba(0,0,0,0.3);"></div>
+                    </div>
+                </div>
             </div>
             <div class="card">
                 <div class="card-title">💾 إدارة البيانات</div>
@@ -933,6 +981,22 @@
             </div>
             <div class="card">
                 <div class="card-title">ℹ️ عن التطبيق</div>
+                <div id="installPWARow" class="settings-row" onclick="installPWA()">
+                    <div class="settings-row-icon" style="background:rgba(61,186,140,0.12); color:var(--success);">📲</div>
+                    <div class="settings-row-text">
+                        <div class="settings-row-title">تثبيت التطبيق</div>
+                        <div class="settings-row-sub">أضف المحلاوي على شاشتك الرئيسية</div>
+                    </div>
+                    <div class="settings-row-arrow" style="color:var(--success);">›</div>
+                </div>
+                <div class="settings-row" style="cursor:default;">
+                    <div class="settings-row-icon" style="background:rgba(201,168,76,0.08); color:var(--gold);">🌐</div>
+                    <div class="settings-row-text">
+                        <div class="settings-row-title">حالة الاتصال</div>
+                        <div id="offlineStatusLabel" class="settings-row-sub">جاري التحقق...</div>
+                    </div>
+                    <div id="offlineStatusDot" style="width:10px;height:10px;border-radius:50%;background:var(--text-muted);flex-shrink:0;"></div>
+                </div>
                 <div class="settings-row" style="cursor:default;"><div class="settings-row-icon" style="background:var(--gold-subtle); color:var(--gold);">📱</div><div class="settings-row-text"><div class="settings-row-title">الإصدار</div><div class="settings-row-sub">نظام المحلاوي — V 4.0</div></div></div>
                 <div class="settings-row" style="cursor:default;"><div class="settings-row-icon" style="background:rgba(74,144,217,0.1); color:var(--edit);">☁️</div><div class="settings-row-text"><div class="settings-row-title">نظام التخزين</div><div class="settings-row-sub">Google Sheets + Local Storage</div></div></div>
                 <div class="settings-row" onclick="logout()" style="margin-top:4px;"><div class="settings-row-icon" style="background:rgba(224,82,82,0.1); color:var(--danger);">⏻</div><div class="settings-row-text"><div class="settings-row-title" style="color:var(--danger);">تسجيل الخروج</div><div class="settings-row-sub">العودة لشاشة الدخول</div></div><div class="settings-row-arrow" style="color:var(--danger);">›</div></div>
@@ -951,7 +1015,7 @@
     let invoiceHistory = JSON.parse(localStorage.getItem("invoiceHistory")) || [];
     let shareQueue = [];
 
-    // Splash
+    // ─── Splash ───
     (function() {
         const splash = document.getElementById('splashScreen');
         setTimeout(() => {
@@ -976,11 +1040,13 @@
     function checkPassword() {
         const pass = document.getElementById("passInput").value;
         if (pass === "123" || pass === "4040") {
+            SFX.login();
             document.getElementById("loginOverlay").style.display = "none";
             document.getElementById("appContent").classList.remove("hidden");
             if (pass === "4040") document.getElementById("adminTestBtn").classList.remove("hidden");
             renderCloudItems(); renderHistory(); updateStats();
         } else {
+            SFX.error();
             showToast("❌ الرمز خطأ، حاول مجدداً");
             document.getElementById("passInput").style.borderColor = "var(--danger)";
             setTimeout(() => document.getElementById("passInput").style.borderColor = "", 1500);
@@ -998,6 +1064,7 @@
         const qty = parseInt(document.getElementById("qty").value);
         if (!item) { showToast("⚠️ يرجى إدخال اسم الصنف"); return; }
         if (!qty || qty < 1) { showToast("⚠️ يرجى إدخال كمية صحيحة"); return; }
+        SFX.addItem();
         saveItemToCloud(item);
         const tbody = document.querySelector("#resultTable tbody");
         const row = tbody.insertRow(-1);
@@ -1023,7 +1090,7 @@
         document.getElementById("qty").focus();
     }
 
-    function removeRow(btn) { btn.parentElement.parentElement.remove(); updateTableNumbers(); }
+    function removeRow(btn) { SFX.remove(); btn.parentElement.parentElement.remove(); updateTableNumbers(); }
 
     function updateTableNumbers() {
         document.querySelectorAll("#resultTable tbody tr").forEach((row, i) => {
@@ -1047,7 +1114,10 @@
         const list = document.getElementById("historyList"); list.innerHTML = "";
         const filtered = invoiceHistory.filter(h => h.client.toLowerCase().includes(filter.toLowerCase()));
         document.getElementById("historyCount").textContent = filtered.length + " فاتورة";
-        if (filtered.length === 0) { list.innerHTML = `<div class="empty-state"><div class="icon">📋</div><p>لا توجد فواتير محفوظة</p></div>`; return; }
+        if (filtered.length === 0) {
+            list.innerHTML = `<div class="empty-state"><div class="icon">📋</div><p>لا توجد فواتير محفوظة</p></div>`;
+            return;
+        }
         filtered.forEach(inv => {
             const div = document.createElement("div"); div.className = "history-item";
             const meta = document.createElement("div"); meta.className = "history-meta";
@@ -1069,6 +1139,7 @@
 
     function deleteInvoiceFromHistory(id) {
         if (confirm("حذف هذه الفاتورة نهائياً؟")) {
+            SFX.remove();
             invoiceHistory = invoiceHistory.filter(i => i.id !== id);
             localStorage.setItem("invoiceHistory", JSON.stringify(invoiceHistory));
             renderHistory(); updateStats(); showToast("🗑️ تم حذف الفاتورة");
@@ -1101,16 +1172,18 @@
         document.getElementById("detailsModal").classList.remove("hidden");
     }
 
-    // ✅ PDF FIXED
+    // ─── ✅ PDF Export — FIXED ───
     async function exportToPDF() {
         const rows = Array.from(document.querySelectorAll("#resultTable tbody tr"));
         if (rows.length === 0) return showToast("⚠️ الجدول فارغ!");
 
         // ✅ الإصلاح: التحقق الصحيح من المكتبة
         const jsPDFLib = (window.jspdf && window.jspdf.jsPDF) || window.jsPDF;
-        if (!jsPDFLib) return showToast("❌ مكتبة PDF غير محملة");
+        if (!jsPDFLib) return showToast("❌ مكتبة PDF غير محملة، انتظر قليلاً وأعد المحاولة");
+        if (!window.html2canvas) return showToast("❌ مكتبة html2canvas غير محملة");
 
         saveInvoiceToHistory();
+        SFX.pdf();
         showToast("⏳ جاري إنشاء PDF...");
 
         const clientName  = document.getElementById("clientName").value  || "عميل";
@@ -1189,12 +1262,9 @@
             document.body.appendChild(wrap);
 
             const canvas = await html2canvas(wrap, {
-                scale: 2,
-                useCORS: true,
+                scale: 2, useCORS: true,
                 backgroundColor: "#ffffff",
-                width: 780,
-                windowWidth: 1200,
-                logging: false
+                width: 780, windowWidth: 1200, logging: false
             });
 
             document.body.removeChild(wrap);
@@ -1208,12 +1278,14 @@
         }
 
         doc.save("فاتورة_" + clientName + "_" + Date.now() + ".pdf");
+        SFX.success();
         showToast("✅ تم تحميل PDF بنجاح!");
     }
 
     function shareToWhatsApp() {
         const rows = Array.from(document.querySelectorAll("#resultTable tbody tr"));
-        if (rows.length === 0) return showToast("⚠️ الجدول فارغ!");
+        if (rows.length === 0) { SFX.error(); return showToast("⚠️ الجدول فارغ!"); }
+        SFX.whatsapp();
         const clientName  = document.getElementById("clientName").value  || "عميل";
         const clientNotes = document.getElementById("clientNotes").value || "";
         const dateStr     = new Date().toLocaleString('ar-EG', { hour12: true });
@@ -1242,14 +1314,7 @@
         for (let i = 0; i < totalPages; i++) {
             const pageDiv = document.createElement("div"); pageDiv.className = "export-page";
             const pageItems = rows.slice(i * itemsPerPage, (i + 1) * itemsPerPage);
-            pageDiv.innerHTML = `
-                <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:4px solid #b08d57;padding-bottom:10px;margin-bottom:15px;">
-                <img src="${LOGO_URL}" crossorigin="anonymous" style="width:80px;height:80px;border-radius:50%;">
-                <h1 style="color:#b08d57;font-family:'Aref Ruqaa';">المحلاوي</h1></div>
-                <div style="color:black;">السيد: <b>${clientName}</b> | صفحة ${i+1}/${totalPages}</div>
-                <table class="invoice-table"><thead><tr><th>م</th><th>الصنف</th><th>الكمية</th></tr></thead>
-                <tbody>${pageItems.map((r,idx)=>`<tr><td>${(i*itemsPerPage)+idx+1}</td><td>${r.cells[1].innerText}</td><td>${r.cells[2].innerText}</td></tr>`).join('')}</tbody></table>
-                <div style="color:black;margin-top:10px;">ملاحظات: ${clientNotes}</div>`;
+            pageDiv.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;border-bottom:4px solid #b08d57;padding-bottom:10px;margin-bottom:15px;"><img src="${LOGO_URL}" crossorigin="anonymous" style="width:80px;height:80px;border-radius:50%;"><h1 style="color:#b08d57;font-family:'Aref Ruqaa';">المحلاوي</h1></div><div style="color:black;">السيد: <b>${clientName}</b> | صفحة ${i+1}/${totalPages}</div><table class="invoice-table"><thead><tr><th>م</th><th>الصنف</th><th>الكمية</th></tr></thead><tbody>${pageItems.map((r,idx)=>`<tr><td>${(i*itemsPerPage)+idx+1}</td><td>${r.cells[1].innerText}</td><td>${r.cells[2].innerText}</td></tr>`).join('')}</tbody></table><div style="color:black;margin-top:10px;">ملاحظات: ${clientNotes}</div>`;
             container.appendChild(pageDiv);
             const canvas = await html2canvas(pageDiv, { scale: 2, useCORS: true });
             const blob = await new Promise(res => canvas.toBlob(res, 'image/png'));
@@ -1285,6 +1350,7 @@
     let _currentPage = 'order';
 
     function switchPage(p, dir) {
+        SFX.tab();
         if (dir) {
             const container = document.querySelector('.container');
             container.classList.remove('page-slide-enter', 'page-slide-enter-left');
@@ -1292,9 +1358,7 @@
             container.addEventListener('animationend', () => container.classList.remove('page-slide-enter', 'page-slide-enter-left'), { once: true });
         }
         _currentPage = p;
-        ['order','browse','history','settings'].forEach(name => {
-            document.getElementById(name+"Page").classList.toggle("hidden", p !== name);
-        });
+        ['order','browse','history','settings'].forEach(name => document.getElementById(name+"Page").classList.toggle("hidden", p !== name));
         document.getElementById("tab1").classList.toggle("active", p === 'order');
         document.getElementById("tab2").classList.toggle("active", p === 'browse');
         document.getElementById("tab3").classList.toggle("active", p === 'history');
@@ -1362,6 +1426,7 @@
     }
 
     async function syncFromCloud() {
+        SFX.sync();
         const btn = document.getElementById("syncBtn"); btn.innerText = "جاري...";
         try {
             const res = await fetch(GOOGLE_URL);
@@ -1411,6 +1476,7 @@
 
     function deleteItem(n) {
         if (confirm("حذف هذا الصنف؟")) {
+            SFX.remove();
             localItems = localItems.filter(i => i !== n);
             localStorage.setItem("items", JSON.stringify(localItems));
             renderCloudItems(); updateStats(); showToast("🗑️ تم حذف الصنف");
@@ -1422,8 +1488,8 @@
         if (n) { localItems[localItems.indexOf(o)] = n; localStorage.setItem("items", JSON.stringify(localItems)); renderCloudItems(); showToast("✅ تم تعديل الصنف"); }
     }
 
-    function clearTable() { if (confirm("مسح الجدول بالكامل؟")) { document.querySelector("#resultTable tbody").innerHTML = ""; showToast("🗑️ تم مسح الجدول"); } }
-    function clearHistory() { if (confirm("حذف السجل بالكامل؟")) { invoiceHistory = []; localStorage.setItem("invoiceHistory", "[]"); renderHistory(); updateStats(); showToast("🗑️ تم مسح السجل"); } }
+    function clearTable() { if (confirm("مسح الجدول بالكامل؟")) { SFX.clear(); document.querySelector("#resultTable tbody").innerHTML = ""; showToast("🗑️ تم مسح الجدول"); } }
+    function clearHistory() { if (confirm("حذف السجل بالكامل؟")) { SFX.clear(); invoiceHistory = []; localStorage.setItem("invoiceHistory", "[]"); renderHistory(); updateStats(); showToast("🗑️ تم مسح السجل"); } }
 
     function startVoice(id) {
         const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -1460,7 +1526,7 @@
         if (!e.target.closest('.mode-dropdown-btn') && !e.target.closest('#modeMenu')) closeModeMenu();
     });
 
-    // Mode
+    // ─── Mode ───
     let modeMenuOpen = false;
     let currentMode = localStorage.getItem('appMode') || 'dark';
     const modeConfig = {
@@ -1468,6 +1534,7 @@
         light:   { icon: '☀️', label: 'فاتح',  bodyClass: 'light-mode' },
         compact: { icon: '⚡', label: 'مضغوط', bodyClass: 'compact-mode' }
     };
+
     function applyMode(mode) {
         document.body.classList.remove('light-mode', 'compact-mode');
         const cfg = modeConfig[mode];
@@ -1480,25 +1547,27 @@
         });
         currentMode = mode; localStorage.setItem('appMode', mode);
     }
+
     function setMode(mode) { applyMode(mode); closeModeMenu(); const labels = { dark: '🌙 الوضع الداكن', light: '☀️ الوضع الفاتح', compact: '⚡ الوضع المضغوط' }; showToast('تم تفعيل ' + labels[mode]); }
     function toggleModeMenu() { modeMenuOpen = !modeMenuOpen; document.getElementById('modeMenu').classList.toggle('hidden', !modeMenuOpen); document.getElementById('modeBtn').classList.toggle('open', modeMenuOpen); }
     function closeModeMenu() { modeMenuOpen = false; document.getElementById('modeMenu').classList.add('hidden'); document.getElementById('modeBtn').classList.remove('open'); }
-    function logout() { if (confirm('هل تريد تسجيل الخروج؟')) { document.getElementById('appContent').classList.add('hidden'); document.getElementById('loginOverlay').style.display = 'flex'; document.getElementById('passInput').value = ''; document.getElementById('adminTestBtn').classList.add('hidden'); showToast('👋 تم تسجيل الخروج'); } }
+    function logout() { if (confirm('هل تريد تسجيل الخروج؟')) { SFX.logout(); document.getElementById('appContent').classList.add('hidden'); document.getElementById('loginOverlay').style.display = 'flex'; document.getElementById('passInput').value = ''; document.getElementById('adminTestBtn').classList.add('hidden'); showToast('👋 تم تسجيل الخروج'); } }
+
     applyMode(currentMode);
 
-    // Font
+    // ─── Font Size ───
     let currentFont = localStorage.getItem('appFont') || 'md';
     function applyFontSize(size) {
         document.body.classList.remove('font-sm', 'font-lg');
         if (size === 'sm') document.body.classList.add('font-sm');
         if (size === 'lg') document.body.classList.add('font-lg');
-        ['Sm','Md','Lg'].forEach(s => { document.getElementById('fontBtn'+s).classList.toggle('active', s.toLowerCase() === size); });
+        ['Sm','Md','Lg'].forEach(s => document.getElementById('fontBtn'+s).classList.toggle('active', s.toLowerCase() === size));
         currentFont = size; localStorage.setItem('appFont', size);
     }
     function setFontSize(size) { applyFontSize(size); const labels = { sm: '🔡 خط صغير', md: '🔤 خط متوسط', lg: '🔠 خط كبير' }; showToast('تم تفعيل ' + labels[size]); }
     applyFontSize(currentFont);
 
-    // Accent
+    // ─── Accent ───
     const accentPalette = {
         gold:   { main: '#c9a84c', light: '#f0d98a', dim: '#8a6830', glow: 'rgba(201,168,76,0.15)', subtle: 'rgba(201,168,76,0.08)', border: 'rgba(201,168,76,0.25)' },
         blue:   { main: '#4a90d9', light: '#82bbf0', dim: '#2a5f9e', glow: 'rgba(74,144,217,0.15)', subtle: 'rgba(74,144,217,0.08)', border: 'rgba(74,144,217,0.25)' },
@@ -1508,11 +1577,13 @@
     };
     const accentNames = { gold: '✨ ذهبي', blue: '💙 أزرق', green: '💚 أخضر', purple: '💜 بنفسجي', rose: '🌸 وردي' };
     let currentAccent = localStorage.getItem('appAccent') || 'gold';
+
     function applyAccent(key) {
         const p = accentPalette[key]; const r = document.documentElement.style;
-        r.setProperty('--gold', p.main); r.setProperty('--gold-light', p.light); r.setProperty('--gold-dim', p.dim);
-        r.setProperty('--gold-glow', p.glow); r.setProperty('--gold-subtle', p.subtle); r.setProperty('--border-gold', p.border);
-        Object.keys(accentPalette).forEach(k => { document.getElementById('accent' + k.charAt(0).toUpperCase() + k.slice(1)).classList.toggle('active', k === key); });
+        r.setProperty('--gold', p.main); r.setProperty('--gold-light', p.light);
+        r.setProperty('--gold-dim', p.dim); r.setProperty('--gold-glow', p.glow);
+        r.setProperty('--gold-subtle', p.subtle); r.setProperty('--border-gold', p.border);
+        Object.keys(accentPalette).forEach(k => document.getElementById('accent' + k.charAt(0).toUpperCase() + k.slice(1)).classList.toggle('active', k === key));
         currentAccent = key; localStorage.setItem('appAccent', key);
     }
     function setAccent(key) { applyAccent(key); showToast('تم تفعيل اللون ' + accentNames[key]); }
@@ -1520,11 +1591,331 @@
 
     updateSettingsModeUI(); updateSettingsFontUI(); updateSettingsAccentUI();
 
-    // Swipe
+    // ─── 🔊 Sound System (Web Audio API — no libraries) ───
+    const SFX = (() => {
+        let ctx = null;
+        let enabled = JSON.parse(localStorage.getItem('sfxEnabled') ?? 'true');
+
+        function getCtx() {
+            if (!ctx) ctx = new (window.AudioContext || window.webkitAudioContext)();
+            if (ctx.state === 'suspended') ctx.resume();
+            return ctx;
+        }
+
+        // core synth: oscillator + optional noise layer
+        function play({ freq = 440, freq2 = null, type = 'sine', type2 = 'sine',
+                        vol = 0.18, vol2 = 0.1, dur = 0.12,
+                        attack = 0.005, decay = 0.04, sustain = 0.6, release = 0.08,
+                        detune = 0, delay = 0, filter = null } = {}) {
+            if (!enabled) return;
+            try {
+                const ac = getCtx();
+                const t  = ac.currentTime + delay;
+
+                // main oscillator
+                const osc  = ac.createOscillator();
+                const gain = ac.createGain();
+                osc.type    = type;
+                osc.frequency.setValueAtTime(freq, t);
+                osc.detune.setValueAtTime(detune, t);
+                gain.gain.setValueAtTime(0, t);
+                gain.gain.linearRampToValueAtTime(vol, t + attack);
+                gain.gain.linearRampToValueAtTime(vol * sustain, t + attack + decay);
+                gain.gain.setValueAtTime(vol * sustain, t + dur - release);
+                gain.gain.linearRampToValueAtTime(0, t + dur);
+
+                let node = gain;
+
+                if (filter) {
+                    const bq = ac.createBiquadFilter();
+                    bq.type = filter.type || 'lowpass';
+                    bq.frequency.setValueAtTime(filter.freq || 2000, t);
+                    bq.Q.setValueAtTime(filter.Q || 1, t);
+                    gain.connect(bq); node = bq;
+                }
+
+                osc.connect(gain);
+                node.connect(ac.destination);
+                osc.start(t); osc.stop(t + dur + 0.01);
+
+                // optional second oscillator (harmony / chord)
+                if (freq2) {
+                    const osc2  = ac.createOscillator();
+                    const gain2 = ac.createGain();
+                    osc2.type = type2;
+                    osc2.frequency.setValueAtTime(freq2, t);
+                    gain2.gain.setValueAtTime(0, t);
+                    gain2.gain.linearRampToValueAtTime(vol2, t + attack);
+                    gain2.gain.linearRampToValueAtTime(0, t + dur);
+                    osc2.connect(gain2); gain2.connect(ac.destination);
+                    osc2.start(t); osc2.stop(t + dur + 0.01);
+                }
+            } catch(e) {}
+        }
+
+        // noise burst (for delete / error)
+        function noise({ vol = 0.08, dur = 0.06, delay = 0, filterFreq = 800 } = {}) {
+            if (!enabled) return;
+            try {
+                const ac     = getCtx();
+                const t      = ac.currentTime + delay;
+                const buf    = ac.createBuffer(1, ac.sampleRate * dur, ac.sampleRate);
+                const data   = buf.getChannelData(0);
+                for (let i = 0; i < data.length; i++) data[i] = Math.random() * 2 - 1;
+                const src    = ac.createBufferSource();
+                const filter = ac.createBiquadFilter();
+                const gain   = ac.createGain();
+                src.buffer   = buf;
+                filter.type  = 'bandpass';
+                filter.frequency.setValueAtTime(filterFreq, t);
+                filter.Q.setValueAtTime(2, t);
+                gain.gain.setValueAtTime(vol, t);
+                gain.gain.linearRampToValueAtTime(0, t + dur);
+                src.connect(filter); filter.connect(gain); gain.connect(ac.destination);
+                src.start(t); src.stop(t + dur + 0.01);
+            } catch(e) {}
+        }
+
+        // ── Named sound presets (soft, modern UI style) ──
+        const sounds = {
+            // إضافة صنف للجدول — نغمة صاعدة خفيفة
+            addItem() {
+                play({ freq: 523.25, freq2: 659.25, type: 'sine', vol: 0.14, vol2: 0.07, dur: 0.18, attack: 0.004, decay: 0.05 });
+            },
+
+            // حفظ / تصدير ناجح — وتر مبهج
+            success() {
+                play({ freq: 523.25, vol: 0.13, dur: 0.12, delay: 0    });
+                play({ freq: 659.25, vol: 0.13, dur: 0.12, delay: 0.08 });
+                play({ freq: 783.99, vol: 0.15, dur: 0.22, delay: 0.16 });
+            },
+
+            // حذف — طقطقة هابطة
+            remove() {
+                play({ freq: 330, type: 'triangle', vol: 0.12, dur: 0.10, decay: 0.03 });
+                noise({ vol: 0.05, dur: 0.05, filterFreq: 600, delay: 0.02 });
+            },
+
+            // مسح كامل — هبوط حاد
+            clear() {
+                play({ freq: 260, freq2: 196, type: 'sawtooth', vol: 0.10, vol2: 0.06, dur: 0.18, attack: 0.002, decay: 0.06 });
+                noise({ vol: 0.07, dur: 0.08, filterFreq: 400, delay: 0.05 });
+            },
+
+            // خطأ / تحذير — نبضتان متقاربتان
+            error() {
+                play({ freq: 220, type: 'square', vol: 0.10, dur: 0.09, attack: 0.002, filter: { type: 'lowpass', freq: 800 } });
+                play({ freq: 196, type: 'square', vol: 0.10, dur: 0.09, attack: 0.002, delay: 0.11, filter: { type: 'lowpass', freq: 800 } });
+            },
+
+            // تسجيل دخول — ترحيب
+            login() {
+                play({ freq: 392,    vol: 0.12, dur: 0.10, delay: 0    });
+                play({ freq: 523.25, vol: 0.12, dur: 0.10, delay: 0.10 });
+                play({ freq: 659.25, vol: 0.14, dur: 0.20, delay: 0.20 });
+            },
+
+            // تسجيل خروج — نزول هادئ
+            logout() {
+                play({ freq: 523.25, vol: 0.11, dur: 0.10, delay: 0    });
+                play({ freq: 392,    vol: 0.11, dur: 0.10, delay: 0.10 });
+                play({ freq: 293.66, vol: 0.10, dur: 0.18, delay: 0.20 });
+            },
+
+            // تبديل تبويب — نقرة خفيفة
+            tab() {
+                play({ freq: 880, type: 'sine', vol: 0.08, dur: 0.07, attack: 0.002, decay: 0.02, sustain: 0.2 });
+            },
+
+            // مزامنة — صوت دوار
+            sync() {
+                [0, 0.07, 0.14].forEach((d, i) => {
+                    play({ freq: 440 + i * 110, type: 'sine', vol: 0.09, dur: 0.09, delay: d });
+                });
+            },
+
+            // نسخ / مشاركة — نبضة مزدوجة
+            share() {
+                play({ freq: 698.46, vol: 0.12, dur: 0.10, delay: 0    });
+                play({ freq: 880,    vol: 0.11, dur: 0.15, delay: 0.10 });
+            },
+
+            // PDF — صوت طابعة
+            pdf() {
+                [0, 0.03, 0.06, 0.09].forEach((d) => {
+                    noise({ vol: 0.06, dur: 0.04, filterFreq: 1200 + Math.random()*400, delay: d });
+                });
+                play({ freq: 440, type: 'triangle', vol: 0.08, dur: 0.20, delay: 0.12 });
+            },
+
+            // تعديل — نقرة محايدة
+            edit() {
+                play({ freq: 600, type: 'triangle', vol: 0.09, dur: 0.09, attack: 0.003 });
+            },
+
+            // واتساب — صوت إرسال
+            whatsapp() {
+                play({ freq: 784, vol: 0.11, dur: 0.08, delay: 0    });
+                play({ freq: 988, vol: 0.12, dur: 0.14, delay: 0.07 });
+            },
+        };
+
+        // toggle on/off
+        function toggle() {
+            enabled = !enabled;
+            localStorage.setItem('sfxEnabled', JSON.stringify(enabled));
+            return enabled;
+        }
+
+        function isEnabled() { return enabled; }
+
+        return { ...sounds, toggle, isEnabled, noise, play };
+    })();
+
+    function toggleSFX() {
+        const on = SFX.toggle();
+        updateSFXSettingsUI(on);
+        if (on) SFX.tab();
+        showToast(on ? '🔊 الأصوات مفعّلة' : '🔇 الأصوات مُوقفة');
+    }
+
+    function updateSFXSettingsUI(on) {
+        const track  = document.getElementById('sfxToggleTrack');
+        const thumb  = document.getElementById('sfxToggleThumb');
+        const label  = document.getElementById('sfxSettingsLabel');
+        const icon   = document.getElementById('sfxSettingsIcon');
+        if (!track) return;
+        track.style.background = on ? 'var(--success)' : 'var(--text-muted)';
+        thumb.style.right      = on ? '3px' : '23px';
+        label.textContent      = on ? 'مفعّلة' : 'موقفة';
+        label.style.color      = on ? 'var(--success)' : 'var(--text-muted)';
+        icon.textContent       = on ? '🔊' : '🔇';
+    }
+
+    // init sfx button state on load
+    (function() {
+        updateSFXSettingsUI(SFX.isEnabled());
+    })();
+
+    // ─── PWA + Offline Mode ───
+    let deferredInstallPrompt = null;
+
+    // Service Worker registration
+    (function registerSW() {
+        if (!('serviceWorker' in navigator)) return;
+
+        // Inline Service Worker as blob URL (no separate file needed)
+        const swCode = `
+const CACHE = 'mahallawi-v4';
+const ASSETS = [
+    'https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&family=Cairo:wght@300;400;600;700;900&display=swap',
+    'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js',
+    'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js'
+];
+
+self.addEventListener('install', e => {
+    e.waitUntil(
+        caches.open(CACHE).then(cache => cache.addAll(ASSETS).catch(()=>{}))
+    );
+    self.skipWaiting();
+});
+
+self.addEventListener('activate', e => {
+    e.waitUntil(
+        caches.keys().then(keys =>
+            Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))
+        )
+    );
+    self.clients.claim();
+});
+
+self.addEventListener('fetch', e => {
+    if (e.request.method !== 'GET') return;
+    e.respondWith(
+        fetch(e.request)
+            .then(res => {
+                const clone = res.clone();
+                caches.open(CACHE).then(c => c.put(e.request, clone));
+                return res;
+            })
+            .catch(() => caches.match(e.request))
+    );
+});`;
+
+        const blob = new Blob([swCode], { type: 'application/javascript' });
+        const swURL = URL.createObjectURL(blob);
+        navigator.serviceWorker.register(swURL, { scope: '/' })
+            .catch(() => {}); // fail silently if scope restricted
+    })();
+
+    // PWA Install prompt
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredInstallPrompt = e;
+        const row = document.getElementById('installPWARow');
+        if (row) row.style.display = 'flex';
+    });
+
+    window.addEventListener('appinstalled', () => {
+        deferredInstallPrompt = null;
+        const row = document.getElementById('installPWARow');
+        if (row) row.style.display = 'none';
+        showToast('🎉 تم تثبيت التطبيق بنجاح!');
+    });
+
+    function installPWA() {
+        if (!deferredInstallPrompt) {
+            showToast('📱 افتح التطبيق في متصفح Chrome أو Safari لتثبيته');
+            return;
+        }
+        deferredInstallPrompt.prompt();
+        deferredInstallPrompt.userChoice.then(res => {
+            if (res.outcome === 'accepted') showToast('✅ جاري التثبيت...');
+            deferredInstallPrompt = null;
+        });
+    }
+
+    // Online / Offline detection
+    function updateOnlineStatus() {
+        const isOnline = navigator.onLine;
+        const dot   = document.getElementById('offlineStatusDot');
+        const label = document.getElementById('offlineStatusLabel');
+        if (dot)   dot.style.background   = isOnline ? 'var(--success)' : 'var(--danger)';
+        if (label) label.textContent       = isOnline ? 'متصل بالإنترنت ✅' : 'غير متصل 📵';
+    }
+
+    function showOfflineBanner() {
+        const b = document.getElementById('offlineBanner');
+        if (b) { b.classList.add('show'); }
+        updateOnlineStatus();
+    }
+
+    function showOnlineBanner() {
+        const ob = document.getElementById('offlineBanner');
+        const nb = document.getElementById('onlineBanner');
+        if (ob) ob.classList.remove('show');
+        if (nb) {
+            nb.classList.add('show');
+            setTimeout(() => nb.classList.remove('show'), 3000);
+        }
+        updateOnlineStatus();
+        // auto sync when back online
+        syncFromCloud();
+    }
+
+    window.addEventListener('offline', showOfflineBanner);
+    window.addEventListener('online',  showOnlineBanner);
+
+    // init on load
+    updateOnlineStatus();
+    if (!navigator.onLine) showOfflineBanner();
+
+
     (function() {
         const pages  = ['order', 'browse', 'history', 'settings'];
         const labels = { order: 'الطلبية', browse: 'الأصناف', history: 'السجل', settings: 'الإعدادات' };
         let touchStartX = 0, touchStartY = 0, touchStartTime = 0, indicatorTimer = null;
+
         function showIndicator(side, label) {
             clearTimeout(indicatorTimer);
             const el = document.getElementById(side === 'left' ? 'swipeIndLeft' : 'swipeIndRight');
@@ -1533,28 +1924,32 @@
             labelEl.textContent = label; el.classList.add('visible');
             indicatorTimer = setTimeout(() => el.classList.remove('visible'), 800);
         }
+
         function hideIndicators() { ['swipeIndLeft','swipeIndRight'].forEach(id => { const el = document.getElementById(id); if (el) el.classList.remove('visible'); }); }
+
         document.addEventListener('touchstart', (e) => {
             if (e.target.closest('input,button,select,.results-box,.mode-menu,#multiShareModal,#detailsModal')) return;
             touchStartX = e.touches[0].clientX; touchStartY = e.touches[0].clientY; touchStartTime = Date.now();
         }, { passive: true });
+
         document.addEventListener('touchmove', (e) => {
             if (!touchStartX) return;
             const dx = e.touches[0].clientX - touchStartX; const dy = e.touches[0].clientY - touchStartY;
             if (Math.abs(dy) > Math.abs(dx) * 1.2 || Math.abs(dx) < 30) return;
             const idx = pages.indexOf(_currentPage);
-            if      (dx < -30 && idx < pages.length - 1) showIndicator('left',  labels[pages[idx + 1]]);
-            else if (dx >  30 && idx > 0)                showIndicator('right', labels[pages[idx - 1]]);
+            if (dx < -30 && idx < pages.length - 1) showIndicator('left', labels[pages[idx + 1]]);
+            else if (dx > 30 && idx > 0) showIndicator('right', labels[pages[idx - 1]]);
         }, { passive: true });
+
         document.addEventListener('touchend', (e) => {
             if (!touchStartX) return;
-            const dx = e.changedTouches[0].clientX - touchStartX; const dy = e.changedTouches[0].clientY - touchStartY; const dt = Date.now() - touchStartTime;
-            touchStartX = 0; hideIndicators();
+            const dx = e.changedTouches[0].clientX - touchStartX; const dy = e.changedTouches[0].clientY - touchStartY;
+            const dt = Date.now() - touchStartTime; touchStartX = 0; hideIndicators();
             if (dt >= 400 || Math.abs(dx) < 55 || Math.abs(dy) >= Math.abs(dx) * 0.9) return;
             if (e.target.closest('input,button,select,.results-box,.mode-menu,#multiShareModal,#detailsModal,table')) return;
             const idx = pages.indexOf(_currentPage);
-            if      (dx < 0 && idx < pages.length - 1) switchPage(pages[idx + 1], 'ltr');
-            else if (dx > 0 && idx > 0)                switchPage(pages[idx - 1], 'rtl');
+            if (dx < 0 && idx < pages.length - 1) switchPage(pages[idx + 1], 'ltr');
+            else if (dx > 0 && idx > 0) switchPage(pages[idx - 1], 'rtl');
         }, { passive: true });
     })();
 </script>
