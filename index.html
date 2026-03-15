@@ -691,58 +691,28 @@
         @keyframes splashOut { 0% { opacity: 1; transform: scale(1); } 100% { opacity: 0; transform: scale(1.04); pointer-events: none; } }
         /* ─── Offline Banner ─── */
         #offlineBanner {
-            position: fixed;
-            top: 16px;
-            left: 130px;
-            z-index: 1201;
-            background: linear-gradient(135deg, #b03020, #8a1f10);
-            color: #fff;
-            font-size: 11px;
-            font-weight: 700;
-            font-family: 'Cairo';
-            padding: 5px 12px;
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            box-shadow: 0 4px 16px rgba(176,48,32,0.4);
-            opacity: 0;
-            transform: translateY(-6px) scale(0.92);
-            transition: all 0.3s cubic-bezier(0.175,0.885,0.32,1.275);
-            pointer-events: none;
+            position: fixed; top: 16px; left: 130px; z-index: 1201;
+            background: linear-gradient(135deg, #b03020, #8a1f10); color: #fff;
+            font-size: 11px; font-weight: 700; font-family: 'Cairo';
+            padding: 5px 12px; border-radius: 20px; display: flex; align-items: center; gap: 5px;
+            box-shadow: 0 4px 16px rgba(176,48,32,0.4); opacity: 0;
+            transform: translateY(-6px) scale(0.92); transition: all 0.3s cubic-bezier(0.175,0.885,0.32,1.275); pointer-events: none;
         }
         #offlineBanner.show { opacity: 1; transform: translateY(0) scale(1); }
-
         #onlineBanner {
-            position: fixed;
-            top: 16px;
-            left: 130px;
-            z-index: 1201;
-            background: linear-gradient(135deg, #1f8a60, #156644);
-            color: #fff;
-            font-size: 11px;
-            font-weight: 700;
-            font-family: 'Cairo';
-            padding: 5px 12px;
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            box-shadow: 0 4px 16px rgba(31,138,96,0.4);
-            opacity: 0;
-            transform: translateY(-6px) scale(0.92);
-            transition: all 0.3s cubic-bezier(0.175,0.885,0.32,1.275);
-            pointer-events: none;
+            position: fixed; top: 16px; left: 130px; z-index: 1201;
+            background: linear-gradient(135deg, #1f8a60, #156644); color: #fff;
+            font-size: 11px; font-weight: 700; font-family: 'Cairo';
+            padding: 5px 12px; border-radius: 20px; display: flex; align-items: center; gap: 5px;
+            box-shadow: 0 4px 16px rgba(31,138,96,0.4); opacity: 0;
+            transform: translateY(-6px) scale(0.92); transition: all 0.3s cubic-bezier(0.175,0.885,0.32,1.275); pointer-events: none;
         }
         #onlineBanner.show { opacity: 1; transform: translateY(0) scale(1); }
-
-        /* ─── Install PWA Button ─── */
         #installPWARow { display: none; }
     </style>
 </head>
 <body>
 
-<!-- Offline Banner -->
 <div id="offlineBanner">🔴 انقطع الاتصال</div>
 <div id="onlineBanner">🟢 متصل مجدداً</div>
 
@@ -953,7 +923,6 @@
                     <button class="settings-font-btn active" id="sFontMd" onclick="setFontSize('md'); updateSettingsFontUI()"><span style="font-size:17px;display:block;font-weight:700;margin-bottom:3px;">أ</span><span>متوسط</span></button>
                     <button class="settings-font-btn" id="sFontLg" onclick="setFontSize('lg'); updateSettingsFontUI()"><span style="font-size:21px;display:block;font-weight:700;margin-bottom:3px;">أ</span><span>كبير</span></button>
                 </div>
-
                 <div class="section-label" style="margin-top:18px;">الأصوات التفاعلية</div>
                 <div onclick="toggleSFX()" style="display:flex; align-items:center; justify-content:space-between; padding:13px 14px; background:var(--card2); border:1px solid var(--border); border-radius:var(--radius-sm); cursor:pointer; transition:all 0.2s;" id="sfxSettingsRow">
                     <div style="display:flex; align-items:center; gap:12px;">
@@ -983,18 +952,12 @@
                 <div class="card-title">ℹ️ عن التطبيق</div>
                 <div id="installPWARow" class="settings-row" onclick="installPWA()">
                     <div class="settings-row-icon" style="background:rgba(61,186,140,0.12); color:var(--success);">📲</div>
-                    <div class="settings-row-text">
-                        <div class="settings-row-title">تثبيت التطبيق</div>
-                        <div class="settings-row-sub">أضف المحلاوي على شاشتك الرئيسية</div>
-                    </div>
+                    <div class="settings-row-text"><div class="settings-row-title">تثبيت التطبيق</div><div class="settings-row-sub">أضف المحلاوي على شاشتك الرئيسية</div></div>
                     <div class="settings-row-arrow" style="color:var(--success);">›</div>
                 </div>
                 <div class="settings-row" style="cursor:default;">
                     <div class="settings-row-icon" style="background:rgba(201,168,76,0.08); color:var(--gold);">🌐</div>
-                    <div class="settings-row-text">
-                        <div class="settings-row-title">حالة الاتصال</div>
-                        <div id="offlineStatusLabel" class="settings-row-sub">جاري التحقق...</div>
-                    </div>
+                    <div class="settings-row-text"><div class="settings-row-title">حالة الاتصال</div><div id="offlineStatusLabel" class="settings-row-sub">جاري التحقق...</div></div>
                     <div id="offlineStatusDot" style="width:10px;height:10px;border-radius:50%;background:var(--text-muted);flex-shrink:0;"></div>
                 </div>
                 <div class="settings-row" style="cursor:default;"><div class="settings-row-icon" style="background:var(--gold-subtle); color:var(--gold);">📱</div><div class="settings-row-text"><div class="settings-row-title">الإصدار</div><div class="settings-row-sub">نظام المحلاوي — V 4.0</div></div></div>
@@ -1172,12 +1135,148 @@
         document.getElementById("detailsModal").classList.remove("hidden");
     }
 
-    // ─── ✅ PDF Export — FIXED ───
+    // ═══════════════════════════════════════════════
+    // ✅ دالة مساعدة: بناء HTML قالب الفاتورة المحسّن
+    // ═══════════════════════════════════════════════
+    function buildInvoiceHTML({ clientName, clientNotes, dateStr, pageNum, totalPages, tableRows, totalCount, isLastPage, logoDataUrl }) {
+
+        const logoImg = logoDataUrl
+            ? `<img src="${logoDataUrl}" style="width:66px;height:66px;border-radius:50%;object-fit:cover;border:2.5px solid #c9a84c;">`
+            : `<div style="width:66px;height:66px;border-radius:50%;background:#c9a84c;border:2px solid #f0d98a;"></div>`;
+
+        // صفوف الجدول — white-space:nowrap على كل شيء عدا اسم الصنف
+        const tableRowsHTML = tableRows.map((r, idx) => {
+            const bg = idx % 2 === 0 ? '#ffffff' : '#faf8f3';
+            return `<tr style="background:${bg};">
+                <td style="padding:10px 8px;border:1px solid #e0d8c0;text-align:center;font-size:14px;color:#bbb;white-space:nowrap;width:46px;">${r.num}</td>
+                <td style="padding:10px 18px;border:1px solid #e0d8c0;text-align:right;font-size:17px;font-weight:700;color:#1a1008;white-space:nowrap;">${r.name}</td>
+                <td style="padding:10px 8px;border:1px solid #e0d8c0;text-align:center;font-size:18px;font-weight:900;color:#7a5808;white-space:nowrap;width:84px;">${r.qty}</td>
+            </tr>`;
+        }).join('');
+
+        const notesRow = clientNotes ? `
+            <tr><td colspan="2" style="padding:10px 18px 0;">
+                <div style="padding:10px 14px;background:#fffbf0;border:1px solid #e8d8a0;border-right:4px solid #c9a84c;border-radius:6px;">
+                    <div style="font-size:12px;font-weight:800;color:#8a6010;margin-bottom:4px;white-space:nowrap;">ملاحظات</div>
+                    <div style="font-size:14px;color:#5a3c0a;white-space:nowrap;">${clientNotes}</div>
+                </div>
+            </td></tr>` : '';
+
+        const summarySection = isLastPage ? `
+            <table style="width:100%;border-collapse:collapse;margin-top:14px;border:1px solid #ddd0b0;border-radius:8px;background:linear-gradient(135deg,#f5f0e8,#ede8dc);">
+                <tr>
+                    <td style="padding:12px 18px;font-size:14px;color:#999;font-weight:600;white-space:nowrap;">إجمالي الأصناف</td>
+                    <td style="padding:12px 18px;font-size:19px;font-weight:900;color:#7a5808;text-align:left;white-space:nowrap;">${totalCount} صنف</td>
+                </tr>
+            </table>` : '';
+
+        return `
+            <style>
+                @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap');
+                .inv * { font-family:'Cairo','Segoe UI',Tahoma,Arial,sans-serif !important; box-sizing:border-box; }
+            </style>
+            <div class="inv" style="background:#fff;direction:rtl;padding:0;color:#111;width:794px;font-family:'Cairo','Segoe UI',Tahoma,Arial,sans-serif;">
+
+                <!-- HEADER — table layout بدل flex -->
+                <table style="width:100%;border-collapse:collapse;background:linear-gradient(135deg,#140a00,#2a1400,#1a0c00);">
+                    <tr>
+                        <td style="padding:22px 30px;vertical-align:middle;">
+                            <table style="border-collapse:collapse;">
+                                <tr>
+                                    <td style="vertical-align:middle;padding-left:16px;">${logoImg}</td>
+                                    <td style="vertical-align:middle;">
+                                        <div style="font-size:32px;font-weight:900;color:#f0d98a;white-space:nowrap;line-height:1.1;">المحلاوي</div>
+                                        <div style="font-size:12px;color:rgba(201,168,76,0.6);margin-top:4px;white-space:nowrap;">نظام إدارة الطلبيات</div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td style="padding:22px 30px;vertical-align:middle;text-align:left;">
+                            <div style="font-size:13px;color:rgba(255,255,255,0.5);white-space:nowrap;line-height:2;">${dateStr}</div>
+                            <div style="font-size:13px;color:rgba(201,168,76,0.7);font-weight:700;white-space:nowrap;">صفحة ${pageNum} / ${totalPages}</div>
+                        </td>
+                    </tr>
+                </table>
+
+                <!-- GOLD LINE -->
+                <div style="height:4px;background:linear-gradient(90deg,#6a4820,#f0d98a,#c9a84c,#f0d98a,#6a4820);"></div>
+
+                <!-- CLIENT INFO — table layout -->
+                <div style="padding:18px 30px 14px;">
+                    <div style="background:#fffdf7;border:1px solid #e5d090;border-radius:10px;padding:14px 18px;">
+                        <table style="border-collapse:collapse;width:100%;">
+                            <tr>
+                                <td style="vertical-align:middle;padding-left:14px;width:52px;">
+                                    <div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#c9a84c,#8a6830);border:2px solid rgba(255,255,255,0.2);">
+                                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:44px;height:44px;padding:10px;">
+                                            <circle cx="12" cy="8" r="4" fill="rgba(255,255,255,0.95)"/>
+                                            <path d="M4 20c0-4.418 3.582-8 8-8s8 3.582 8 8" stroke="rgba(255,255,255,0.95)" stroke-width="2" stroke-linecap="round"/>
+                                        </svg>
+                                    </div>
+                                </td>
+                                <td style="vertical-align:middle;">
+                                    <div style="font-size:11px;color:#bba060;letter-spacing:1.5px;font-weight:600;white-space:nowrap;">العميل</div>
+                                    <div style="font-size:19px;font-weight:900;color:#1a0e00;white-space:nowrap;">${clientName}</div>
+                                </td>
+                            </tr>
+                            ${notesRow}
+                        </table>
+                    </div>
+                </div>
+
+                <!-- ITEMS TABLE -->
+                <div style="padding:0 30px 22px;">
+                    <table style="width:100%;border-collapse:collapse;table-layout:auto;border:1px solid #e0d4b8;">
+                        <thead>
+                            <tr style="background:linear-gradient(135deg,#c9a84c,#a07828);">
+                                <th style="padding:12px 8px;color:#fff;font-size:14px;font-weight:700;border:1px solid #8a6830;text-align:center;white-space:nowrap;width:46px;">م</th>
+                                <th style="padding:12px 18px;color:#fff;font-size:15px;font-weight:700;border:1px solid #8a6830;text-align:right;white-space:nowrap;">الصنف</th>
+                                <th style="padding:12px 8px;color:#fff;font-size:14px;font-weight:700;border:1px solid #8a6830;text-align:center;white-space:nowrap;width:84px;">الكمية</th>
+                            </tr>
+                        </thead>
+                        <tbody>${tableRowsHTML}</tbody>
+                    </table>
+                    ${summarySection}
+                </div>
+
+                <!-- FOOTER — table layout -->
+                <table style="width:100%;border-collapse:collapse;background:linear-gradient(135deg,#f5f0e8,#ede8dc);border-top:2px solid #e0d0b0;">
+                    <tr>
+                        <td style="padding:13px 30px;font-size:12px;color:#aaa;white-space:nowrap;">
+                            تم الإنشاء بواسطة نظام المحلاوي
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="#c9a84c" xmlns="http://www.w3.org/2000/svg" style="vertical-align:middle;margin-right:4px;"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
+                        </td>
+                        <td style="padding:13px 30px;font-size:11px;color:#c9a84c;font-weight:700;letter-spacing:1px;text-align:left;white-space:nowrap;">V 4.0</td>
+                    </tr>
+                </table>
+
+            </div>
+        `;
+    }
+
+    // ═══════════════════════════════════════════════
+    // ✅ تحميل اللوجو كـ base64 (لدعم html2canvas)
+    // ═══════════════════════════════════════════════
+    async function loadLogoAsBase64(url) {
+        try {
+            const response = await fetch(url);
+            const blob = await response.blob();
+            return new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.onloadend = () => resolve(reader.result);
+                reader.onerror = () => resolve(null);
+                reader.readAsDataURL(blob);
+            });
+        } catch (e) {
+            return null;
+        }
+    }
+
+    // ─── ✅ PDF Export ───
     async function exportToPDF() {
         const rows = Array.from(document.querySelectorAll("#resultTable tbody tr"));
         if (rows.length === 0) return showToast("⚠️ الجدول فارغ!");
 
-        // ✅ الإصلاح: التحقق الصحيح من المكتبة
         const jsPDFLib = (window.jspdf && window.jspdf.jsPDF) || window.jsPDF;
         if (!jsPDFLib) return showToast("❌ مكتبة PDF غير محملة، انتظر قليلاً وأعد المحاولة");
         if (!window.html2canvas) return showToast("❌ مكتبة html2canvas غير محملة");
@@ -1189,8 +1288,9 @@
         const clientName  = document.getElementById("clientName").value  || "عميل";
         const clientNotes = document.getElementById("clientNotes").value || "";
         const dateStr     = new Date().toLocaleDateString("ar-EG");
+        const logoDataUrl = await loadLogoAsBase64(LOGO_URL);
 
-        const itemsPerPage = 28;
+        const itemsPerPage = 25;
         const totalPages   = Math.ceil(rows.length / itemsPerPage);
         const doc  = new jsPDFLib({ orientation: "p", unit: "mm", format: "a4" });
         const pdfW = doc.internal.pageSize.getWidth();
@@ -1198,75 +1298,36 @@
 
         for (let pg = 0; pg < totalPages; pg++) {
             const pageRows = rows.slice(pg * itemsPerPage, (pg + 1) * itemsPerPage);
+            const tableRows = pageRows.map((r, idx) => ({
+                num:  pg * itemsPerPage + idx + 1,
+                name: r.cells[1].innerText,
+                qty:  r.cells[2].innerText
+            }));
 
             const wrap = document.createElement("div");
             wrap.style.cssText = `
                 position:fixed; top:0; left:0; z-index:99998;
-                width:780px; padding:28px 32px 32px;
-                background:#fff; color:#111;
-                font-family:'Cairo',sans-serif; direction:rtl;
-                box-sizing:border-box;
+                width:794px; background:#fff;
+                box-sizing:border-box; overflow:hidden;
             `;
-
-            const tableHTML = pageRows.map((r, idx) => {
-                const bg  = idx % 2 === 0 ? "#fff" : "#faf8f3";
-                const num = pg * itemsPerPage + idx + 1;
-                return `<tr style="background:${bg}">
-                    <td style="padding:7px 6px;border:1px solid #ddd;text-align:center;font-size:12px;color:#888">${num}</td>
-                    <td style="padding:7px 10px;border:1px solid #ddd;text-align:right;font-size:13px">${r.cells[1].innerText}</td>
-                    <td style="padding:7px 6px;border:1px solid #ddd;text-align:center;font-size:13px;font-weight:700;color:#7a5c10">${r.cells[2].innerText}</td>
-                </tr>`;
-            }).join("");
-
-            const summaryHTML = pg === totalPages - 1 ? `
-                <div style="margin-top:12px;padding:8px 14px;background:#f5f0e8;border-radius:6px;
-                            border:1px solid #e0d0b0;display:flex;justify-content:space-between;align-items:center">
-                    <span style="font-size:12px;color:#666">إجمالي الأصناف</span>
-                    <span style="font-size:15px;font-weight:900;color:#b08d57">${rows.length} صنف</span>
-                </div>` : "";
-
-            wrap.innerHTML = `
-                <div style="display:flex;justify-content:space-between;align-items:flex-end;
-                            padding-bottom:10px;margin-bottom:14px;border-bottom:3px solid #b08d57">
-                    <div>
-                        <div style="font-size:26px;font-weight:900;color:#b08d57;">المحلاوي</div>
-                        <div style="font-size:10px;color:#aaa;margin-top:3px">نظام إدارة الطلبيات السحابي</div>
-                    </div>
-                    <div style="text-align:left;font-size:10px;color:#888;line-height:1.8">
-                        <div>${dateStr}</div>
-                        <div>صفحة ${pg + 1} / ${totalPages}</div>
-                    </div>
-                </div>
-                <div style="background:#fffbf2;border:1px solid #e8d8a0;border-radius:6px;
-                            padding:9px 14px;margin-bottom:14px;font-size:12px;line-height:1.9">
-                    <div><b>السيد / ${clientName}</b></div>
-                    ${clientNotes ? `<div style="color:#777">ملاحظات: ${clientNotes}</div>` : ""}
-                </div>
-                <table style="width:100%;border-collapse:collapse">
-                    <thead>
-                        <tr style="background:#b08d57">
-                            <th style="padding:8px 6px;color:#fff;border:1px solid #8a6830;width:38px;font-size:11px">م</th>
-                            <th style="padding:8px 10px;color:#fff;border:1px solid #8a6830;text-align:right;font-size:12px">الصنف</th>
-                            <th style="padding:8px 6px;color:#fff;border:1px solid #8a6830;width:70px;font-size:11px">الكمية</th>
-                        </tr>
-                    </thead>
-                    <tbody>${tableHTML}</tbody>
-                </table>
-                ${summaryHTML}
-                <div style="margin-top:20px;padding-top:10px;border-top:1px dashed #ddd;
-                            text-align:center;font-size:10px;color:#bbb">
-                    شكراً لتعاملكم معنا — نظام المحلاوي
-                </div>
-            `;
-
-            document.body.appendChild(wrap);
-
-            const canvas = await html2canvas(wrap, {
-                scale: 2, useCORS: true,
-                backgroundColor: "#ffffff",
-                width: 780, windowWidth: 1200, logging: false
+            wrap.innerHTML = buildInvoiceHTML({
+                clientName, clientNotes, dateStr,
+                pageNum: pg + 1, totalPages,
+                tableRows,
+                totalCount: rows.length,
+                isLastPage: pg === totalPages - 1,
+                logoDataUrl
             });
 
+            document.body.appendChild(wrap);
+            // ✅ انتظار تحميل الخط قبل التصوير
+            try { await document.fonts.ready; await new Promise(r => setTimeout(r, 200)); } catch(e) {}
+            const canvas = await html2canvas(wrap, {
+                scale: 2, useCORS: true, allowTaint: false,
+                backgroundColor: "#ffffff",
+                width: 794, windowWidth: 1200, logging: false,
+                onclone: (doc) => { doc.body.style.fontFamily = "'Cairo','Segoe UI',Tahoma,Arial,sans-serif"; }
+            });
             document.body.removeChild(wrap);
 
             const imgData = canvas.toDataURL("image/jpeg", 0.95);
@@ -1291,60 +1352,167 @@
         const dateStr     = new Date().toLocaleString('ar-EG', { hour12: true });
         let msg = `🏪 *نظام المحلاوي*\n━━━━━━━━━━━━━━━\n👤 *العميل:* ${clientName}\n📅 *التاريخ:* ${dateStr}\n`;
         if (clientNotes) msg += `📝 *ملاحظات:* ${clientNotes}\n`;
-        msg += `━━━━━━━━━━━━━━━\n📦 *قائمة الطلبية:*\n\n`;
-        rows.forEach((r, idx) => { msg += `${idx+1}. ${r.cells[1].innerText}  ──  *${r.cells[2].innerText}*\n`; });
-        msg += `\n━━━━━━━━━━━━━━━\n📊 *إجمالي الأصناف:* ${rows.length} صنف\n_شكراً لتعاملكم معنا_ 🌟`;
+        msg += `━━━━━━━━━━━━━━━\n`;
+        rows.forEach((r, idx) => {
+            msg += `${idx + 1}. ${r.cells[1].innerText} — *${r.cells[2].innerText}*\n`;
+        });
+        msg += `━━━━━━━━━━━━━━━\n📦 *الإجمالي:* ${rows.length} صنف\n_تم الإرسال بواسطة نظام المحلاوي_ 🌟`;
         window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
     }
 
+    // ─── مشاركة وحفظ (صور) ───
     async function prepareAndShowShare() {
         const rows = Array.from(document.querySelectorAll("#resultTable tbody tr"));
-        if (rows.length === 0) return showToast("⚠️ الجدول فارغ!");
+        if (rows.length === 0) { SFX.error(); return showToast("⚠️ الجدول فارغ!"); }
+
         saveInvoiceToHistory();
-        const clientName = document.getElementById("clientName").value || "عميل";
-        const clientNotes = document.getElementById("clientNotes").value || "لا يوجد";
-        const container = document.getElementById("exportContainer");
-        container.innerHTML = ""; shareQueue = [];
-        const itemsPerPage = 32;
-        const totalPages = Math.ceil(rows.length / itemsPerPage);
-        const modal = document.getElementById("multiShareModal");
-        const status = document.getElementById("shareStatus");
-        const btn = document.getElementById("nextShareBtn");
-        modal.classList.remove("hidden"); btn.disabled = true; status.innerText = "⏳ جاري المعالجة...";
+        SFX.share();
+
+        const clientName  = document.getElementById("clientName").value  || "عميل";
+        const clientNotes = document.getElementById("clientNotes").value || "";
+        const dateStr     = new Date().toLocaleDateString("ar-EG");
+        const modal       = document.getElementById("multiShareModal");
+        const status      = document.getElementById("shareStatus");
+        const btn         = document.getElementById("nextShareBtn");
+        const logoDataUrl = await loadLogoAsBase64(LOGO_URL);
+
+        modal.classList.remove("hidden");
+        btn.disabled     = true;
+        status.innerText = "⏳ جاري تجهيز الصور...";
+        shareQueue = [];
+
+        const itemsPerPage = 25;
+        const totalPages   = Math.ceil(rows.length / itemsPerPage);
+
         for (let i = 0; i < totalPages; i++) {
-            const pageDiv = document.createElement("div"); pageDiv.className = "export-page";
-            const pageItems = rows.slice(i * itemsPerPage, (i + 1) * itemsPerPage);
-            pageDiv.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;border-bottom:4px solid #b08d57;padding-bottom:10px;margin-bottom:15px;"><img src="${LOGO_URL}" crossorigin="anonymous" style="width:80px;height:80px;border-radius:50%;"><h1 style="color:#b08d57;font-family:'Aref Ruqaa';">المحلاوي</h1></div><div style="color:black;">السيد: <b>${clientName}</b> | صفحة ${i+1}/${totalPages}</div><table class="invoice-table"><thead><tr><th>م</th><th>الصنف</th><th>الكمية</th></tr></thead><tbody>${pageItems.map((r,idx)=>`<tr><td>${(i*itemsPerPage)+idx+1}</td><td>${r.cells[1].innerText}</td><td>${r.cells[2].innerText}</td></tr>`).join('')}</tbody></table><div style="color:black;margin-top:10px;">ملاحظات: ${clientNotes}</div>`;
-            container.appendChild(pageDiv);
-            const canvas = await html2canvas(pageDiv, { scale: 2, useCORS: true });
-            const blob = await new Promise(res => canvas.toBlob(res, 'image/png'));
-            shareQueue.push(new File([blob], `فاتورة_${i+1}.png`, { type: 'image/png' }));
+            status.innerText = `⏳ صفحة ${i+1} / ${totalPages}...`;
+            const pageRows = rows.slice(i * itemsPerPage, (i + 1) * itemsPerPage);
+            const tableRows = pageRows.map((r, idx) => ({
+                num:  i * itemsPerPage + idx + 1,
+                name: r.cells[1].innerText,
+                qty:  r.cells[2].innerText
+            }));
+
+            const wrap = document.createElement("div");
+            wrap.style.cssText = `position:fixed;top:0;left:0;z-index:99997;width:794px;background:#fff;box-sizing:border-box;overflow:hidden;`;
+            wrap.innerHTML = buildInvoiceHTML({
+                clientName, clientNotes, dateStr,
+                pageNum: i + 1, totalPages,
+                tableRows,
+                totalCount: rows.length,
+                isLastPage: i === totalPages - 1,
+                logoDataUrl
+            });
+
+            document.body.appendChild(wrap);
+            try { await document.fonts.ready; await new Promise(r => setTimeout(r, 200)); } catch(e) {}
+            const canvas = await html2canvas(wrap, { scale: 2, useCORS: true, allowTaint: false, backgroundColor: "#ffffff", width: 794, windowWidth: 1200, logging: false, onclone: (doc) => { doc.body.style.fontFamily = "'Cairo','Segoe UI',Tahoma,Arial,sans-serif"; } });
+            document.body.removeChild(wrap);
+
+            const blob = await new Promise(res => canvas.toBlob(res, 'image/png', 0.95));
+            shareQueue.push({
+                file: new File([blob], `فاتورة_${clientName}_${i+1}.png`, { type: 'image/png' }),
+                dataUrl: canvas.toDataURL('image/png', 0.95)
+            });
         }
-        let currentIdx = 0;
-        status.innerText = `✅ جاهز لـ ${totalPages} صفحة`; btn.disabled = false; btn.innerText = `📤 إرسال صفحة 1`;
-        btn.onclick = async () => {
-            try {
-                await navigator.share({ files: [shareQueue[currentIdx]], text: currentIdx === 0 ? `طلبية: ${clientName}` : '' });
-                currentIdx++;
-                if (currentIdx < shareQueue.length) { btn.innerText = `📤 إرسال صفحة ${currentIdx+1}`; status.innerText = `✅ تم إرسال ${currentIdx}/${totalPages}`; }
-                else { status.innerText = "🎉 تم الإرسال بنجاح!"; btn.innerText = "إغلاق"; btn.onclick = () => modal.classList.add("hidden"); }
-            } catch(e) {}
-        };
+
+        const canShareFiles = navigator.share && navigator.canShare && navigator.canShare({ files: [shareQueue[0].file] });
+
+        if (canShareFiles) {
+            let currentIdx = 0;
+            status.innerText = `✅ جاهز — ${totalPages} ${totalPages === 1 ? 'صفحة' : 'صفحات'}`;
+            btn.disabled     = false;
+            btn.innerText    = totalPages === 1 ? `📤 مشاركة الفاتورة` : `📤 مشاركة صفحة 1 / ${totalPages}`;
+
+            btn.onclick = async () => {
+                try {
+                    await navigator.share({ files: [shareQueue[currentIdx].file], text: currentIdx === 0 ? `🧾 طلبية: ${clientName}` : '' });
+                    SFX.success();
+                    currentIdx++;
+                    if (currentIdx < shareQueue.length) {
+                        btn.innerText    = `📤 مشاركة صفحة ${currentIdx+1} / ${totalPages}`;
+                        status.innerText = `✅ تم ${currentIdx} / ${totalPages}`;
+                    } else {
+                        status.innerText = "🎉 تم الإرسال بنجاح!";
+                        btn.innerText    = "✅ إغلاق";
+                        btn.onclick      = () => modal.classList.add("hidden");
+                    }
+                } catch(e) {
+                    if (e.name !== 'AbortError') showToast("❌ فشل الإرسال، حاول مجدداً");
+                }
+            };
+        } else {
+            status.innerText = `📥 المتصفح لا يدعم المشاركة المباشرة\nسيتم تحميل الصور تلقائياً`;
+            btn.disabled     = false;
+            btn.innerText    = `💾 تحميل ${totalPages === 1 ? 'الصورة' : `${totalPages} صور`}`;
+
+            btn.onclick = async () => {
+                for (let i = 0; i < shareQueue.length; i++) {
+                    const link    = document.createElement('a');
+                    link.download = shareQueue[i].file.name;
+                    link.href     = shareQueue[i].dataUrl;
+                    link.click();
+                    if (i < shareQueue.length - 1) await new Promise(r => setTimeout(r, 400));
+                }
+                SFX.success();
+                showToast(`✅ تم تحميل ${shareQueue.length} ${shareQueue.length === 1 ? 'صورة' : 'صور'}!`);
+                modal.classList.add("hidden");
+            };
+        }
     }
 
+    // ─── حفظ كصور مباشرة ───
     async function processExport() {
         const rows = Array.from(document.querySelectorAll("#resultTable tbody tr"));
-        if (rows.length === 0) return showToast("⚠️ الجدول فارغ!");
-        const container = document.getElementById("exportContainer"); container.innerHTML = "";
-        const totalPages = Math.ceil(rows.length / 32);
+        if (rows.length === 0) { SFX.error(); return showToast("⚠️ الجدول فارغ!"); }
+
+        showToast("⏳ جاري حفظ الصور...");
+        const clientName  = document.getElementById("clientName").value  || "عميل";
+        const clientNotes = document.getElementById("clientNotes").value || "";
+        const dateStr     = new Date().toLocaleDateString("ar-EG");
+        const logoDataUrl = await loadLogoAsBase64(LOGO_URL);
+        const itemsPerPage = 25;
+        const totalPages   = Math.ceil(rows.length / itemsPerPage);
+
         for (let i = 0; i < totalPages; i++) {
-            const pageDiv = document.createElement("div"); pageDiv.className = "export-page";
-            const pageItems = rows.slice(i * 32, (i + 1) * 32);
-            pageDiv.innerHTML = `<div style="padding:15px;background:white;color:black;"><h2>صفحة ${i+1}</h2><table class="invoice-table"><thead><tr><th>م</th><th>الصنف</th><th>الكمية</th></tr></thead><tbody>${pageItems.map((r,idx)=>`<tr><td>${(i*32)+idx+1}</td><td>${r.cells[1].innerText}</td><td>${r.cells[2].innerText}</td></tr>`).join('')}</tbody></table></div>`;
-            container.appendChild(pageDiv);
-            const canvas = await html2canvas(pageDiv, { scale: 2, useCORS: true });
-            const link = document.createElement('a'); link.download = `فاتورة_${i+1}.png`; link.href = canvas.toDataURL(); link.click();
+            const pageRows = rows.slice(i * itemsPerPage, (i + 1) * itemsPerPage);
+            const tableRows = pageRows.map((r, idx) => ({
+                num:  i * itemsPerPage + idx + 1,
+                name: r.cells[1].innerText,
+                qty:  r.cells[2].innerText
+            }));
+
+            const wrap = document.createElement("div");
+            wrap.style.cssText = `position:fixed;top:0;left:0;z-index:99997;width:794px;background:#fff;box-sizing:border-box;overflow:hidden;`;
+            wrap.innerHTML = buildInvoiceHTML({
+                clientName, clientNotes, dateStr,
+                pageNum: i + 1, totalPages,
+                tableRows,
+                totalCount: rows.length,
+                isLastPage: i === totalPages - 1,
+                logoDataUrl
+            });
+
+            document.body.appendChild(wrap);
+            try { await document.fonts.ready; await new Promise(r => setTimeout(r, 200)); } catch(e) {}
+            const canvas = await html2canvas(wrap, {
+                scale: 2, useCORS: true, allowTaint: false,
+                backgroundColor: "#ffffff",
+                width: 794, windowWidth: 1200, logging: false,
+                onclone: (doc) => { doc.body.style.fontFamily = "'Cairo','Segoe UI',Tahoma,Arial,sans-serif"; }
+            });
+            document.body.removeChild(wrap);
+
+            const link     = document.createElement('a');
+            link.download  = `فاتورة_${clientName}_${i+1}.png`;
+            link.href      = canvas.toDataURL('image/png', 0.95);
+            link.click();
+
+            if (i < totalPages - 1) await new Promise(r => setTimeout(r, 400));
         }
+
+        SFX.success();
+        showToast(`✅ تم حفظ ${totalPages} ${totalPages === 1 ? 'صورة' : 'صور'} بنجاح!`);
     }
 
     let _currentPage = 'order';
@@ -1591,7 +1759,7 @@
 
     updateSettingsModeUI(); updateSettingsFontUI(); updateSettingsAccentUI();
 
-    // ─── 🔊 Sound System (Web Audio API — no libraries) ───
+    // ─── 🔊 Sound System ───
     const SFX = (() => {
         let ctx = null;
         let enabled = JSON.parse(localStorage.getItem('sfxEnabled') ?? 'true');
@@ -1602,7 +1770,6 @@
             return ctx;
         }
 
-        // core synth: oscillator + optional noise layer
         function play({ freq = 440, freq2 = null, type = 'sine', type2 = 'sine',
                         vol = 0.18, vol2 = 0.1, dur = 0.12,
                         attack = 0.005, decay = 0.04, sustain = 0.6, release = 0.08,
@@ -1611,8 +1778,6 @@
             try {
                 const ac = getCtx();
                 const t  = ac.currentTime + delay;
-
-                // main oscillator
                 const osc  = ac.createOscillator();
                 const gain = ac.createGain();
                 osc.type    = type;
@@ -1623,9 +1788,7 @@
                 gain.gain.linearRampToValueAtTime(vol * sustain, t + attack + decay);
                 gain.gain.setValueAtTime(vol * sustain, t + dur - release);
                 gain.gain.linearRampToValueAtTime(0, t + dur);
-
                 let node = gain;
-
                 if (filter) {
                     const bq = ac.createBiquadFilter();
                     bq.type = filter.type || 'lowpass';
@@ -1633,12 +1796,9 @@
                     bq.Q.setValueAtTime(filter.Q || 1, t);
                     gain.connect(bq); node = bq;
                 }
-
                 osc.connect(gain);
                 node.connect(ac.destination);
                 osc.start(t); osc.stop(t + dur + 0.01);
-
-                // optional second oscillator (harmony / chord)
                 if (freq2) {
                     const osc2  = ac.createOscillator();
                     const gain2 = ac.createGain();
@@ -1653,7 +1813,6 @@
             } catch(e) {}
         }
 
-        // noise burst (for delete / error)
         function noise({ vol = 0.08, dur = 0.06, delay = 0, filterFreq = 800 } = {}) {
             if (!enabled) return;
             try {
@@ -1676,97 +1835,23 @@
             } catch(e) {}
         }
 
-        // ── Named sound presets (soft, modern UI style) ──
         const sounds = {
-            // إضافة صنف للجدول — نغمة صاعدة خفيفة
-            addItem() {
-                play({ freq: 523.25, freq2: 659.25, type: 'sine', vol: 0.14, vol2: 0.07, dur: 0.18, attack: 0.004, decay: 0.05 });
-            },
-
-            // حفظ / تصدير ناجح — وتر مبهج
-            success() {
-                play({ freq: 523.25, vol: 0.13, dur: 0.12, delay: 0    });
-                play({ freq: 659.25, vol: 0.13, dur: 0.12, delay: 0.08 });
-                play({ freq: 783.99, vol: 0.15, dur: 0.22, delay: 0.16 });
-            },
-
-            // حذف — طقطقة هابطة
-            remove() {
-                play({ freq: 330, type: 'triangle', vol: 0.12, dur: 0.10, decay: 0.03 });
-                noise({ vol: 0.05, dur: 0.05, filterFreq: 600, delay: 0.02 });
-            },
-
-            // مسح كامل — هبوط حاد
-            clear() {
-                play({ freq: 260, freq2: 196, type: 'sawtooth', vol: 0.10, vol2: 0.06, dur: 0.18, attack: 0.002, decay: 0.06 });
-                noise({ vol: 0.07, dur: 0.08, filterFreq: 400, delay: 0.05 });
-            },
-
-            // خطأ / تحذير — نبضتان متقاربتان
-            error() {
-                play({ freq: 220, type: 'square', vol: 0.10, dur: 0.09, attack: 0.002, filter: { type: 'lowpass', freq: 800 } });
-                play({ freq: 196, type: 'square', vol: 0.10, dur: 0.09, attack: 0.002, delay: 0.11, filter: { type: 'lowpass', freq: 800 } });
-            },
-
-            // تسجيل دخول — ترحيب
-            login() {
-                play({ freq: 392,    vol: 0.12, dur: 0.10, delay: 0    });
-                play({ freq: 523.25, vol: 0.12, dur: 0.10, delay: 0.10 });
-                play({ freq: 659.25, vol: 0.14, dur: 0.20, delay: 0.20 });
-            },
-
-            // تسجيل خروج — نزول هادئ
-            logout() {
-                play({ freq: 523.25, vol: 0.11, dur: 0.10, delay: 0    });
-                play({ freq: 392,    vol: 0.11, dur: 0.10, delay: 0.10 });
-                play({ freq: 293.66, vol: 0.10, dur: 0.18, delay: 0.20 });
-            },
-
-            // تبديل تبويب — نقرة خفيفة
-            tab() {
-                play({ freq: 880, type: 'sine', vol: 0.08, dur: 0.07, attack: 0.002, decay: 0.02, sustain: 0.2 });
-            },
-
-            // مزامنة — صوت دوار
-            sync() {
-                [0, 0.07, 0.14].forEach((d, i) => {
-                    play({ freq: 440 + i * 110, type: 'sine', vol: 0.09, dur: 0.09, delay: d });
-                });
-            },
-
-            // نسخ / مشاركة — نبضة مزدوجة
-            share() {
-                play({ freq: 698.46, vol: 0.12, dur: 0.10, delay: 0    });
-                play({ freq: 880,    vol: 0.11, dur: 0.15, delay: 0.10 });
-            },
-
-            // PDF — صوت طابعة
-            pdf() {
-                [0, 0.03, 0.06, 0.09].forEach((d) => {
-                    noise({ vol: 0.06, dur: 0.04, filterFreq: 1200 + Math.random()*400, delay: d });
-                });
-                play({ freq: 440, type: 'triangle', vol: 0.08, dur: 0.20, delay: 0.12 });
-            },
-
-            // تعديل — نقرة محايدة
-            edit() {
-                play({ freq: 600, type: 'triangle', vol: 0.09, dur: 0.09, attack: 0.003 });
-            },
-
-            // واتساب — صوت إرسال
-            whatsapp() {
-                play({ freq: 784, vol: 0.11, dur: 0.08, delay: 0    });
-                play({ freq: 988, vol: 0.12, dur: 0.14, delay: 0.07 });
-            },
+            addItem() { play({ freq: 523.25, freq2: 659.25, type: 'sine', vol: 0.14, vol2: 0.07, dur: 0.18, attack: 0.004, decay: 0.05 }); },
+            success() { play({ freq: 523.25, vol: 0.13, dur: 0.12, delay: 0 }); play({ freq: 659.25, vol: 0.13, dur: 0.12, delay: 0.08 }); play({ freq: 783.99, vol: 0.15, dur: 0.22, delay: 0.16 }); },
+            remove() { play({ freq: 330, type: 'triangle', vol: 0.12, dur: 0.10, decay: 0.03 }); noise({ vol: 0.05, dur: 0.05, filterFreq: 600, delay: 0.02 }); },
+            clear() { play({ freq: 260, freq2: 196, type: 'sawtooth', vol: 0.10, vol2: 0.06, dur: 0.18, attack: 0.002, decay: 0.06 }); noise({ vol: 0.07, dur: 0.08, filterFreq: 400, delay: 0.05 }); },
+            error() { play({ freq: 220, type: 'square', vol: 0.10, dur: 0.09, attack: 0.002, filter: { type: 'lowpass', freq: 800 } }); play({ freq: 196, type: 'square', vol: 0.10, dur: 0.09, attack: 0.002, delay: 0.11, filter: { type: 'lowpass', freq: 800 } }); },
+            login() { play({ freq: 392, vol: 0.12, dur: 0.10, delay: 0 }); play({ freq: 523.25, vol: 0.12, dur: 0.10, delay: 0.10 }); play({ freq: 659.25, vol: 0.14, dur: 0.20, delay: 0.20 }); },
+            logout() { play({ freq: 523.25, vol: 0.11, dur: 0.10, delay: 0 }); play({ freq: 392, vol: 0.11, dur: 0.10, delay: 0.10 }); play({ freq: 293.66, vol: 0.10, dur: 0.18, delay: 0.20 }); },
+            tab() { play({ freq: 880, type: 'sine', vol: 0.08, dur: 0.07, attack: 0.002, decay: 0.02, sustain: 0.2 }); },
+            sync() { [0, 0.07, 0.14].forEach((d, i) => { play({ freq: 440 + i * 110, type: 'sine', vol: 0.09, dur: 0.09, delay: d }); }); },
+            share() { play({ freq: 698.46, vol: 0.12, dur: 0.10, delay: 0 }); play({ freq: 880, vol: 0.11, dur: 0.15, delay: 0.10 }); },
+            pdf() { [0, 0.03, 0.06, 0.09].forEach((d) => { noise({ vol: 0.06, dur: 0.04, filterFreq: 1200 + Math.random()*400, delay: d }); }); play({ freq: 440, type: 'triangle', vol: 0.08, dur: 0.20, delay: 0.12 }); },
+            edit() { play({ freq: 600, type: 'triangle', vol: 0.09, dur: 0.09, attack: 0.003 }); },
+            whatsapp() { play({ freq: 784, vol: 0.11, dur: 0.08, delay: 0 }); play({ freq: 988, vol: 0.12, dur: 0.14, delay: 0.07 }); },
         };
 
-        // toggle on/off
-        function toggle() {
-            enabled = !enabled;
-            localStorage.setItem('sfxEnabled', JSON.stringify(enabled));
-            return enabled;
-        }
-
+        function toggle() { enabled = !enabled; localStorage.setItem('sfxEnabled', JSON.stringify(enabled)); return enabled; }
         function isEnabled() { return enabled; }
 
         return { ...sounds, toggle, isEnabled, noise, play };
@@ -1792,19 +1877,13 @@
         icon.textContent       = on ? '🔊' : '🔇';
     }
 
-    // init sfx button state on load
-    (function() {
-        updateSFXSettingsUI(SFX.isEnabled());
-    })();
+    (function() { updateSFXSettingsUI(SFX.isEnabled()); })();
 
-    // ─── PWA + Offline Mode ───
+    // ─── PWA + Offline ───
     let deferredInstallPrompt = null;
 
-    // Service Worker registration
     (function registerSW() {
         if (!('serviceWorker' in navigator)) return;
-
-        // Inline Service Worker as blob URL (no separate file needed)
         const swCode = `
 const CACHE = 'mahallawi-v4';
 const ASSETS = [
@@ -1812,46 +1891,25 @@ const ASSETS = [
     'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js',
     'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js'
 ];
-
 self.addEventListener('install', e => {
-    e.waitUntil(
-        caches.open(CACHE).then(cache => cache.addAll(ASSETS).catch(()=>{}))
-    );
+    e.waitUntil(caches.open(CACHE).then(cache => cache.addAll(ASSETS).catch(()=>{})));
     self.skipWaiting();
 });
-
 self.addEventListener('activate', e => {
-    e.waitUntil(
-        caches.keys().then(keys =>
-            Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))
-        )
-    );
+    e.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))));
     self.clients.claim();
 });
-
 self.addEventListener('fetch', e => {
     if (e.request.method !== 'GET') return;
-    e.respondWith(
-        fetch(e.request)
-            .then(res => {
-                const clone = res.clone();
-                caches.open(CACHE).then(c => c.put(e.request, clone));
-                return res;
-            })
-            .catch(() => caches.match(e.request))
-    );
+    e.respondWith(fetch(e.request).then(res => { const clone = res.clone(); caches.open(CACHE).then(c => c.put(e.request, clone)); return res; }).catch(() => caches.match(e.request)));
 });`;
-
         const blob = new Blob([swCode], { type: 'application/javascript' });
         const swURL = URL.createObjectURL(blob);
-        navigator.serviceWorker.register(swURL, { scope: '/' })
-            .catch(() => {}); // fail silently if scope restricted
+        navigator.serviceWorker.register(swURL, { scope: '/' }).catch(() => {});
     })();
 
-    // PWA Install prompt
     window.addEventListener('beforeinstallprompt', (e) => {
-        e.preventDefault();
-        deferredInstallPrompt = e;
+        e.preventDefault(); deferredInstallPrompt = e;
         const row = document.getElementById('installPWARow');
         if (row) row.style.display = 'flex';
     });
@@ -1864,10 +1922,7 @@ self.addEventListener('fetch', e => {
     });
 
     function installPWA() {
-        if (!deferredInstallPrompt) {
-            showToast('📱 افتح التطبيق في متصفح Chrome أو Safari لتثبيته');
-            return;
-        }
+        if (!deferredInstallPrompt) { showToast('📱 افتح التطبيق في متصفح Chrome أو Safari لتثبيته'); return; }
         deferredInstallPrompt.prompt();
         deferredInstallPrompt.userChoice.then(res => {
             if (res.outcome === 'accepted') showToast('✅ جاري التثبيت...');
@@ -1875,7 +1930,6 @@ self.addEventListener('fetch', e => {
         });
     }
 
-    // Online / Offline detection
     function updateOnlineStatus() {
         const isOnline = navigator.onLine;
         const dot   = document.getElementById('offlineStatusDot');
@@ -1894,23 +1948,17 @@ self.addEventListener('fetch', e => {
         const ob = document.getElementById('offlineBanner');
         const nb = document.getElementById('onlineBanner');
         if (ob) ob.classList.remove('show');
-        if (nb) {
-            nb.classList.add('show');
-            setTimeout(() => nb.classList.remove('show'), 3000);
-        }
+        if (nb) { nb.classList.add('show'); setTimeout(() => nb.classList.remove('show'), 3000); }
         updateOnlineStatus();
-        // auto sync when back online
         syncFromCloud();
     }
 
     window.addEventListener('offline', showOfflineBanner);
     window.addEventListener('online',  showOnlineBanner);
-
-    // init on load
     updateOnlineStatus();
     if (!navigator.onLine) showOfflineBanner();
 
-
+    // ─── Swipe Navigation ───
     (function() {
         const pages  = ['order', 'browse', 'history', 'settings'];
         const labels = { order: 'الطلبية', browse: 'الأصناف', history: 'السجل', settings: 'الإعدادات' };
