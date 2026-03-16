@@ -744,6 +744,31 @@
             <input type="password" id="passInput" placeholder="🔐  أدخل الرمز السري" style="text-align:center; margin-bottom:10px;" onkeydown="if(event.key==='Enter') checkPassword()">
         </div>
         <button class="btn-main" onclick="checkPassword()" style="font-size:16px;">دخول ←</button>
+
+        <!-- زر البصمة -->
+        <div id="biometricRow" class="hidden" style="margin-top:16px; text-align:center;">
+            <div style="display:flex; align-items:center; gap:10px; margin-bottom:14px;">
+                <div style="flex:1; height:1px; background:linear-gradient(90deg, transparent, rgba(201,168,76,0.2));"></div>
+                <span style="font-size:11px; color:var(--text-muted); letter-spacing:1px;">أو</span>
+                <div style="flex:1; height:1px; background:linear-gradient(90deg, rgba(201,168,76,0.2), transparent);"></div>
+            </div>
+            <button id="biometricBtn" onclick="loginWithBiometric()" style="
+                width:100%; padding:14px; border-radius:var(--radius-sm);
+                background:rgba(201,168,76,0.07); border:1px solid rgba(201,168,76,0.2);
+                color:var(--gold-light); font-family:'Cairo'; font-size:15px; font-weight:700;
+                cursor:pointer; transition:all 0.25s; display:flex; align-items:center;
+                justify-content:center; gap:10px; letter-spacing:0.3px;">
+                <span id="biometricBtnIcon" style="font-size:22px;">👆</span>
+                <span id="biometricBtnText">الدخول بالبصمة</span>
+            </button>
+        </div>
+
+        <!-- رابط تفعيل البصمة -->
+        <div id="biometricRegisterRow" style="margin-top:12px; text-align:center;">
+            <button onclick="registerBiometric()" style="background:none; border:none; color:var(--text-muted); font-family:'Cairo'; font-size:12px; cursor:pointer; text-decoration:underline; text-underline-offset:3px; padding:4px;" id="biometricRegisterBtn">
+                تفعيل الدخول بالبصمة
+            </button>
+        </div>
     </div>
 </div>
 
@@ -948,6 +973,21 @@
                     <div class="settings-row" onclick="resetAllData()" style="border:none;padding:6px 0;background:none;margin-top:4px;"><div class="settings-row-icon" style="background:rgba(224,82,82,0.1); color:var(--danger);">⚠️</div><div class="settings-row-text"><div class="settings-row-title" style="color:var(--danger);">إعادة ضبط المصنع</div><div class="settings-row-sub">حذف جميع البيانات والإعدادات</div></div><div class="settings-row-arrow" style="color:var(--danger);">›</div></div>
                 </div>
             </div>
+            <!-- ═══════════════════════════════════════════ -->
+            <!-- 🧾 زر إعدادات الفاتورة (يفتح modal)        -->
+            <!-- ═══════════════════════════════════════════ -->
+            <div class="card">
+                <div class="card-title">🧾 الفاتورة</div>
+                <div class="settings-row" onclick="openInvModal()">
+                    <div class="settings-row-icon" style="background:rgba(201,168,76,0.1); color:var(--gold);">🧾</div>
+                    <div class="settings-row-text">
+                        <div class="settings-row-title">إعدادات الفاتورة</div>
+                        <div class="settings-row-sub">تخصيص الشكل، الألوان، النصوص</div>
+                    </div>
+                    <div class="settings-row-arrow">›</div>
+                </div>
+            </div>
+
             <div class="card">
                 <div class="card-title">ℹ️ عن التطبيق</div>
                 <div id="installPWARow" class="settings-row" onclick="installPWA()">
@@ -963,9 +1003,144 @@
                 <div class="settings-row" style="cursor:default;"><div class="settings-row-icon" style="background:var(--gold-subtle); color:var(--gold);">📱</div><div class="settings-row-text"><div class="settings-row-title">الإصدار</div><div class="settings-row-sub">نظام المحلاوي — V 4.0</div></div></div>
                 <div class="settings-row" style="cursor:default;"><div class="settings-row-icon" style="background:rgba(74,144,217,0.1); color:var(--edit);">☁️</div><div class="settings-row-text"><div class="settings-row-title">نظام التخزين</div><div class="settings-row-sub">Google Sheets + Local Storage</div></div></div>
                 <div class="settings-row" onclick="logout()" style="margin-top:4px;"><div class="settings-row-icon" style="background:rgba(224,82,82,0.1); color:var(--danger);">⏻</div><div class="settings-row-text"><div class="settings-row-title" style="color:var(--danger);">تسجيل الخروج</div><div class="settings-row-sub">العودة لشاشة الدخول</div></div><div class="settings-row-arrow" style="color:var(--danger);">›</div></div>
+                <div id="biometricSettingsRow" class="settings-row hidden" onclick="handleBiometricSettings()" style="margin-top:4px;">
+                    <div class="settings-row-icon" style="background:rgba(201,168,76,0.1); color:var(--gold);">👆</div>
+                    <div class="settings-row-text">
+                        <div class="settings-row-title">الدخول بالبصمة</div>
+                        <div class="settings-row-sub">انقر لتفعيل الدخول بالبصمة</div>
+                    </div>
+                    <div class="settings-row-arrow">›</div>
+                </div>
             </div>
         </div>
 
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- 🧾 Modal إعدادات الفاتورة                              -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div id="invSettingsModal" class="hidden" style="position:fixed;inset:0;background:rgba(4,8,16,0.88);z-index:2000;display:flex;align-items:flex-end;justify-content:center;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);animation:fadeIn 0.2s ease;">
+    <div style="width:100%;max-width:520px;max-height:90vh;overflow-y:auto;background:var(--card);border-radius:22px 22px 0 0;border:1px solid rgba(201,168,76,0.2);border-bottom:none;box-shadow:0 -12px 48px rgba(0,0,0,0.7);animation:slideUp 0.3s ease;padding-bottom:env(safe-area-inset-bottom,16px);">
+
+        <!-- Handle -->
+        <div style="display:flex;justify-content:center;padding:12px 0 4px;">
+            <div style="width:36px;height:4px;border-radius:2px;background:var(--border);"></div>
+        </div>
+
+        <!-- Header -->
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 20px 16px;border-bottom:1px solid var(--border);">
+            <div style="display:flex;align-items:center;gap:10px;">
+                <div style="width:38px;height:38px;border-radius:10px;background:rgba(201,168,76,0.1);display:flex;align-items:center;justify-content:center;font-size:18px;">🧾</div>
+                <div>
+                    <div style="font-size:16px;font-weight:700;color:var(--gold-light);">إعدادات الفاتورة</div>
+                    <div style="font-size:11px;color:var(--text-muted);margin-top:1px;">تخصيص الشكل والمحتوى</div>
+                </div>
+            </div>
+            <button onclick="closeInvModal()" style="width:32px;height:32px;border-radius:50%;border:1px solid rgba(224,82,82,0.2);background:rgba(224,82,82,0.1);color:var(--danger);cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;transition:all 0.2s;" onmouseover="this.style.background='var(--danger)';this.style.color='#fff'" onmouseout="this.style.background='rgba(224,82,82,0.1)';this.style.color='var(--danger)'">✕</button>
+        </div>
+
+        <!-- Body -->
+        <div style="padding:18px 20px;display:flex;flex-direction:column;gap:18px;">
+
+            <!-- اسم المتجر -->
+            <div>
+                <div class="section-label" style="margin-bottom:8px;">اسم المتجر / الشركة</div>
+                <div class="input-wrapper" style="margin-bottom:0;">
+                    <input type="text" id="invStoreName" placeholder="مثال: المحلاوي" style="text-align:right;" oninput="saveInvoiceSettings()">
+                </div>
+            </div>
+
+            <!-- العنوان الفرعي -->
+            <div>
+                <div class="section-label" style="margin-bottom:8px;">العنوان الفرعي (اختياري)</div>
+                <div class="input-wrapper" style="margin-bottom:0;">
+                    <input type="text" id="invSubtitle" placeholder="مثال: نظام إدارة الطلبيات" style="text-align:right;" oninput="saveInvoiceSettings()">
+                </div>
+            </div>
+
+            <!-- نص الفوتر -->
+            <div>
+                <div class="section-label" style="margin-bottom:8px;">نص أسفل الفاتورة</div>
+                <div class="input-wrapper" style="margin-bottom:0;">
+                    <input type="text" id="invFooterText" placeholder="مثال: تم الإنشاء بواسطة نظام المحلاوي" style="text-align:right;" oninput="saveInvoiceSettings()">
+                </div>
+            </div>
+
+            <!-- لون الهيدر -->
+            <div>
+                <div class="section-label" style="margin-bottom:8px;">لون رأس الفاتورة</div>
+                <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:9px;">
+                    <button class="settings-accent-btn active" id="invColorDark"  onclick="setInvColor('dark')"  style="--c:#c9a84c"><span class="s-swatch" style="background:linear-gradient(135deg,#140a00,#2a1400);border:1px solid #c9a84c;"></span><span>ذهبي</span></button>
+                    <button class="settings-accent-btn"        id="invColorBlue"  onclick="setInvColor('blue')"  style="--c:#4a90d9"><span class="s-swatch" style="background:linear-gradient(135deg,#0a1628,#1a3a6a);border:1px solid #4a90d9;"></span><span>أزرق</span></button>
+                    <button class="settings-accent-btn"        id="invColorGreen" onclick="setInvColor('green')" style="--c:#3dba8c"><span class="s-swatch" style="background:linear-gradient(135deg,#0a2018,#1a4a30);border:1px solid #3dba8c;"></span><span>أخضر</span></button>
+                    <button class="settings-accent-btn"        id="invColorRed"   onclick="setInvColor('red')"   style="--c:#e05252"><span class="s-swatch" style="background:linear-gradient(135deg,#200a0a,#4a1a1a);border:1px solid #e05252;"></span><span>أحمر</span></button>
+                </div>
+            </div>
+
+            <!-- التخطيط -->
+            <div>
+                <div class="section-label" style="margin-bottom:8px;">تخطيط الفاتورة</div>
+                <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:9px;">
+                    <button class="settings-mode-btn active" id="invLayoutFull"    onclick="setInvLayout('full')"><span style="font-size:18px;display:block;margin-bottom:4px;">📄</span><span>كامل</span></button>
+                    <button class="settings-mode-btn"        id="invLayoutCompact" onclick="setInvLayout('compact')"><span style="font-size:18px;display:block;margin-bottom:4px;">📋</span><span>مضغوط</span></button>
+                </div>
+            </div>
+
+            <!-- عناصر الفاتورة -->
+            <div>
+                <div class="section-label" style="margin-bottom:8px;">عناصر الفاتورة</div>
+                <div style="display:flex;flex-direction:column;gap:9px;">
+
+                    <div onclick="toggleInvOption('showLogo')" style="display:flex;align-items:center;justify-content:space-between;padding:11px 14px;background:var(--card2);border:1px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;transition:all 0.2s;">
+                        <div style="display:flex;align-items:center;gap:12px;">
+                            <div style="width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:15px;background:rgba(201,168,76,0.1);">🖼️</div>
+                            <div style="font-size:13px;font-weight:600;color:var(--text);">إظهار الشعار</div>
+                        </div>
+                        <div id="invToggleLogo" style="width:40px;height:22px;border-radius:11px;background:var(--success);position:relative;transition:background 0.25s;flex-shrink:0;"><div id="invThumbLogo" style="width:16px;height:16px;border-radius:50%;background:#fff;position:absolute;top:3px;right:3px;transition:right 0.25s;box-shadow:0 1px 4px rgba(0,0,0,0.3);"></div></div>
+                    </div>
+
+                    <div onclick="toggleInvOption('showDate')" style="display:flex;align-items:center;justify-content:space-between;padding:11px 14px;background:var(--card2);border:1px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;transition:all 0.2s;">
+                        <div style="display:flex;align-items:center;gap:12px;">
+                            <div style="width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:15px;background:rgba(74,144,217,0.1);">📅</div>
+                            <div style="font-size:13px;font-weight:600;color:var(--text);">إظهار التاريخ</div>
+                        </div>
+                        <div id="invToggleDate" style="width:40px;height:22px;border-radius:11px;background:var(--success);position:relative;transition:background 0.25s;flex-shrink:0;"><div id="invThumbDate" style="width:16px;height:16px;border-radius:50%;background:#fff;position:absolute;top:3px;right:3px;transition:right 0.25s;box-shadow:0 1px 4px rgba(0,0,0,0.3);"></div></div>
+                    </div>
+
+                    <div onclick="toggleInvOption('showNotes')" style="display:flex;align-items:center;justify-content:space-between;padding:11px 14px;background:var(--card2);border:1px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;transition:all 0.2s;">
+                        <div style="display:flex;align-items:center;gap:12px;">
+                            <div style="width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:15px;background:rgba(201,168,76,0.1);">📝</div>
+                            <div style="font-size:13px;font-weight:600;color:var(--text);">إظهار الملاحظات</div>
+                        </div>
+                        <div id="invToggleNotes" style="width:40px;height:22px;border-radius:11px;background:var(--success);position:relative;transition:background 0.25s;flex-shrink:0;"><div id="invThumbNotes" style="width:16px;height:16px;border-radius:50%;background:#fff;position:absolute;top:3px;right:3px;transition:right 0.25s;box-shadow:0 1px 4px rgba(0,0,0,0.3);"></div></div>
+                    </div>
+
+                    <div onclick="toggleInvOption('showTotal')" style="display:flex;align-items:center;justify-content:space-between;padding:11px 14px;background:var(--card2);border:1px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;transition:all 0.2s;">
+                        <div style="display:flex;align-items:center;gap:12px;">
+                            <div style="width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:15px;background:rgba(61,186,140,0.1);">📦</div>
+                            <div style="font-size:13px;font-weight:600;color:var(--text);">إظهار الإجمالي</div>
+                        </div>
+                        <div id="invToggleTotal" style="width:40px;height:22px;border-radius:11px;background:var(--success);position:relative;transition:background 0.25s;flex-shrink:0;"><div id="invThumbTotal" style="width:16px;height:16px;border-radius:50%;background:#fff;position:absolute;top:3px;right:3px;transition:right 0.25s;box-shadow:0 1px 4px rgba(0,0,0,0.3);"></div></div>
+                    </div>
+
+                    <div onclick="toggleInvOption('showPageNum')" style="display:flex;align-items:center;justify-content:space-between;padding:11px 14px;background:var(--card2);border:1px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;transition:all 0.2s;">
+                        <div style="display:flex;align-items:center;gap:12px;">
+                            <div style="width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:15px;background:rgba(124,92,191,0.1);">🔢</div>
+                            <div style="font-size:13px;font-weight:600;color:var(--text);">رقم الصفحة</div>
+                        </div>
+                        <div id="invTogglePageNum" style="width:40px;height:22px;border-radius:11px;background:var(--success);position:relative;transition:background 0.25s;flex-shrink:0;"><div id="invThumbPageNum" style="width:16px;height:16px;border-radius:50%;background:#fff;position:absolute;top:3px;right:3px;transition:right 0.25s;box-shadow:0 1px 4px rgba(0,0,0,0.3);"></div></div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- إعادة الضبط -->
+            <button onclick="resetInvoiceSettings()" style="width:100%;padding:11px;background:none;border:1px dashed rgba(201,168,76,0.25);border-radius:var(--radius-sm);color:var(--gold-dim);font-family:'Cairo';font-size:13px;font-weight:600;cursor:pointer;transition:all 0.2s;margin-bottom:4px;" onmouseover="this.style.background='var(--gold-subtle)'" onmouseout="this.style.background='none'">
+                🔄 إعادة ضبط إعدادات الفاتورة
+            </button>
+
+        </div>
     </div>
 </div>
 
@@ -1140,35 +1315,59 @@
     // ═══════════════════════════════════════════════
     function buildInvoiceHTML({ clientName, clientNotes, dateStr, pageNum, totalPages, tableRows, totalCount, isLastPage, logoDataUrl }) {
 
-        const logoImg = logoDataUrl
-            ? `<img src="${logoDataUrl}" style="width:66px;height:66px;border-radius:50%;object-fit:cover;border:2.5px solid #c9a84c;">`
-            : `<div style="width:66px;height:66px;border-radius:50%;background:#c9a84c;border:2px solid #f0d98a;"></div>`;
+        // ── تطبيق إعدادات الفاتورة ──
+        const IS = invSettings;
+        const P  = getInvHeaderColors();
+        const storeName  = IS.storeName  || 'المحلاوي';
+        const subtitle   = IS.subtitle   || 'نظام إدارة الطلبيات';
+        const footerText = IS.footerText || 'تم الإنشاء بواسطة نظام المحلاوي';
+        const isCompact  = IS.layout === 'compact';
+
+        const logoSize   = isCompact ? '48px' : '66px';
+        const logoBorder = '2.5px solid ' + P.accent;
+        const logoImg = IS.showLogo
+            ? (logoDataUrl
+                ? '<img src="' + logoDataUrl + '" style="width:' + logoSize + ';height:' + logoSize + ';border-radius:50%;object-fit:cover;border:' + logoBorder + ';">'
+                : '<div style="width:' + logoSize + ';height:' + logoSize + ';border-radius:50%;background:' + P.accent + ';border:2px solid ' + P.accentLight + ';"></div>')
+            : '';
 
         // صفوف الجدول — white-space:nowrap على كل شيء عدا اسم الصنف
+        const cellPad = isCompact ? '6px 8px' : '10px 8px';
+        const namePad = isCompact ? '6px 14px' : '10px 18px';
+        const cellFontSize = isCompact ? '13px' : '17px';
+        const qtyFontSize  = isCompact ? '14px' : '18px';
+
         const tableRowsHTML = tableRows.map((r, idx) => {
             const bg = idx % 2 === 0 ? '#ffffff' : '#faf8f3';
             return `<tr style="background:${bg};">
-                <td style="padding:10px 8px;border:1px solid #e0d8c0;text-align:center;font-size:14px;color:#bbb;white-space:nowrap;width:46px;">${r.num}</td>
-                <td style="padding:10px 18px;border:1px solid #e0d8c0;text-align:right;font-size:17px;font-weight:700;color:#1a1008;white-space:nowrap;">${r.name}</td>
-                <td style="padding:10px 8px;border:1px solid #e0d8c0;text-align:center;font-size:18px;font-weight:900;color:#7a5808;white-space:nowrap;width:84px;">${r.qty}</td>
+                <td style="padding:${cellPad};border:1px solid #e0d8c0;text-align:center;font-size:14px;color:#bbb;white-space:nowrap;width:46px;">${r.num}</td>
+                <td style="padding:${namePad};border:1px solid #e0d8c0;text-align:right;font-size:${cellFontSize};font-weight:700;color:#1a1008;white-space:nowrap;">${r.name}</td>
+                <td style="padding:${cellPad};border:1px solid #e0d8c0;text-align:center;font-size:${qtyFontSize};font-weight:900;color:${P.accentDim};white-space:nowrap;width:84px;">${r.qty}</td>
             </tr>`;
         }).join('');
 
-        const notesRow = clientNotes ? `
+        const notesRow = (IS.showNotes && clientNotes) ? `
             <tr><td colspan="2" style="padding:10px 18px 0;">
-                <div style="padding:10px 14px;background:#fffbf0;border:1px solid #e8d8a0;border-right:4px solid #c9a84c;border-radius:6px;">
-                    <div style="font-size:12px;font-weight:800;color:#8a6010;margin-bottom:4px;white-space:nowrap;">ملاحظات</div>
+                <div style="padding:10px 14px;background:#fffbf0;border:1px solid #e8d8a0;border-right:4px solid ${P.accent};border-radius:6px;">
+                    <div style="font-size:12px;font-weight:800;color:${P.accentDim};margin-bottom:4px;white-space:nowrap;">ملاحظات</div>
                     <div style="font-size:14px;color:#5a3c0a;white-space:nowrap;">${clientNotes}</div>
                 </div>
             </td></tr>` : '';
 
-        const summarySection = isLastPage ? `
+        const summarySection = (isLastPage && IS.showTotal) ? `
             <table style="width:100%;border-collapse:collapse;margin-top:14px;border:1px solid #ddd0b0;border-radius:8px;background:linear-gradient(135deg,#f5f0e8,#ede8dc);">
                 <tr>
                     <td style="padding:12px 18px;font-size:14px;color:#999;font-weight:600;white-space:nowrap;">إجمالي الأصناف</td>
-                    <td style="padding:12px 18px;font-size:19px;font-weight:900;color:#7a5808;text-align:left;white-space:nowrap;">${totalCount} صنف</td>
+                    <td style="padding:12px 18px;font-size:19px;font-weight:900;color:${P.accentDim};text-align:left;white-space:nowrap;">${totalCount} صنف</td>
                 </tr>
             </table>` : '';
+
+        const headerPad  = isCompact ? '14px 30px' : '22px 30px';
+        const storeSize  = isCompact ? '22px' : '32px';
+        const pageNumHTML = IS.showPageNum ? '<div style="font-size:13px;color:' + P.accentLight + ';font-weight:700;white-space:nowrap;opacity:0.8;">صفحة ' + pageNum + ' / ' + totalPages + '</div>' : '';
+        const dateHTML    = IS.showDate    ? '<div style="font-size:13px;color:rgba(255,255,255,0.5);white-space:nowrap;line-height:2;">' + dateStr + '</div>' : '';
+        const logoTd      = IS.showLogo    ? '<td style="vertical-align:middle;padding-left:16px;">' + logoImg + '</td>' : '';
+        const subtitleDiv = subtitle       ? '<div style="font-size:12px;color:' + P.accent + ';opacity:0.7;margin-top:4px;white-space:nowrap;">' + subtitle + '</div>' : '';
 
         return `
             <style>
@@ -1177,46 +1376,46 @@
             </style>
             <div class="inv" style="background:#fff;direction:rtl;padding:0;color:#111;width:794px;font-family:'Cairo','Segoe UI',Tahoma,Arial,sans-serif;">
 
-                <!-- HEADER — table layout بدل flex -->
-                <table style="width:100%;border-collapse:collapse;background:linear-gradient(135deg,#140a00,#2a1400,#1a0c00);">
+                <!-- HEADER -->
+                <table style="width:100%;border-collapse:collapse;background:${P.bg};">
                     <tr>
-                        <td style="padding:22px 30px;vertical-align:middle;">
+                        <td style="padding:${headerPad};vertical-align:middle;">
                             <table style="border-collapse:collapse;">
                                 <tr>
-                                    <td style="vertical-align:middle;padding-left:16px;">${logoImg}</td>
+                                    ${logoTd}
                                     <td style="vertical-align:middle;">
-                                        <div style="font-size:32px;font-weight:900;color:#f0d98a;white-space:nowrap;line-height:1.1;">المحلاوي</div>
-                                        <div style="font-size:12px;color:rgba(201,168,76,0.6);margin-top:4px;white-space:nowrap;">نظام إدارة الطلبيات</div>
+                                        <div style="font-size:${storeSize};font-weight:900;color:${P.accentLight};white-space:nowrap;line-height:1.1;">${storeName}</div>
+                                        ${subtitleDiv}
                                     </td>
                                 </tr>
                             </table>
                         </td>
-                        <td style="padding:22px 30px;vertical-align:middle;text-align:left;">
-                            <div style="font-size:13px;color:rgba(255,255,255,0.5);white-space:nowrap;line-height:2;">${dateStr}</div>
-                            <div style="font-size:13px;color:rgba(201,168,76,0.7);font-weight:700;white-space:nowrap;">صفحة ${pageNum} / ${totalPages}</div>
+                        <td style="padding:${headerPad};vertical-align:middle;text-align:left;">
+                            ${dateHTML}
+                            ${pageNumHTML}
                         </td>
                     </tr>
                 </table>
 
-                <!-- GOLD LINE -->
-                <div style="height:4px;background:linear-gradient(90deg,#6a4820,#f0d98a,#c9a84c,#f0d98a,#6a4820);"></div>
+                <!-- ACCENT LINE -->
+                <div style="height:4px;background:linear-gradient(90deg,${P.accentDim},${P.accentLight},${P.accent},${P.accentLight},${P.accentDim});"></div>
 
-                <!-- CLIENT INFO — table layout -->
-                <div style="padding:18px 30px 14px;">
-                    <div style="background:#fffdf7;border:1px solid #e5d090;border-radius:10px;padding:14px 18px;">
+                <!-- CLIENT INFO -->
+                <div style="padding:${isCompact ? '12px 30px 10px' : '18px 30px 14px'};">
+                    <div style="background:#fffdf7;border:1px solid #e5d090;border-radius:10px;padding:${isCompact ? '10px 14px' : '14px 18px'};">
                         <table style="border-collapse:collapse;width:100%;">
                             <tr>
                                 <td style="vertical-align:middle;padding-left:14px;width:52px;">
-                                    <div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#c9a84c,#8a6830);border:2px solid rgba(255,255,255,0.2);">
-                                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:44px;height:44px;padding:10px;">
+                                    <div style="width:${isCompact ? '36px' : '44px'};height:${isCompact ? '36px' : '44px'};border-radius:50%;background:linear-gradient(135deg,${P.accent},${P.accentDim});border:2px solid rgba(255,255,255,0.2);">
+                                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:${isCompact ? '36px' : '44px'};height:${isCompact ? '36px' : '44px'};padding:${isCompact ? '7px' : '10px'};">
                                             <circle cx="12" cy="8" r="4" fill="rgba(255,255,255,0.95)"/>
                                             <path d="M4 20c0-4.418 3.582-8 8-8s8 3.582 8 8" stroke="rgba(255,255,255,0.95)" stroke-width="2" stroke-linecap="round"/>
                                         </svg>
                                     </div>
                                 </td>
                                 <td style="vertical-align:middle;">
-                                    <div style="font-size:11px;color:#bba060;letter-spacing:1.5px;font-weight:600;white-space:nowrap;">العميل</div>
-                                    <div style="font-size:19px;font-weight:900;color:#1a0e00;white-space:nowrap;">${clientName}</div>
+                                    <div style="font-size:11px;color:${P.accentDim};letter-spacing:1.5px;font-weight:600;white-space:nowrap;">العميل</div>
+                                    <div style="font-size:${isCompact ? '15px' : '19px'};font-weight:900;color:#1a0e00;white-space:nowrap;">${clientName}</div>
                                 </td>
                             </tr>
                             ${notesRow}
@@ -1225,13 +1424,13 @@
                 </div>
 
                 <!-- ITEMS TABLE -->
-                <div style="padding:0 30px 22px;">
+                <div style="padding:0 30px ${isCompact ? '14px' : '22px'};">
                     <table style="width:100%;border-collapse:collapse;table-layout:auto;border:1px solid #e0d4b8;">
                         <thead>
-                            <tr style="background:linear-gradient(135deg,#c9a84c,#a07828);">
-                                <th style="padding:12px 8px;color:#fff;font-size:14px;font-weight:700;border:1px solid #8a6830;text-align:center;white-space:nowrap;width:46px;">م</th>
-                                <th style="padding:12px 18px;color:#fff;font-size:15px;font-weight:700;border:1px solid #8a6830;text-align:right;white-space:nowrap;">الصنف</th>
-                                <th style="padding:12px 8px;color:#fff;font-size:14px;font-weight:700;border:1px solid #8a6830;text-align:center;white-space:nowrap;width:84px;">الكمية</th>
+                            <tr style="background:linear-gradient(135deg,${P.accent},${P.accentDim});">
+                                <th style="padding:${isCompact ? '8px' : '12px'} 8px;color:#fff;font-size:14px;font-weight:700;border:1px solid ${P.accentDim};text-align:center;white-space:nowrap;width:46px;">م</th>
+                                <th style="padding:${isCompact ? '8px 14px' : '12px 18px'};color:#fff;font-size:15px;font-weight:700;border:1px solid ${P.accentDim};text-align:right;white-space:nowrap;">الصنف</th>
+                                <th style="padding:${isCompact ? '8px' : '12px'} 8px;color:#fff;font-size:14px;font-weight:700;border:1px solid ${P.accentDim};text-align:center;white-space:nowrap;width:84px;">الكمية</th>
                             </tr>
                         </thead>
                         <tbody>${tableRowsHTML}</tbody>
@@ -1239,14 +1438,14 @@
                     ${summarySection}
                 </div>
 
-                <!-- FOOTER — table layout -->
+                <!-- FOOTER -->
                 <table style="width:100%;border-collapse:collapse;background:linear-gradient(135deg,#f5f0e8,#ede8dc);border-top:2px solid #e0d0b0;">
                     <tr>
-                        <td style="padding:13px 30px;font-size:12px;color:#aaa;white-space:nowrap;">
-                            تم الإنشاء بواسطة نظام المحلاوي
-                            <svg width="13" height="13" viewBox="0 0 24 24" fill="#c9a84c" xmlns="http://www.w3.org/2000/svg" style="vertical-align:middle;margin-right:4px;"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
+                        <td style="padding:${isCompact ? '9px 30px' : '13px 30px'};font-size:12px;color:#aaa;white-space:nowrap;">
+                            ${footerText}
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="${P.accent}" xmlns="http://www.w3.org/2000/svg" style="vertical-align:middle;margin-right:4px;"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
                         </td>
-                        <td style="padding:13px 30px;font-size:11px;color:#c9a84c;font-weight:700;letter-spacing:1px;text-align:left;white-space:nowrap;">V 4.0</td>
+                        <td style="padding:${isCompact ? '9px 30px' : '13px 30px'};font-size:11px;color:${P.accent};font-weight:700;letter-spacing:1px;text-align:left;white-space:nowrap;">V 4.0</td>
                     </tr>
                 </table>
 
@@ -1531,7 +1730,7 @@
         document.getElementById("tab2").classList.toggle("active", p === 'browse');
         document.getElementById("tab3").classList.toggle("active", p === 'history');
         document.getElementById("tab4").classList.toggle("active", p === 'settings');
-        if (p === 'settings') refreshSettingsStats();
+        if (p === 'settings') { refreshSettingsStats(); loadInvoiceSettingsUI(); showBiometricSettingsRow(); }
     }
 
     function refreshSettingsStats() {
@@ -1856,6 +2055,294 @@
 
         return { ...sounds, toggle, isEnabled, noise, play };
     })();
+
+    // ═══════════════════════════════════════════════════
+    // 🧾 إعدادات الفاتورة — تخزين وتطبيق
+    // ═══════════════════════════════════════════════════
+
+    const INV_SETTINGS_KEY = 'mahallawi_inv_settings';
+
+    const defaultInvSettings = {
+        storeName:   'المحلاوي',
+        subtitle:    'نظام إدارة الطلبيات',
+        footerText:  'تم الإنشاء بواسطة نظام المحلاوي',
+        color:       'dark',   // dark | blue | green | red
+        layout:      'full',   // full | compact
+        showLogo:    true,
+        showDate:    true,
+        showNotes:   true,
+        showTotal:   true,
+        showPageNum: true,
+    };
+
+    let invSettings = { ...defaultInvSettings, ...JSON.parse(localStorage.getItem(INV_SETTINGS_KEY) || '{}') };
+
+    function saveInvoiceSettings() {
+        invSettings.storeName  = document.getElementById('invStoreName')?.value  || invSettings.storeName;
+        invSettings.subtitle   = document.getElementById('invSubtitle')?.value   || invSettings.subtitle;
+        invSettings.footerText = document.getElementById('invFooterText')?.value || invSettings.footerText;
+        localStorage.setItem(INV_SETTINGS_KEY, JSON.stringify(invSettings));
+    }
+
+    function loadInvoiceSettingsUI() {
+        const s = document.getElementById('invStoreName');
+        const u = document.getElementById('invSubtitle');
+        const f = document.getElementById('invFooterText');
+        if (s) s.value = invSettings.storeName;
+        if (u) u.value = invSettings.subtitle;
+        if (f) f.value = invSettings.footerText;
+        updateInvColorUI();
+        updateInvLayoutUI();
+        updateInvToggleUI('showLogo',    invSettings.showLogo);
+        updateInvToggleUI('showDate',    invSettings.showDate);
+        updateInvToggleUI('showNotes',   invSettings.showNotes);
+        updateInvToggleUI('showTotal',   invSettings.showTotal);
+        updateInvToggleUI('showPageNum', invSettings.showPageNum);
+    }
+
+    function setInvColor(color) {
+        invSettings.color = color;
+        localStorage.setItem(INV_SETTINGS_KEY, JSON.stringify(invSettings));
+        updateInvColorUI();
+        showToast('🎨 تم تغيير لون الفاتورة');
+    }
+
+    function updateInvColorUI() {
+        ['dark','blue','green','red'].forEach(c => {
+            const btn = document.getElementById('invColor' + c.charAt(0).toUpperCase() + c.slice(1));
+            if (btn) btn.classList.toggle('active', invSettings.color === c);
+        });
+    }
+
+    function setInvLayout(layout) {
+        invSettings.layout = layout;
+        localStorage.setItem(INV_SETTINGS_KEY, JSON.stringify(invSettings));
+        updateInvLayoutUI();
+        showToast('📄 تم تغيير تخطيط الفاتورة');
+    }
+
+    function updateInvLayoutUI() {
+        ['full','compact'].forEach(l => {
+            const btn = document.getElementById('invLayout' + l.charAt(0).toUpperCase() + l.slice(1));
+            if (btn) btn.classList.toggle('active', invSettings.layout === l);
+        });
+    }
+
+    function toggleInvOption(key) {
+        invSettings[key] = !invSettings[key];
+        localStorage.setItem(INV_SETTINGS_KEY, JSON.stringify(invSettings));
+        updateInvToggleUI(key, invSettings[key]);
+        SFX.tab();
+    }
+
+    function updateInvToggleUI(key, isOn) {
+        const capKey = key.charAt(0).toUpperCase() + key.slice(1);
+        const track  = document.getElementById('invToggle' + capKey);
+        const thumb  = document.getElementById('invThumb'  + capKey);
+        if (!track || !thumb) return;
+        track.style.background = isOn ? 'var(--success)' : 'var(--text-muted)';
+        thumb.style.right      = isOn ? '3px' : '21px';
+    }
+
+    function resetInvoiceSettings() {
+        if (!confirm('إعادة ضبط جميع إعدادات الفاتورة للافتراضي؟')) return;
+        invSettings = { ...defaultInvSettings };
+        localStorage.setItem(INV_SETTINGS_KEY, JSON.stringify(invSettings));
+        loadInvoiceSettingsUI();
+        showToast('✅ تم إعادة ضبط إعدادات الفاتورة');
+    }
+
+    // استدعاء عند تحميل الصفحة الإعدادات
+    (function() { loadInvoiceSettingsUI(); })();
+
+    // ─── تحديد ألوان الهيدر حسب الإعداد ───
+    function getInvHeaderColors() {
+        const palettes = {
+            dark:  { bg: 'linear-gradient(135deg,#140a00,#2a1400,#1a0c00)', accent: '#c9a84c', accentLight: '#f0d98a', accentDim: '#8a6830' },
+            blue:  { bg: 'linear-gradient(135deg,#060f1e,#0d2240,#0a1628)', accent: '#4a90d9', accentLight: '#7ab8f5', accentDim: '#2a5a9a' },
+            green: { bg: 'linear-gradient(135deg,#040e08,#0a2418,#051208)', accent: '#3dba8c', accentLight: '#6de8b8', accentDim: '#1a7a52' },
+            red:   { bg: 'linear-gradient(135deg,#150404,#320a0a,#1e0606)', accent: '#e05252', accentLight: '#f58a8a', accentDim: '#902020' },
+        };
+        return palettes[invSettings.color] || palettes.dark;
+    }
+
+    // ═══════════════════════════════════════════════════
+    // 👆 تسجيل الدخول بالبصمة — WebAuthn
+    // ═══════════════════════════════════════════════════
+    const BIOMETRIC_KEY = 'mahallawi_biometric_cred';
+
+    function isBiometricSupported() {
+        return window.PublicKeyCredential &&
+               typeof PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable === 'function';
+    }
+
+    async function initBiometricUI() {
+        if (!isBiometricSupported()) return;
+        try {
+            const available = await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable();
+            if (!available) return;
+            const stored = localStorage.getItem(BIOMETRIC_KEY);
+            if (stored) {
+                // بصمة مسجّلة — أظهر زر الدخول بها
+                document.getElementById('biometricRow').classList.remove('hidden');
+                document.getElementById('biometricRegisterRow').style.display = 'none';
+            } else {
+                // لم تُسجَّل بعد — أظهر رابط التفعيل
+                document.getElementById('biometricRegisterRow').style.display = 'block';
+            }
+        } catch(e) {}
+    }
+
+    async function registerBiometric() {
+        // يجب أن يكون المستخدم مسجّلاً دخولاً أولاً
+        if (document.getElementById('appContent').classList.contains('hidden')) {
+            showToast('🔐 سجّل دخولك بالرمز أولاً لتفعيل البصمة');
+            return;
+        }
+        if (!isBiometricSupported()) { showToast('❌ الجهاز لا يدعم البصمة'); return; }
+        try {
+            const available = await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable();
+            if (!available) { showToast('❌ لا يوجد مستشعر بصمة'); return; }
+
+            showToast('👆 اتبع تعليمات الجهاز...');
+
+            const challenge = crypto.getRandomValues(new Uint8Array(32));
+            const userId    = crypto.getRandomValues(new Uint8Array(16));
+
+            const credential = await navigator.credentials.create({
+                publicKey: {
+                    challenge,
+                    rp: { name: 'نظام المحلاوي', id: location.hostname || 'localhost' },
+                    user: { id: userId, name: 'mahallawi_user', displayName: 'مستخدم المحلاوي' },
+                    pubKeyCredParams: [
+                        { alg: -7,   type: 'public-key' },
+                        { alg: -257, type: 'public-key' }
+                    ],
+                    authenticatorSelection: {
+                        authenticatorAttachment: 'platform',
+                        userVerification: 'required',
+                        residentKey: 'preferred'
+                    },
+                    timeout: 60000
+                }
+            });
+
+            // حفظ credentialId فقط (base64)
+            const credId = btoa(String.fromCharCode(...new Uint8Array(credential.rawId)));
+            localStorage.setItem(BIOMETRIC_KEY, credId);
+
+            showToast('✅ تم تفعيل الدخول بالبصمة!');
+            SFX.success();
+
+            document.getElementById('biometricRow').classList.remove('hidden');
+            document.getElementById('biometricRegisterRow').style.display = 'none';
+
+            // تحديث زر في الإعدادات
+            updateBiometricSettingsUI();
+
+        } catch(e) {
+            if (e.name === 'NotAllowedError') showToast('⚠️ تم الإلغاء');
+            else showToast('❌ فشل التفعيل: ' + e.message);
+        }
+    }
+
+    async function loginWithBiometric() {
+        const storedCred = localStorage.getItem(BIOMETRIC_KEY);
+        if (!storedCred) { showToast('❌ لم تُفعَّل البصمة بعد'); return; }
+
+        const btn  = document.getElementById('biometricBtn');
+        const icon = document.getElementById('biometricBtnIcon');
+        const text = document.getElementById('biometricBtnText');
+
+        icon.textContent = '⏳';
+        text.textContent = 'جاري التحقق...';
+        btn.style.opacity = '0.7';
+
+        try {
+            const challenge = crypto.getRandomValues(new Uint8Array(32));
+            const rawId     = Uint8Array.from(atob(storedCred), c => c.charCodeAt(0));
+
+            await navigator.credentials.get({
+                publicKey: {
+                    challenge,
+                    allowCredentials: [{ id: rawId, type: 'public-key' }],
+                    userVerification: 'required',
+                    timeout: 60000
+                }
+            });
+
+            // نجح التحقق — دخول مباشر
+            SFX.login();
+            document.getElementById('loginOverlay').style.display = 'none';
+            document.getElementById('appContent').classList.remove('hidden');
+            renderCloudItems(); renderHistory(); updateStats();
+            showToast('👆 تم الدخول بالبصمة!');
+
+        } catch(e) {
+            icon.textContent = '👆';
+            text.textContent = 'الدخول بالبصمة';
+            btn.style.opacity = '1';
+            if (e.name === 'NotAllowedError') showToast('⚠️ تم الإلغاء');
+            else { showToast('❌ فشل التحقق، جرّب الرمز السري'); }
+        }
+    }
+
+    function removeBiometric() {
+        if (!confirm('هل تريد إلغاء تفعيل البصمة؟')) return;
+        localStorage.removeItem(BIOMETRIC_KEY);
+        document.getElementById('biometricRow').classList.add('hidden');
+        document.getElementById('biometricRegisterRow').style.display = 'block';
+        updateBiometricSettingsUI();
+        showToast('🗑️ تم إلغاء البصمة');
+    }
+
+    function updateBiometricSettingsUI() {
+        const row = document.getElementById('biometricSettingsRow');
+        if (!row) return;
+        const stored = localStorage.getItem(BIOMETRIC_KEY);
+        row.querySelector('.settings-row-sub').textContent = stored ? 'مفعّلة — انقر لإلغاء التفعيل' : 'انقر لتفعيل الدخول بالبصمة';
+        row.querySelector('.settings-row-icon').textContent = stored ? '✅' : '👆';
+    }
+
+    // تهيئة عند التحميل
+    (function() { initBiometricUI(); })();
+
+    function handleBiometricSettings() {
+        const stored = localStorage.getItem(BIOMETRIC_KEY);
+        if (stored) removeBiometric();
+        else registerBiometric();
+    }
+
+    async function showBiometricSettingsRow() {
+        const row = document.getElementById('biometricSettingsRow');
+        if (!row || !isBiometricSupported()) return;
+        try {
+            const available = await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable();
+            if (!available) return;
+            row.classList.remove('hidden');
+            updateBiometricSettingsUI();
+        } catch(e) {}
+    }
+
+
+    function openInvModal() {
+        SFX.tab();
+        loadInvoiceSettingsUI();
+        const m = document.getElementById('invSettingsModal');
+        m.classList.remove('hidden');
+        m.style.display = 'flex';
+    }
+
+    function closeInvModal() {
+        const m = document.getElementById('invSettingsModal');
+        m.classList.add('hidden');
+        m.style.display = '';
+    }
+
+    // إغلاق بالنقر على الخلفية
+    document.getElementById('invSettingsModal').addEventListener('click', function(e) {
+        if (e.target === this) closeInvModal();
+    });
 
     function toggleSFX() {
         const on = SFX.toggle();
