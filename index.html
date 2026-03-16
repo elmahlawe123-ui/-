@@ -1197,10 +1197,14 @@
                         <div id="swipeToggleThumb" style="width:20px;height:20px;border-radius:50%;background:#fff;position:absolute;top:3px;right:3px;transition:right 0.25s;box-shadow:0 1px 4px rgba(0,0,0,0.3);"></div>
                     </div>
                 </div>
+                <div class="section-label" style="margin-top:18px;">تكرار المزامنة التلقائية</div>
+                <div style="font-size:11px;color:var(--text-muted);margin-bottom:10px;" id="syncIntervalSub">كل دقيقتين</div>
+                <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:7px;" id="syncOptionsGrid"></div>
             </div>
             <div class="card">
                 <div class="card-title">💾 إدارة البيانات</div>
                 <div class="settings-row" onclick="syncFromCloud()"><div class="settings-row-icon" style="background:rgba(61,186,140,0.12); color:var(--success);">🔄</div><div class="settings-row-text"><div class="settings-row-title">مزامنة الأصناف</div><div class="settings-row-sub">تحديث قائمة الأصناف من السحابة</div></div><div class="settings-row-arrow">›</div></div>
+                <div class="settings-row" onclick="showActivityLog()"><div class="settings-row-icon" style="background:rgba(144,112,216,0.12); color:var(--share);">📊</div><div class="settings-row-text"><div class="settings-row-title">سجل العمليات</div><div class="settings-row-sub" id="activityCountSub">لا توجد عمليات مسجلة</div></div><div class="settings-row-arrow">›</div></div>
                 <div class="settings-row" onclick="exportBackup()"><div class="settings-row-icon" style="background:rgba(74,144,217,0.12); color:var(--edit);">📤</div><div class="settings-row-text"><div class="settings-row-title">تصدير نسخة احتياطية</div><div class="settings-row-sub">حفظ جميع البيانات كملف JSON</div></div><div class="settings-row-arrow">›</div></div>
                 <div class="settings-row" onclick="document.getElementById('importFile').click()"><div class="settings-row-icon" style="background:rgba(201,168,76,0.1); color:var(--gold);">📥</div><div class="settings-row-text"><div class="settings-row-title">استيراد نسخة احتياطية</div><div class="settings-row-sub">استعادة البيانات من ملف JSON</div></div><div class="settings-row-arrow">›</div></div>
                 <input type="file" id="importFile" accept=".json" class="hidden" onchange="importBackup(event)">
@@ -1256,6 +1260,40 @@
             </div>
         </div>
 
+    </div>
+</div>
+
+<!-- Modal سجل العمليات -->
+<div id="activityModal" class="hidden" style="position:fixed;inset:0;background:rgba(4,8,16,0.88);z-index:3000;display:flex;align-items:flex-end;justify-content:center;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);">
+    <div style="width:100%;max-width:520px;max-height:88vh;display:flex;flex-direction:column;background:var(--card);border-radius:22px 22px 0 0;border:1px solid rgba(201,168,76,0.2);border-bottom:none;box-shadow:0 -12px 48px rgba(0,0,0,0.7);animation:slideUp 0.3s ease;padding-bottom:env(safe-area-inset-bottom,20px);">
+        <!-- Handle -->
+        <div style="display:flex;justify-content:center;padding:12px 0 4px;flex-shrink:0;">
+            <div style="width:36px;height:4px;border-radius:2px;background:var(--border);"></div>
+        </div>
+        <!-- Header -->
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 20px 14px;border-bottom:1px solid var(--border);flex-shrink:0;">
+            <div style="display:flex;align-items:center;gap:10px;">
+                <div style="width:38px;height:38px;border-radius:10px;background:rgba(144,112,216,0.12);display:flex;align-items:center;justify-content:center;font-size:18px;">📊</div>
+                <div>
+                    <div style="font-size:16px;font-weight:700;color:var(--gold-light);">سجل العمليات</div>
+                    <div id="activityModalSub" style="font-size:11px;color:var(--text-muted);margin-top:1px;">جاري التحميل...</div>
+                </div>
+            </div>
+            <div style="display:flex;gap:8px;align-items:center;">
+                <button onclick="clearActivityLog()" style="padding:5px 12px;border-radius:10px;border:1px solid rgba(240,96,96,0.2);background:rgba(240,96,96,0.07);color:var(--danger);font-family:'IBM Plex Sans Arabic';font-size:11px;font-weight:700;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.background='rgba(240,96,96,0.16)'" onmouseout="this.style.background='rgba(240,96,96,0.07)'">🗑️ مسح</button>
+                <button onclick="document.getElementById('activityModal').classList.add('hidden')" style="width:32px;height:32px;border-radius:50%;border:1px solid rgba(224,82,82,0.2);background:rgba(224,82,82,0.1);color:var(--danger);cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;transition:all 0.2s;" onmouseover="this.style.background='var(--danger)';this.style.color='#fff'" onmouseout="this.style.background='rgba(224,82,82,0.1)';this.style.color='var(--danger)'">✕</button>
+            </div>
+        </div>
+        <!-- Filter tabs -->
+        <div style="display:flex;gap:6px;padding:10px 16px;border-bottom:1px solid var(--border);flex-shrink:0;overflow-x:auto;">
+            <button onclick="filterActivity('all')" id="actFilterAll" style="padding:5px 14px;border-radius:20px;border:1px solid rgba(232,184,109,0.3);background:rgba(232,184,109,0.1);color:var(--gold);font-family:'IBM Plex Sans Arabic';font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;transition:all 0.2s;">الكل</button>
+            <button onclick="filterActivity('invoice')" id="actFilterInvoice" style="padding:5px 14px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--text-muted);font-family:'IBM Plex Sans Arabic';font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;transition:all 0.2s;">🧾 الفواتير</button>
+            <button onclick="filterActivity('item')" id="actFilterItem" style="padding:5px 14px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--text-muted);font-family:'IBM Plex Sans Arabic';font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;transition:all 0.2s;">📦 الأصناف</button>
+            <button onclick="filterActivity('delete')" id="actFilterDelete" style="padding:5px 14px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--text-muted);font-family:'IBM Plex Sans Arabic';font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;transition:all 0.2s;">🗑️ الحذف</button>
+            <button onclick="filterActivity('sync')" id="actFilterSync" style="padding:5px 14px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--text-muted);font-family:'IBM Plex Sans Arabic';font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;transition:all 0.2s;">🔄 المزامنة</button>
+        </div>
+        <!-- List -->
+        <div id="activityList" style="overflow-y:auto;flex:1;padding:12px 16px;display:flex;flex-direction:column;gap:8px;"></div>
     </div>
 </div>
 
@@ -1566,6 +1604,7 @@
         updateStats(); renderHistory();
         // حفظ في السحابة
         saveInvoiceToCloud(invoice);
+        logActivity('invoice_save', `👤 ${client} — ${items.length} صنف`);
     }
 
     function renderHistory(filter = "") {
@@ -1598,10 +1637,12 @@
     async function deleteInvoiceFromHistory(id) {
         if (confirm("حذف هذه الفاتورة نهائياً؟")) {
             SFX.remove();
+            const inv = invoiceHistory.find(i => i.id === id);
             invoiceHistory = invoiceHistory.filter(i => i.id !== id);
             localStorage.setItem("invoiceHistory", JSON.stringify(invoiceHistory));
             renderHistory(); updateStats();
             await cloudPost({ action: 'deleteInvoice', id });
+            logActivity('invoice_delete', inv ? `👤 ${inv.client}` : '');
             showToast("🗑️ تم حذف الفاتورة");
         }
     }
@@ -2171,6 +2212,7 @@
                         '🧾 فاتورة جديدة — المحلاوي',
                         `👤 ${inv.client}  •  📦 ${inv.totalItems} صنف\n📅 ${inv.date}`
                     );
+                    logActivity('sync_new_inv', `👤 ${inv.client} — ${inv.totalItems} صنف`);
                 });
             }
         }
@@ -2185,6 +2227,7 @@
         if (btn) { btn.innerText = "جاري..."; btn.style.opacity = "0.6"; }
         try {
             await Promise.all([syncItemsFromCloud(), syncInvoicesFromCloud()]);
+            logActivity('sync_success', 'أصناف + فواتير');
             showToast("✅ تمت المزامنة بنجاح");
         } catch(e) {
             showToast("❌ خطأ في المزامنة");
@@ -2193,7 +2236,114 @@
         _syncInProgress = false;
     }
 
-    // ─── سجل التغييرات والإصدار ───
+    // ══════════════════════════════════════════════════
+    // 📊 سجل العمليات
+    // ══════════════════════════════════════════════════
+    const ACTIVITY_KEY  = 'activityLog';
+    const ACTIVITY_LIMIT = 200; // أقصى عدد عمليات محفوظة
+    let activityLog = JSON.parse(localStorage.getItem(ACTIVITY_KEY) || '[]');
+    let _actFilter  = 'all';
+
+    const ACTIVITY_TYPES = {
+        invoice_save:   { icon: '🧾', label: 'حفظ فاتورة',     color: 'var(--gold)',    cat: 'invoice' },
+        invoice_delete: { icon: '🗑️', label: 'حذف فاتورة',     color: 'var(--danger)',  cat: 'delete'  },
+        item_add:       { icon: '📦', label: 'إضافة صنف',       color: 'var(--success)', cat: 'item'    },
+        item_edit:      { icon: '✏️', label: 'تعديل صنف',       color: 'var(--edit)',    cat: 'item'    },
+        item_delete:    { icon: '🗑️', label: 'حذف صنف',        color: 'var(--danger)',  cat: 'delete'  },
+        sync_success:   { icon: '🔄', label: 'مزامنة ناجحة',    color: 'var(--success)', cat: 'sync'    },
+        sync_new_inv:   { icon: '📩', label: 'فاتورة واردة',     color: 'var(--share)',   cat: 'invoice' },
+    };
+
+    function logActivity(type, details = '') {
+        const entry = {
+            id:      Date.now(),
+            type,
+            details,
+            time:    new Date().toLocaleString('ar-EG', { hour12: true })
+        };
+        activityLog.unshift(entry);
+        if (activityLog.length > ACTIVITY_LIMIT) activityLog = activityLog.slice(0, ACTIVITY_LIMIT);
+        localStorage.setItem(ACTIVITY_KEY, JSON.stringify(activityLog));
+        // تحديث العداد في الإعدادات
+        const sub = document.getElementById('activityCountSub');
+        if (sub) sub.textContent = activityLog.length + ' عملية مسجلة';
+    }
+
+    function showActivityLog() {
+        document.getElementById('activityModal').classList.remove('hidden');
+        _actFilter = 'all';
+        updateActivityFilterUI('all');
+        renderActivityList();
+    }
+
+    function filterActivity(cat) {
+        _actFilter = cat;
+        updateActivityFilterUI(cat);
+        renderActivityList();
+    }
+
+    function updateActivityFilterUI(active) {
+        ['all','invoice','item','delete','sync'].forEach(k => {
+            const btn = document.getElementById('actFilter' + k.charAt(0).toUpperCase() + k.slice(1));
+            if (!btn) return;
+            const isActive = k === active;
+            btn.style.background    = isActive ? 'rgba(232,184,109,0.1)' : 'transparent';
+            btn.style.borderColor   = isActive ? 'rgba(232,184,109,0.3)' : 'var(--border)';
+            btn.style.color         = isActive ? 'var(--gold)' : 'var(--text-muted)';
+        });
+    }
+
+    function renderActivityList() {
+        const list = document.getElementById('activityList');
+        const sub  = document.getElementById('activityModalSub');
+        if (!list) return;
+
+        const filtered = _actFilter === 'all'
+            ? activityLog
+            : activityLog.filter(e => ACTIVITY_TYPES[e.type]?.cat === _actFilter);
+
+        if (sub) sub.textContent = filtered.length + ' عملية';
+
+        if (filtered.length === 0) {
+            list.innerHTML = `<div class="empty-state"><div class="icon">📭</div><p>لا توجد عمليات في هذا التصنيف</p></div>`;
+            return;
+        }
+
+        list.innerHTML = filtered.map(entry => {
+            const t = ACTIVITY_TYPES[entry.type] || { icon: '•', label: entry.type, color: 'var(--text-muted)' };
+            return `
+            <div style="display:flex;align-items:flex-start;gap:12px;padding:11px 14px;background:var(--card2);border:1px solid var(--border);border-radius:12px;border-right:3px solid ${t.color};">
+                <div style="font-size:20px;flex-shrink:0;line-height:1.2;">${t.icon}</div>
+                <div style="flex:1;min-width:0;">
+                    <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px;">${t.label}</div>
+                    ${entry.details ? `<div style="font-size:12px;color:var(--text-soft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${entry.details}</div>` : ''}
+                    <div style="font-size:10px;color:var(--text-muted);margin-top:4px;letter-spacing:0.3px;">🕐 ${entry.time}</div>
+                </div>
+            </div>`;
+        }).join('');
+    }
+
+    function clearActivityLog() {
+        if (confirm('مسح سجل العمليات كاملاً؟')) {
+            activityLog = [];
+            localStorage.removeItem(ACTIVITY_KEY);
+            const sub = document.getElementById('activityCountSub');
+            if (sub) sub.textContent = 'لا توجد عمليات مسجلة';
+            renderActivityList();
+            showToast('🗑️ تم مسح السجل');
+        }
+    }
+
+    // إغلاق modal سجل العمليات بالنقر خارجه
+    document.getElementById('activityModal').addEventListener('click', function(e) {
+        if (e.target === this) this.classList.add('hidden');
+    });
+
+    // تهيئة العداد عند الفتح
+    (function() {
+        const sub = document.getElementById('activityCountSub');
+        if (sub && activityLog.length > 0) sub.textContent = activityLog.length + ' عملية مسجلة';
+    })();
     (function initVersionUI() {
         const badge = document.getElementById('versionBadge');
         const build = document.getElementById('versionBuildDate');
@@ -2251,21 +2401,73 @@
             });
         } catch(e) {}
     }
-    const AUTO_SYNC_INTERVAL = 2 * 60 * 1000; // دقيقتين
-    let _autoSyncTimer = null;
+    // ─── وقت المزامنة التلقائية ───
+    const SYNC_OPTIONS = [
+        { label: 'دقيقة',     value: 1  },
+        { label: 'دقيقتين',   value: 2  },
+        { label: '5 دقائق',   value: 5  },
+        { label: '10 دقائق',  value: 10 },
+        { label: '30 دقيقة',  value: 30 },
+        { label: 'يدوي فقط',  value: 0  },
+    ];
+    let _syncIntervalMin = parseInt(localStorage.getItem('syncInterval') ?? '2');
+    let _autoSyncTimer   = null;
 
     function startAutoSync() {
         stopAutoSync();
+        if (_syncIntervalMin === 0) return; // يدوي فقط
         _autoSyncTimer = setInterval(async () => {
-            if (navigator.onLine && !_syncInProgress) {
-                await syncFromCloud();
-            }
-        }, AUTO_SYNC_INTERVAL);
+            if (navigator.onLine && !_syncInProgress) await syncFromCloud();
+        }, _syncIntervalMin * 60 * 1000);
     }
 
     function stopAutoSync() {
         if (_autoSyncTimer) { clearInterval(_autoSyncTimer); _autoSyncTimer = null; }
     }
+
+    function setSyncInterval(val) {
+        _syncIntervalMin = val;
+        localStorage.setItem('syncInterval', val);
+        stopAutoSync(); startAutoSync();
+        updateSyncIntervalUI();
+        const opt = SYNC_OPTIONS.find(o => o.value === val);
+        showToast('🔄 المزامنة: ' + (opt ? opt.label : val + ' د'));
+    }
+
+    function updateSyncIntervalUI() {
+        SYNC_OPTIONS.forEach(opt => {
+            const btn = document.getElementById('syncOpt_' + opt.value);
+            if (!btn) return;
+            const active = opt.value === _syncIntervalMin;
+            btn.style.background  = active ? 'rgba(69,204,154,0.12)' : 'var(--card2)';
+            btn.style.borderColor = active ? 'rgba(69,204,154,0.35)' : 'var(--border)';
+            btn.style.color       = active ? 'var(--success)' : 'var(--text-soft)';
+            btn.style.fontWeight  = active ? '700' : '500';
+        });
+        const sub = document.getElementById('syncIntervalSub');
+        if (sub) {
+            const opt = SYNC_OPTIONS.find(o => o.value === _syncIntervalMin);
+            sub.textContent = opt ? 'كل ' + opt.label : 'كل ' + _syncIntervalMin + ' دقيقة';
+        }
+    }
+
+    (function() { updateSyncIntervalUI(); })();
+
+    // بناء أزرار خيارات المزامنة
+    (function buildSyncOptionsUI() {
+        const grid = document.getElementById('syncOptionsGrid');
+        if (!grid) return;
+        grid.innerHTML = SYNC_OPTIONS.map(opt => `
+            <button id="syncOpt_${opt.value}" onclick="setSyncInterval(${opt.value})" style="
+                padding:10px 6px; border-radius:var(--radius-sm);
+                border:1px solid var(--border); background:var(--card2);
+                color:var(--text-soft); cursor:pointer;
+                font-family:'IBM Plex Sans Arabic'; font-size:12px; font-weight:500;
+                text-align:center; transition:all 0.2s; line-height:1.4;
+            ">${opt.value === 0 ? '🔕<br>' : '⏱️<br>'}${opt.label}</button>
+        `).join('');
+        updateSyncIntervalUI();
+    })();
 
     // إيقاف المزامنة عند إخفاء الصفحة واستئنافها عند العودة
     document.addEventListener('visibilitychange', () => {
@@ -2284,6 +2486,7 @@
             localStorage.setItem("items", JSON.stringify(localItems));
             renderCloudItems(); updateStats();
             await cloudPost({ action: 'add', item: name });
+            logActivity('item_add', name);
         }
     }
 
@@ -2324,6 +2527,7 @@
             localStorage.setItem("items", JSON.stringify(localItems));
             renderCloudItems(); updateStats();
             await cloudPost({ action: 'delete', item: n });
+            logActivity('item_delete', n);
             showToast("🗑️ تم حذف الصنف");
         }
     }
@@ -2336,6 +2540,7 @@
             localStorage.setItem("items", JSON.stringify(localItems));
             renderCloudItems();
             await cloudPost({ action: 'edit', item: n.trim(), old: o });
+            logActivity('item_edit', `${o} ← ${n.trim()}`);
             showToast("✅ تم تعديل الصنف");
         }
     }
