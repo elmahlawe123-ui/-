@@ -944,6 +944,17 @@
             <span class="brand-name">المحلاوي</span>
         </div>
         <div class="header-controls">
+            <button id="syncBtn" onclick="syncFromCloud()" style="
+                display:flex; align-items:center; gap:5px;
+                padding:6px 12px;
+                background:rgba(69,204,154,0.08);
+                border:1px solid rgba(69,204,154,0.2);
+                border-radius:20px; cursor:pointer;
+                font-family:'IBM Plex Sans Arabic'; font-size:11px; font-weight:700;
+                color:var(--success); transition:all 0.2s; white-space:nowrap; flex-shrink:0;
+            " onmouseover="this.style.background='rgba(69,204,154,0.16)'" onmouseout="this.style.background='rgba(69,204,154,0.08)'">
+                🔄 مزامنة
+            </button>
             <div style="position:relative;">
                 <button class="mode-dropdown-btn" id="modeBtn" onclick="toggleModeMenu()">
                     <span id="modeBtnIcon">🌙</span>
@@ -1104,9 +1115,8 @@
             <div class="card">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;">
                     <span class="card-title" style="margin-bottom:0;">📦 إدارة الأصناف</span>
-                    <button class="sync-btn" id="syncBtn" onclick="syncFromCloud()">🔄 مزامنة</button>
                 </div>
-                <div class="stats-bar"><div class="stat-pill"><div class="stat-num" id="totalItemsCount">0</div><div class="stat-label">إجمالي الأصناف</div></div></div>
+                <div class="stats-bar"><div class="stat-pill"><div class="stat-num" id="totalItemsCount">0</div><div class="stat-label">إجمالي الكمية</div></div></div>
                 <div class="input-wrapper"><input type="text" id="newItemName" placeholder="🔍  بحث أو إضافة صنف جديد..." oninput="renderCloudItems(this.value)"></div>
                 <button class="btn-main" onclick="addCloudItemManual()">💾  حفظ صنف جديد</button>
                 <div id="itemsGrid" style="margin-top:16px;"></div>
@@ -1361,11 +1371,12 @@
 <div id="exportContainer"></div>
 
 <script>
-    const GOOGLE_URL = 'https://script.google.com/macros/s/AKfycby94J0O_uH3WIFzLoelLDAVMagTZEGbo0LAfbVaVR_52wgSoCtbqJ-6ZHjbnUBujlfc/exec';
+    const GOOGLE_URL = 'https://script.google.com/macros/s/AKfycbzGKYOVXDrLodotaa90wZZIXOeIuS6RVYNF2Ymr9xQ0vwTmA4uDShhpJjTcf_TQT0E/exec';
     const LOGO_URL = 'https://i.ibb.co/4R44srhj/image.jpg';
     let localItems = JSON.parse(localStorage.getItem("items")) || [];
     let invoiceHistory = JSON.parse(localStorage.getItem("invoiceHistory")) || [];
     let shareQueue = [];
+    let _syncInProgress = false;
 
     // ─── Splash ───
     (function() {
@@ -1397,6 +1408,8 @@
             document.getElementById("appContent").classList.remove("hidden");
             if (pass === "4040") document.getElementById("adminTestBtn").classList.remove("hidden");
             renderCloudItems(); renderHistory(); updateStats();
+            // مزامنة تلقائية عند الدخول
+            setTimeout(() => syncFromCloud(), 800);
         } else {
             SFX.error();
             showToast("❌ الرمز خطأ، حاول مجدداً");
@@ -1406,8 +1419,22 @@
     }
 
     function updateStats() {
-        document.getElementById("totalItemsCount").textContent = localItems.length;
+        // إجمالي الكمية = مجموع كل الكميات في الجدول الحالي
+        const rows = document.querySelectorAll('#resultTable tbody tr');
+        let totalQty = 0;
+        rows.forEach(r => { totalQty += parseInt(r.cells[2]?.innerText) || 0; });
+        document.getElementById("totalItemsCount").textContent = totalQty;
         document.getElementById("historyCount").textContent = invoiceHistory.length + " فاتورة";
+    }
+
+    function updateOrderCount() {
+        const rows = document.querySelectorAll('#resultTable tbody tr');
+        let totalQty = 0;
+        rows.forEach(r => { totalQty += parseInt(r.cells[2]?.innerText) || 0; });
+        const el = document.getElementById('orderCount');
+        if (el) el.textContent = rows.length + ' صنف — ' + totalQty + ' قطعة';
+        // تحديث stat الكمية
+        document.getElementById("totalItemsCount").textContent = totalQty;
     }
 
     function toggleClientPanel() {
@@ -1419,12 +1446,6 @@
         toggle.style.color   = open ? 'var(--gold)' : '';
         toggle.style.background    = open ? 'rgba(232,184,109,0.1)' : 'var(--bg3)';
         toggle.style.borderColor   = open ? 'rgba(232,184,109,0.25)' : 'var(--border)';
-    }
-
-    function updateOrderCount() {
-        const n = document.querySelectorAll('#resultTable tbody tr').length;
-        const el = document.getElementById('orderCount');
-        if (el) el.textContent = n + ' صنف';
     }
 
     function addItem() {
@@ -1479,6 +1500,8 @@
         invoiceHistory.unshift(invoice);
         localStorage.setItem("invoiceHistory", JSON.stringify(invoiceHistory));
         updateStats(); renderHistory();
+        // حفظ في السحابة
+        saveInvoiceToCloud(invoice);
     }
 
     function renderHistory(filter = "") {
@@ -1508,12 +1531,14 @@
         });
     }
 
-    function deleteInvoiceFromHistory(id) {
+    async function deleteInvoiceFromHistory(id) {
         if (confirm("حذف هذه الفاتورة نهائياً؟")) {
             SFX.remove();
             invoiceHistory = invoiceHistory.filter(i => i.id !== id);
             localStorage.setItem("invoiceHistory", JSON.stringify(invoiceHistory));
-            renderHistory(); updateStats(); showToast("🗑️ تم حذف الفاتورة");
+            renderHistory(); updateStats();
+            await cloudPost({ action: 'deleteInvoice', id });
+            showToast("🗑️ تم حذف الفاتورة");
         }
     }
 
@@ -2032,28 +2057,84 @@
         }
     }
 
-    async function syncFromCloud() {
-        SFX.sync();
-        const btn = document.getElementById("syncBtn"); btn.innerText = "جاري...";
+    // ══════════════════════════════════════════════════
+    // 🔄 مزامنة كاملة: أصناف + فواتير في الاتجاهين
+    // ══════════════════════════════════════════════════
+
+    async function cloudPost(body) {
         try {
-            const res = await fetch(GOOGLE_URL);
-            const data = await res.json();
-            if (Array.isArray(data)) {
-                localItems = [...new Set([...localItems, ...data])];
-                localStorage.setItem("items", JSON.stringify(localItems));
-                renderCloudItems(); updateStats(); showToast("✅ تم التحديث بنجاح");
-            }
-        } catch(e) { showToast("❌ خطأ في المزامنة"); }
-        btn.innerText = "🔄 مزامنة";
+            const res = await fetch(GOOGLE_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'text/plain' },
+                body: JSON.stringify(body)
+            });
+            return await res.text();
+        } catch(e) { return null; }
     }
 
-    function saveItemToCloud(name) {
+    async function cloudGet(action) {
+        try {
+            const res = await fetch(GOOGLE_URL + '?action=' + action);
+            return await res.json();
+        } catch(e) { return null; }
+    }
+
+    // مزامنة الأصناف من السحابة للجهاز
+    async function syncItemsFromCloud() {
+        const data = await cloudGet('getItems');
+        if (Array.isArray(data) && data.length > 0) {
+            const merged = [...new Set([...data, ...localItems])];
+            localItems = merged;
+            localStorage.setItem("items", JSON.stringify(localItems));
+            renderCloudItems(); updateStats();
+        }
+    }
+
+    // مزامنة الفواتير من السحابة للجهاز
+    async function syncInvoicesFromCloud() {
+        const data = await cloudGet('getInvoices');
+        if (Array.isArray(data) && data.length > 0) {
+            const localIds = invoiceHistory.map(i => String(i.id));
+            const newInvoices = data.filter(inv => !localIds.includes(String(inv.id)));
+            if (newInvoices.length > 0) {
+                invoiceHistory = [...invoiceHistory, ...newInvoices]
+                    .sort((a, b) => b.id - a.id);
+                localStorage.setItem("invoiceHistory", JSON.stringify(invoiceHistory));
+                renderHistory(); updateStats();
+            }
+        }
+    }
+
+    // مزامنة كاملة (أصناف + فواتير)
+    async function syncFromCloud() {
+        if (_syncInProgress) return;
+        _syncInProgress = true;
+        SFX.sync();
+        const btn = document.getElementById("syncBtn");
+        if (btn) btn.innerText = "جاري...";
+        try {
+            await Promise.all([syncItemsFromCloud(), syncInvoicesFromCloud()]);
+            showToast("✅ تمت المزامنة بنجاح");
+        } catch(e) {
+            showToast("❌ خطأ في المزامنة");
+        }
+        if (btn) btn.innerText = "🔄 مزامنة";
+        _syncInProgress = false;
+    }
+
+    // حفظ صنف جديد محلياً وفي السحابة
+    async function saveItemToCloud(name) {
         if (name && !localItems.includes(name)) {
             localItems.push(name);
             localStorage.setItem("items", JSON.stringify(localItems));
             renderCloudItems(); updateStats();
-            fetch(GOOGLE_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: 'add', item: name }) });
+            await cloudPost({ action: 'add', item: name });
         }
+    }
+
+    // حفظ فاتورة في السحابة
+    async function saveInvoiceToCloud(invoice) {
+        await cloudPost({ action: 'saveInvoice', invoice });
     }
 
     function renderCloudItems(filter = "") {
@@ -2081,22 +2162,40 @@
         if (input.value.trim()) { saveItemToCloud(input.value.trim()); input.value = ""; showToast("✅ تم حفظ الصنف"); }
     }
 
-    function deleteItem(n) {
+    async function deleteItem(n) {
         if (confirm("حذف هذا الصنف؟")) {
             SFX.remove();
             localItems = localItems.filter(i => i !== n);
             localStorage.setItem("items", JSON.stringify(localItems));
-            renderCloudItems(); updateStats(); showToast("🗑️ تم حذف الصنف");
+            renderCloudItems(); updateStats();
+            await cloudPost({ action: 'delete', item: n });
+            showToast("🗑️ تم حذف الصنف");
         }
     }
 
-    function editItem(o) {
+    async function editItem(o) {
         const n = prompt("تعديل الصنف:", o);
-        if (n) { localItems[localItems.indexOf(o)] = n; localStorage.setItem("items", JSON.stringify(localItems)); renderCloudItems(); showToast("✅ تم تعديل الصنف"); }
+        if (n && n.trim() && n.trim() !== o) {
+            const idx = localItems.indexOf(o);
+            if (idx !== -1) localItems[idx] = n.trim();
+            localStorage.setItem("items", JSON.stringify(localItems));
+            renderCloudItems();
+            await cloudPost({ action: 'edit', item: n.trim(), old: o });
+            showToast("✅ تم تعديل الصنف");
+        }
     }
 
     function clearTable() { if (confirm("مسح الجدول بالكامل؟")) { SFX.clear(); document.querySelector("#resultTable tbody").innerHTML = ""; updateOrderCount(); showToast("🗑️ تم مسح الجدول"); } }
-    function clearHistory() { if (confirm("حذف السجل بالكامل؟")) { SFX.clear(); invoiceHistory = []; localStorage.setItem("invoiceHistory", "[]"); renderHistory(); updateStats(); showToast("🗑️ تم مسح السجل"); } }
+
+    async function clearHistory() {
+        if (confirm("حذف السجل بالكامل؟")) {
+            SFX.clear();
+            invoiceHistory = [];
+            localStorage.setItem("invoiceHistory", "[]");
+            renderHistory(); updateStats();
+            showToast("🗑️ تم مسح السجل محلياً");
+        }
+    }
 
     function startVoice(id) {
         const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
