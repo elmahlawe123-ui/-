@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>نظام المحلاوي — V 4.0</title>
+    <title>نظام المحلاوي — V 4.1</title>
     <meta name="theme-color" content="#090d18">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -866,7 +866,7 @@
     <div class="splash-brand">المحلاوي</div>
     <div class="splash-tagline">نظام إدارة الطلبيات</div>
     <div class="splash-bar-wrap"><div class="splash-bar"></div></div>
-    <div class="splash-version">V 4.0</div>
+    <div class="splash-version">V 4.1</div>
 </div>
 
 <!-- Swipe Indicators -->
@@ -878,7 +878,7 @@
     <div class="login-card">
         <img src="https://i.ibb.co/4R44srhj/image.jpg" class="login-avatar" alt="logo">
         <span class="brand-name" style="display:block;margin-bottom:4px;">المحلاوي</span>
-        <div class="login-version">Version 4.0</div>
+        <div class="login-version">Version 4.1</div>
         <div class="login-divider"></div>
         <div class="input-wrapper">
             <input type="password" id="passInput" placeholder="🔐  أدخل الرمز السري" style="text-align:center; margin-bottom:10px;" onkeydown="if(event.key==='Enter') checkPassword()">
@@ -1143,7 +1143,7 @@
             <div class="card" style="text-align:center; padding:28px 22px;">
                 <img src="https://i.ibb.co/4R44srhj/image.jpg" style="width:72px;height:72px;border-radius:50%;border:2px solid var(--gold-dim);box-shadow:0 0 20px var(--gold-glow);margin-bottom:12px;">
                 <div style="font-family:'Aref Ruqaa';font-size:24px;color:var(--gold-light);margin-bottom:4px;">نظام المحلاوي</div>
-                <div class="version-badge" style="display:inline-block;">V 4.0</div>
+                <div class="version-badge" style="display:inline-block;">V 4.1</div>
                 <div style="margin-top:16px; display:flex; justify-content:center; gap:20px;">
                     <div style="text-align:center;"><div id="statsItemsCount" style="font-size:22px;font-weight:900;color:var(--gold-light);font-family:'Aref Ruqaa';">0</div><div style="font-size:11px;color:var(--text-muted);">صنف محفوظ</div></div>
                     <div style="width:1px;background:var(--border);"></div>
@@ -1236,9 +1236,15 @@
                     <div class="settings-row-text"><div class="settings-row-title">حالة الاتصال</div><div id="offlineStatusLabel" class="settings-row-sub">جاري التحقق...</div></div>
                     <div id="offlineStatusDot" style="width:10px;height:10px;border-radius:50%;background:var(--text-muted);flex-shrink:0;"></div>
                 </div>
-                <div class="settings-row" style="cursor:default;"><div class="settings-row-icon" style="background:var(--gold-subtle); color:var(--gold);">📱</div><div class="settings-row-text"><div class="settings-row-title">الإصدار</div><div class="settings-row-sub">نظام المحلاوي — V 4.0</div></div></div>
-                <div class="settings-row" style="cursor:default;"><div class="settings-row-icon" style="background:rgba(74,144,217,0.1); color:var(--edit);">☁️</div><div class="settings-row-text"><div class="settings-row-title">نظام التخزين</div><div class="settings-row-sub">Google Sheets + Local Storage</div></div></div>
-                <div class="settings-row" onclick="logout()" style="margin-top:4px;"><div class="settings-row-icon" style="background:rgba(224,82,82,0.1); color:var(--danger);">⏻</div><div class="settings-row-text"><div class="settings-row-title" style="color:var(--danger);">تسجيل الخروج</div><div class="settings-row-sub">العودة لشاشة الدخول</div></div><div class="settings-row-arrow" style="color:var(--danger);">›</div></div>
+                <div class="settings-row" onclick="showChangelog()" style="cursor:pointer;">
+                    <div class="settings-row-icon" style="background:var(--gold-subtle); color:var(--gold);">📱</div>
+                    <div class="settings-row-text">
+                        <div class="settings-row-title">الإصدار <span id="versionBadge" style="font-size:11px;background:rgba(232,184,109,0.15);color:var(--gold);border:1px solid rgba(232,184,109,0.25);padding:2px 8px;border-radius:10px;margin-right:6px;font-weight:700;"></span></div>
+                        <div class="settings-row-sub" id="versionBuildDate"></div>
+                    </div>
+                    <div class="settings-row-arrow">›</div>
+                </div>
+                <div class="settings-row" style="cursor:default;"><div class="settings-row-icon" style="background:rgba(74,144,217,0.1); color:var(--edit);">☁️</div><div class="settings-row-text"><div class="settings-row-title">نظام التخزين</div><div class="settings-row-sub">Google Sheets + Local Storage</div></div></div>                <div class="settings-row" onclick="logout()" style="margin-top:4px;"><div class="settings-row-icon" style="background:rgba(224,82,82,0.1); color:var(--danger);">⏻</div><div class="settings-row-text"><div class="settings-row-title" style="color:var(--danger);">تسجيل الخروج</div><div class="settings-row-sub">العودة لشاشة الدخول</div></div><div class="settings-row-arrow" style="color:var(--danger);">›</div></div>
                 <div id="biometricSettingsRow" class="settings-row hidden" onclick="handleBiometricSettings()" style="margin-top:4px;">
                     <div class="settings-row-icon" style="background:rgba(201,168,76,0.1); color:var(--gold);">👆</div>
                     <div class="settings-row-text">
@@ -1253,9 +1259,25 @@
     </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════════════ -->
-<!-- 🧾 Modal إعدادات الفاتورة                              -->
-<!-- ═══════════════════════════════════════════════════════ -->
+<!-- Modal سجل التغييرات -->
+<div id="changelogModal" class="hidden" style="position:fixed;inset:0;background:rgba(4,8,16,0.88);z-index:3000;display:flex;align-items:flex-end;justify-content:center;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);animation:fadeIn 0.2s ease;">
+    <div style="width:100%;max-width:520px;max-height:88vh;overflow-y:auto;background:var(--card);border-radius:22px 22px 0 0;border:1px solid rgba(201,168,76,0.2);border-bottom:none;box-shadow:0 -12px 48px rgba(0,0,0,0.7);animation:slideUp 0.3s ease;padding-bottom:env(safe-area-inset-bottom,20px);">
+        <div style="display:flex;justify-content:center;padding:12px 0 4px;">
+            <div style="width:36px;height:4px;border-radius:2px;background:var(--border);"></div>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 20px 16px;border-bottom:1px solid var(--border);">
+            <div style="display:flex;align-items:center;gap:10px;">
+                <div style="width:38px;height:38px;border-radius:10px;background:rgba(201,168,76,0.1);display:flex;align-items:center;justify-content:center;font-size:18px;">📋</div>
+                <div>
+                    <div style="font-size:16px;font-weight:700;color:var(--gold-light);">سجل التحديثات</div>
+                    <div style="font-size:11px;color:var(--text-muted);margin-top:1px;">تاريخ التغييرات لكل إصدار</div>
+                </div>
+            </div>
+            <button onclick="document.getElementById('changelogModal').classList.add('hidden')" style="width:32px;height:32px;border-radius:50%;border:1px solid rgba(224,82,82,0.2);background:rgba(224,82,82,0.1);color:var(--danger);cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;transition:all 0.2s;" onmouseover="this.style.background='var(--danger)';this.style.color='#fff'" onmouseout="this.style.background='rgba(224,82,82,0.1)';this.style.color='var(--danger)'">✕</button>
+        </div>
+        <div id="changelogBody" style="padding:18px 20px;display:flex;flex-direction:column;gap:16px;"></div>
+    </div>
+</div>
 <div id="invSettingsModal" class="hidden" style="position:fixed;inset:0;background:rgba(4,8,16,0.88);z-index:2000;display:flex;align-items:flex-end;justify-content:center;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);animation:fadeIn 0.2s ease;">
     <div style="width:100%;max-width:520px;max-height:90vh;overflow-y:auto;background:var(--card);border-radius:22px 22px 0 0;border:1px solid rgba(201,168,76,0.2);border-bottom:none;box-shadow:0 -12px 48px rgba(0,0,0,0.7);animation:slideUp 0.3s ease;padding-bottom:env(safe-area-inset-bottom,16px);">
 
@@ -1385,6 +1407,34 @@
 <script>
     const GOOGLE_URL = 'https://script.google.com/macros/s/AKfycbzGKYOVXDrLodotaa90wZZIXOeIuS6RVYNF2Ymr9xQ0vwTmA4uDShhpJjTcf_TQT0E/exec';
     const LOGO_URL = 'https://i.ibb.co/4R44srhj/image.jpg';
+
+    // ─── نظام الإصدارات ───
+    const APP_VERSION = '4.1';
+    const APP_BUILD   = '2026.03.16';
+    const CHANGELOG = [
+        {
+            version: '4.1',
+            date: '2026-03-16',
+            changes: [
+                'مزامنة حقيقية للفواتير والأصناف بين الهواتف',
+                'زر المزامنة في الهيدر',
+                'مزامنة تلقائية كل دقيقتين',
+                'إشعارات عند وصول فاتورة جديدة',
+                'مفتاح تشغيل/إيقاف التمرير',
+                'عداد الكمية الإجمالية بدل عدد الأصناف',
+            ]
+        },
+        {
+            version: '4.0',
+            date: '2025-01-01',
+            changes: [
+                'الإصدار الأساسي',
+                'إدارة الأصناف والفواتير',
+                'تصدير PDF وصور وواتساب',
+                'دعم البصمة والـ PWA',
+            ]
+        }
+    ];
     let localItems = JSON.parse(localStorage.getItem("items")) || [];
     let invoiceHistory = JSON.parse(localStorage.getItem("invoiceHistory")) || [];
     let shareQueue = [];
@@ -1704,7 +1754,7 @@
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="${P.accent}" style="flex-shrink:0;"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
                         ${footerText}
                     </div>
-                    <div style="font-size:10px;font-weight:700;color:${P.accent};letter-spacing:2px;white-space:nowrap;">V 4.0</div>
+                    <div style="font-size:10px;font-weight:700;color:${P.accent};letter-spacing:2px;white-space:nowrap;">V 4.1</div>
                 </div>
 
             </div>
@@ -2143,7 +2193,44 @@
         _syncInProgress = false;
     }
 
-    // ─── نظام الإشعارات ───
+    // ─── سجل التغييرات والإصدار ───
+    (function initVersionUI() {
+        const badge = document.getElementById('versionBadge');
+        const build = document.getElementById('versionBuildDate');
+        if (badge) badge.textContent = 'V ' + APP_VERSION;
+        if (build) build.textContent = 'آخر تحديث: ' + APP_BUILD;
+    })();
+
+    function showChangelog() {
+        const body = document.getElementById('changelogBody');
+        if (!body) return;
+        body.innerHTML = CHANGELOG.map((rel, idx) => `
+            <div style="background:var(--card2);border:1px solid ${idx === 0 ? 'rgba(232,184,109,0.3)' : 'var(--border)'};border-radius:14px;overflow:hidden;">
+                <div style="padding:14px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);background:${idx === 0 ? 'rgba(232,184,109,0.05)' : 'transparent'};">
+                    <div style="display:flex;align-items:center;gap:10px;">
+                        <span style="font-size:18px;">${idx === 0 ? '🆕' : '📦'}</span>
+                        <div>
+                            <div style="font-size:15px;font-weight:700;color:${idx === 0 ? 'var(--gold-light)' : 'var(--text)'};">الإصدار ${rel.version}</div>
+                            <div style="font-size:11px;color:var(--text-muted);margin-top:1px;">📅 ${rel.date}</div>
+                        </div>
+                    </div>
+                    ${idx === 0 ? '<span style="font-size:10px;font-weight:700;background:rgba(232,184,109,0.15);color:var(--gold);border:1px solid rgba(232,184,109,0.3);padding:3px 10px;border-radius:20px;letter-spacing:1px;">الحالي</span>' : ''}
+                </div>
+                <div style="padding:12px 16px;display:flex;flex-direction:column;gap:7px;">
+                    ${rel.changes.map(c => `
+                        <div style="display:flex;align-items:flex-start;gap:8px;font-size:13px;color:var(--text-soft);">
+                            <span style="color:var(--success);font-size:11px;margin-top:2px;flex-shrink:0;">✔</span>
+                            <span>${c}</span>
+                        </div>`).join('')}
+                </div>
+            </div>`).join('');
+        document.getElementById('changelogModal').classList.remove('hidden');
+    }
+
+    // إغلاق modal سجل التغييرات بالنقر خارجه
+    document.getElementById('changelogModal').addEventListener('click', function(e) {
+        if (e.target === this) this.classList.add('hidden');
+    });
     function requestNotificationPermission() {
         if (!('Notification' in window)) return;
         if (Notification.permission === 'default') {
