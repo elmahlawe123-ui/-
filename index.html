@@ -440,14 +440,15 @@
            DROPDOWN / RESULTS
         ══════════════════════════════════════ */
         .results-box {
-            position: absolute;
+            position: fixed;
             background: var(--card2);
-            border: 1px solid rgba(232,184,109,0.2);
-            width: 100%; z-index: 1100;
-            max-height: 220px; overflow-y: auto;
+            border: 1px solid rgba(232,184,109,0.25);
+            width: auto;
+            min-width: 200px;
+            z-index: 2500;
+            max-height: 260px; overflow-y: auto;
             border-radius: var(--radius-sm);
-            top: calc(100% + 6px);
-            box-shadow: 0 20px 60px rgba(0,0,0,0.75), 0 0 0 1px rgba(232,184,109,0.07);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.85), 0 0 0 1px rgba(232,184,109,0.08);
         }
         .results-box::-webkit-scrollbar { width: 3px; }
         .results-box::-webkit-scrollbar-thumb { background: var(--gold-dim); border-radius: 4px; }
@@ -2124,8 +2125,23 @@
             d.onclick = () => { document.getElementById("itemSearch").value = item; resDiv.classList.add('hidden'); document.getElementById("qty").focus(); };
             resDiv.appendChild(d);
         });
+        // حساب موضع القائمة بناءً على موضع الحقل الفعلي (fixed positioning)
+        const rect = this.getBoundingClientRect();
+        resDiv.style.top    = (rect.bottom + 6) + 'px';
+        resDiv.style.left   = rect.left + 'px';
+        resDiv.style.width  = rect.width + 'px';
         resDiv.classList.remove('hidden');
     };
+
+    // تحديث موضع القائمة عند السكرول
+    document.addEventListener('scroll', () => {
+        const resDiv = document.getElementById('results');
+        if (resDiv.classList.contains('hidden')) return;
+        const input = document.getElementById('itemSearch');
+        const rect  = input.getBoundingClientRect();
+        resDiv.style.top  = (rect.bottom + 6) + 'px';
+        resDiv.style.left = rect.left + 'px';
+    }, true);
 
     document.addEventListener('click', (e) => {
         if (!e.target.closest('#itemSearch') && !e.target.closest('#results')) document.getElementById('results').classList.add('hidden');
