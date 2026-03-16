@@ -1119,7 +1119,16 @@
                 <div class="stats-bar"><div class="stat-pill"><div class="stat-num" id="totalItemsCount">0</div><div class="stat-label">إجمالي الكمية</div></div></div>
                 <div class="input-wrapper"><input type="text" id="newItemName" placeholder="🔍  بحث أو إضافة صنف جديد..." oninput="renderCloudItems(this.value)"></div>
                 <button class="btn-main" onclick="addCloudItemManual()">💾  حفظ صنف جديد</button>
-                <div id="itemsGrid" style="margin-top:16px;"></div>
+
+                <!-- شريط الترتيب -->
+                <div style="display:flex;gap:6px;margin-top:14px;overflow-x:auto;padding-bottom:2px;">
+                    <button id="sortBtn_alpha"  onclick="setSortMode('alpha')"  style="padding:6px 13px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--text-muted);font-family:'IBM Plex Sans Arabic';font-size:11px;font-weight:600;cursor:pointer;white-space:nowrap;transition:all 0.2s;flex-shrink:0;">أ-ي</button>
+                    <button id="sortBtn_recent" onclick="setSortMode('recent')" style="padding:6px 13px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--text-muted);font-family:'IBM Plex Sans Arabic';font-size:11px;font-weight:600;cursor:pointer;white-space:nowrap;transition:all 0.2s;flex-shrink:0;">🕐 الأحدث</button>
+                    <button id="sortBtn_prefix" onclick="setSortMode('prefix')" style="padding:6px 13px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--text-muted);font-family:'IBM Plex Sans Arabic';font-size:11px;font-weight:600;cursor:pointer;white-space:nowrap;transition:all 0.2s;flex-shrink:0;">🔤 تشابه</button>
+                    <button id="sortBtn_used"   onclick="setSortMode('used')"   style="padding:6px 13px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--text-muted);font-family:'IBM Plex Sans Arabic';font-size:11px;font-weight:600;cursor:pointer;white-space:nowrap;transition:all 0.2s;flex-shrink:0;">🔥 الأكثر استخداماً</button>
+                </div>
+
+                <div id="itemsGrid" style="margin-top:14px;"></div>
             </div>
         </div>
 
@@ -1558,6 +1567,7 @@
         if (!qty || qty < 1) { showToast("⚠️ يرجى إدخال كمية صحيحة"); return; }
         SFX.addItem();
         saveItemToCloud(item);
+        trackItemUsage(item);
         const tbody = document.querySelector("#resultTable tbody");
         const row = tbody.insertRow(-1);
         row.style.animation = "fadeIn 0.25s ease";
@@ -2237,7 +2247,56 @@
     }
 
     // ══════════════════════════════════════════════════
-    // 📊 سجل العمليات
+    // 🔀 ترتيب الأصناف
+    // ══════════════════════════════════════════════════
+    let _sortMode = localStorage.getItem('sortMode') || 'recent';
+
+    // عداد استخدام كل صنف (كم مرة أضيف في فاتورة)
+    let itemUsageCount = JSON.parse(localStorage.getItem('itemUsage') || '{}');
+
+    function trackItemUsage(name) {
+        itemUsageCount[name] = (itemUsageCount[name] || 0) + 1;
+        localStorage.setItem('itemUsage', JSON.stringify(itemUsageCount));
+    }
+
+    function getSortedItems(items) {
+        const arr = [...items];
+        if (_sortMode === 'alpha') {
+            arr.sort((a, b) => a.localeCompare(b, 'ar'));
+        } else if (_sortMode === 'recent') {
+            // الترتيب الافتراضي = ترتيب الإضافة (آخر مضاف أولاً)
+            arr.reverse();
+        } else if (_sortMode === 'prefix') {
+            // تجميع حسب أول كلمة
+            arr.sort((a, b) => {
+                const pa = a.split(' ')[0], pb = b.split(' ')[0];
+                return pa.localeCompare(pb, 'ar') || a.localeCompare(b, 'ar');
+            });
+        } else if (_sortMode === 'used') {
+            arr.sort((a, b) => (itemUsageCount[b] || 0) - (itemUsageCount[a] || 0));
+        }
+        return arr;
+    }
+
+    function setSortMode(mode) {
+        _sortMode = mode;
+        localStorage.setItem('sortMode', mode);
+        updateSortUI();
+        renderCloudItems(document.getElementById('newItemName')?.value || '');
+    }
+
+    function updateSortUI() {
+        ['alpha','recent','prefix','used'].forEach(m => {
+            const btn = document.getElementById('sortBtn_' + m);
+            if (!btn) return;
+            const active = m === _sortMode;
+            btn.style.background  = active ? 'rgba(232,184,109,0.12)' : 'transparent';
+            btn.style.borderColor = active ? 'rgba(232,184,109,0.35)' : 'var(--border)';
+            btn.style.color       = active ? 'var(--gold-light)'       : 'var(--text-muted)';
+        });
+    }
+
+    (function() { updateSortUI(); })();
     // ══════════════════════════════════════════════════
     const ACTIVITY_KEY  = 'activityLog';
     const ACTIVITY_LIMIT = 200; // أقصى عدد عمليات محفوظة
@@ -2497,22 +2556,59 @@
 
     function renderCloudItems(filter = "") {
         const grid = document.getElementById("itemsGrid"); grid.innerHTML = "";
-        const filtered = localItems.filter(i => i.toLowerCase().includes(filter.toLowerCase()));
-        document.getElementById("totalItemsCount").textContent = localItems.length;
+        let filtered = localItems.filter(i => i.toLowerCase().includes(filter.toLowerCase()));
+        filtered = getSortedItems(filtered);
+        document.getElementById("totalItemsCount").textContent = (() => {
+            const rows = document.querySelectorAll('#resultTable tbody tr');
+            let q = 0; rows.forEach(r => { q += parseInt(r.cells[2]?.innerText) || 0; }); return q;
+        })();
         if (filtered.length === 0) { grid.innerHTML = `<div class="empty-state"><div class="icon">📦</div><p>لا توجد أصناف محفوظة</p></div>`; return; }
-        filtered.forEach(item => {
-            const div = document.createElement("div"); div.className = "item-row";
-            const span = document.createElement("span"); span.style.fontSize = "14px"; span.textContent = item;
-            const actions = document.createElement("div"); actions.className = "item-actions";
-            const editBtn = document.createElement("button"); editBtn.className = "item-btn";
-            editBtn.style.cssText = "background:rgba(74,144,217,0.12);color:var(--edit);border:1px solid rgba(74,144,217,0.2);";
-            editBtn.textContent = "تعديل"; editBtn.onclick = () => editItem(item);
-            const delBtn = document.createElement("button"); delBtn.className = "item-btn";
-            delBtn.style.cssText = "background:rgba(224,82,82,0.1);color:var(--danger);border:1px solid rgba(224,82,82,0.18);";
-            delBtn.textContent = "حذف"; delBtn.onclick = () => deleteItem(item);
-            actions.appendChild(editBtn); actions.appendChild(delBtn);
-            div.appendChild(span); div.appendChild(actions); grid.appendChild(div);
-        });
+
+        // تجميع حسب أول كلمة في وضع prefix
+        if (_sortMode === 'prefix') {
+            const groups = {};
+            filtered.forEach(item => {
+                const key = item.split(' ')[0];
+                if (!groups[key]) groups[key] = [];
+                groups[key].push(item);
+            });
+            Object.entries(groups).forEach(([key, items]) => {
+                if (Object.keys(groups).length > 1) {
+                    const label = document.createElement('div');
+                    label.style.cssText = 'font-size:10px;color:var(--text-muted);letter-spacing:2px;text-transform:uppercase;font-weight:700;padding:8px 4px 4px;border-bottom:1px solid var(--border);margin-bottom:6px;margin-top:8px;';
+                    label.textContent = key;
+                    grid.appendChild(label);
+                }
+                items.forEach(item => grid.appendChild(buildItemRow(item)));
+            });
+        } else {
+            filtered.forEach(item => grid.appendChild(buildItemRow(item)));
+        }
+    }
+
+    function buildItemRow(item) {
+        const div = document.createElement("div"); div.className = "item-row";
+        const span = document.createElement("span"); span.style.fontSize = "14px";
+        span.style.flex = "1";
+        span.textContent = item;
+        // بادج عدد الاستخدامات
+        const usage = itemUsageCount[item] || 0;
+        if (usage > 0) {
+            const badge = document.createElement('span');
+            badge.style.cssText = `font-size:10px;background:rgba(232,184,109,0.1);color:var(--gold-dim);border:1px solid rgba(232,184,109,0.2);padding:2px 7px;border-radius:10px;margin-right:6px;flex-shrink:0;`;
+            badge.textContent = '×' + usage;
+            span.appendChild(badge);
+        }
+        const actions = document.createElement("div"); actions.className = "item-actions";
+        const editBtn = document.createElement("button"); editBtn.className = "item-btn";
+        editBtn.style.cssText = "background:rgba(74,144,217,0.12);color:var(--edit);border:1px solid rgba(74,144,217,0.2);";
+        editBtn.textContent = "تعديل"; editBtn.onclick = () => editItem(item);
+        const delBtn = document.createElement("button"); delBtn.className = "item-btn";
+        delBtn.style.cssText = "background:rgba(224,82,82,0.1);color:var(--danger);border:1px solid rgba(224,82,82,0.18);";
+        delBtn.textContent = "حذف"; delBtn.onclick = () => deleteItem(item);
+        actions.appendChild(editBtn); actions.appendChild(delBtn);
+        div.appendChild(span); div.appendChild(actions);
+        return div;
     }
 
     function addCloudItemManual() {
