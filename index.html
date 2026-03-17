@@ -10,14 +10,14 @@
     <meta name="apple-mobile-web-app-title" content="المحلاوي">
     <meta name="description" content="نظام المحلاوي لإدارة الطلبيات">
     <link rel="apple-touch-icon" href="https://i.ibb.co/4R44srhj/image.jpg">
-    <!-- فونتات: preload عشان ماتبلكش الصفحة لو النت مقطوع -->
+    <!-- فونتات: non-blocking عشان ماتوقفش الصفحة لو النت مقطوع -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;500;600;700&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Aref+Ruqaa:wght@400;700&family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
     <noscript><link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet"></noscript>
-    <!-- مكتبات: async عشان ماتبلكش الـ JS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
+    <!-- المكتبات: بدون defer عشان تشتغل من الكاش أوفلاين -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
         :root {
             /* ── Palette الجديدة: Obsidian & Ember ── */
@@ -3242,16 +3242,19 @@
         if (!('serviceWorker' in navigator)) return;
         const swCode = `
 const CACHE = 'mahallawi-v4.3';
-const MUST_CACHE = [
+const LIBS = [
     'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js',
     'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js'
 ];
 
+// كاش المكتبات فوراً عند التثبيت
 self.addEventListener('install', e => {
     e.waitUntil(
         caches.open(CACHE).then(cache =>
-            Promise.all(MUST_CACHE.map(url =>
-                fetch(url).then(res => cache.put(url, res)).catch(() => {})
+            Promise.all(LIBS.map(url =>
+                fetch(url, { cache: 'no-cache' })
+                    .then(res => { if (res.ok) cache.put(url, res); })
+                    .catch(() => {})
             ))
         )
     );
@@ -3269,28 +3272,36 @@ self.addEventListener('activate', e => {
 
 self.addEventListener('fetch', e => {
     if (e.request.method !== 'GET') return;
-    // الـ Google APIs والـ Scripts: cache-first
     const url = e.request.url;
-    if (url.includes('cdnjs.cloudflare.com') || url.includes('fonts.googleapis.com') || url.includes('fonts.gstatic.com')) {
+
+    // المكتبات والفونتات: cache-first دائماً
+    if (url.includes('cdnjs.cloudflare.com') || url.includes('fonts.gstatic.com') || url.includes('fonts.googleapis.com')) {
         e.respondWith(
             caches.match(e.request).then(cached => {
                 if (cached) return cached;
                 return fetch(e.request).then(res => {
-                    const clone = res.clone();
-                    caches.open(CACHE).then(c => c.put(e.request, clone));
+                    if (res.ok) {
+                        const clone = res.clone();
+                        caches.open(CACHE).then(c => c.put(e.request, clone));
+                    }
                     return res;
-                }).catch(() => cached);
+                }).catch(() => new Response('', { status: 503 }));
             })
         );
         return;
     }
+
     // باقي الطلبات: network-first مع fallback للكاش
     e.respondWith(
-        fetch(e.request).then(res => {
-            const clone = res.clone();
-            caches.open(CACHE).then(c => c.put(e.request, clone));
-            return res;
-        }).catch(() => caches.match(e.request))
+        fetch(e.request)
+            .then(res => {
+                if (res.ok) {
+                    const clone = res.clone();
+                    caches.open(CACHE).then(c => c.put(e.request, clone));
+                }
+                return res;
+            })
+            .catch(() => caches.match(e.request))
     );
 });`;
         const blob = new Blob([swCode], { type: 'application/javascript' });
