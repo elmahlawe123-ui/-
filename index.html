@@ -3,16 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>نظام المحلاوي — V 4.2</title>
+    <title>نظام المحلاوي — V 4.3</title>
     <meta name="theme-color" content="#090d18">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="المحلاوي">
     <meta name="description" content="نظام المحلاوي لإدارة الطلبيات">
     <link rel="apple-touch-icon" href="https://i.ibb.co/4R44srhj/image.jpg">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;500;600;700&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Aref+Ruqaa:wght@400;700&family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <!-- فونتات: preload عشان ماتبلكش الصفحة لو النت مقطوع -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;500;600;700&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Aref+Ruqaa:wght@400;700&family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet"></noscript>
+    <!-- مكتبات: async عشان ماتبلكش الـ JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
     <style>
         :root {
             /* ── Palette الجديدة: Obsidian & Ember ── */
@@ -866,7 +871,7 @@
     <div class="splash-brand">المحلاوي</div>
     <div class="splash-tagline">نظام إدارة الطلبيات</div>
     <div class="splash-bar-wrap"><div class="splash-bar"></div></div>
-    <div class="splash-version">V 4.2</div>
+    <div class="splash-version">V 4.3</div>
 </div>
 
 <!-- Swipe Indicators -->
@@ -878,7 +883,7 @@
     <div class="login-card">
         <img src="https://i.ibb.co/4R44srhj/image.jpg" class="login-avatar" alt="logo">
         <span class="brand-name" style="display:block;margin-bottom:4px;">المحلاوي</span>
-        <div class="login-version">Version 4.2</div>
+        <div class="login-version">Version 4.3</div>
         <div class="login-divider"></div>
         <div class="input-wrapper">
             <input type="password" id="passInput" placeholder="🔐  أدخل الرمز السري" style="text-align:center; margin-bottom:10px;" onkeydown="if(event.key==='Enter') checkPassword()">
@@ -1116,7 +1121,7 @@
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;">
                     <span class="card-title" style="margin-bottom:0;">📦 إدارة الأصناف</span>
                 </div>
-                <div class="stats-bar"><div class="stat-pill"><div class="stat-num" id="totalItemsCount">0</div><div class="stat-label">إجمالي الكمية</div></div></div>
+                <div class="stats-bar"><div class="stat-pill"><div class="stat-num" id="totalItemsCount">0</div><div class="stat-label">إجمالي الأصناف</div></div></div>
                 <div class="input-wrapper"><input type="text" id="newItemName" placeholder="🔍  بحث أو إضافة صنف جديد..." oninput="renderCloudItems(this.value)"></div>
                 <button class="btn-main" onclick="addCloudItemManual()">💾  حفظ صنف جديد</button>
 
@@ -1152,7 +1157,7 @@
             <div class="card" style="text-align:center; padding:28px 22px;">
                 <img src="https://i.ibb.co/4R44srhj/image.jpg" style="width:72px;height:72px;border-radius:50%;border:2px solid var(--gold-dim);box-shadow:0 0 20px var(--gold-glow);margin-bottom:12px;">
                 <div style="font-family:'Aref Ruqaa';font-size:24px;color:var(--gold-light);margin-bottom:4px;">نظام المحلاوي</div>
-                <div class="version-badge" style="display:inline-block;">V 4.2</div>
+                <div class="version-badge" style="display:inline-block;">V 4.3</div>
                 <div style="margin-top:16px; display:flex; justify-content:center; gap:20px;">
                     <div style="text-align:center;"><div id="statsItemsCount" style="font-size:22px;font-weight:900;color:var(--gold-light);font-family:'Aref Ruqaa';">0</div><div style="font-size:11px;color:var(--text-muted);">صنف محفوظ</div></div>
                     <div style="width:1px;background:var(--border);"></div>
@@ -1306,6 +1311,24 @@
     </div>
 </div>
 
+<!-- Modal قطع النت -->
+<div id="offlineModal" class="hidden" style="position:fixed;inset:0;background:rgba(4,8,16,0.88);z-index:9000;display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);animation:fadeIn 0.25s ease;">
+    <div style="width:100%;max-width:340px;background:var(--card);border-radius:22px;border:1px solid rgba(240,96,96,0.2);box-shadow:0 30px 80px rgba(0,0,0,0.85);animation:slideUp 0.3s ease;overflow:hidden;">
+        <div style="height:3px;background:linear-gradient(90deg,var(--danger),#ff8a65,var(--danger));"></div>
+        <div style="padding:28px 24px 24px;text-align:center;">
+            <div style="width:56px;height:56px;border-radius:16px;background:rgba(240,96,96,0.1);border:1px solid rgba(240,96,96,0.2);display:flex;align-items:center;justify-content:center;font-size:26px;margin:0 auto 16px;">📵</div>
+            <div style="font-size:17px;font-weight:700;color:var(--text);margin-bottom:10px;font-family:'Noto Naskh Arabic';">انقطع الاتصال بالإنترنت</div>
+            <div style="font-size:13px;color:var(--text-soft);line-height:1.7;margin-bottom:22px;">
+                التطبيق يعمل الآن بدون نت وسيتم حفظ البيانات على الهاتف لحين الوصول إلى الإنترنت وإعادة المزامنة تلقائياً.
+            </div>
+            <div style="display:flex;gap:10px;">
+                <button onclick="document.getElementById('offlineModal').classList.add('hidden')" style="flex:1;padding:12px;border-radius:12px;border:1px solid var(--border);background:var(--card2);color:var(--text-muted);font-family:'IBM Plex Sans Arabic';font-size:14px;font-weight:600;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.background='var(--card-hover)'" onmouseout="this.style.background='var(--card2)'">إلغاء</button>
+                <button onclick="document.getElementById('offlineModal').classList.add('hidden')" style="flex:1;padding:12px;border-radius:12px;border:none;background:linear-gradient(135deg,rgba(240,96,96,0.85),rgba(200,60,60,0.9));color:#fff;font-family:'IBM Plex Sans Arabic';font-size:14px;font-weight:700;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.filter='brightness(1.1)'" onmouseout="this.style.filter='brightness(1)'">تمام</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Modal سجل التغييرات -->
 <div id="changelogModal" class="hidden" style="position:fixed;inset:0;background:rgba(4,8,16,0.88);z-index:3000;display:flex;align-items:flex-end;justify-content:center;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);animation:fadeIn 0.2s ease;">
     <div style="width:100%;max-width:520px;max-height:88vh;overflow-y:auto;background:var(--card);border-radius:22px 22px 0 0;border:1px solid rgba(201,168,76,0.2);border-bottom:none;box-shadow:0 -12px 48px rgba(0,0,0,0.7);animation:slideUp 0.3s ease;padding-bottom:env(safe-area-inset-bottom,20px);">
@@ -1456,9 +1479,20 @@
     const LOGO_URL = 'https://i.ibb.co/4R44srhj/image.jpg';
 
     // ─── نظام الإصدارات ───
-    const APP_VERSION = '4.2';
+    const APP_VERSION = '4.3';
     const APP_BUILD   = '2026.03.17';
     const CHANGELOG = [
+        {
+            version: '4.3',
+            date: '2026-03-17',
+            changes: [
+                'تحسين الوضع أوفلاين — التطبيق يعمل بدون نت',
+                'رسالة تنبيه عند انقطاع النت مع زر تمام/إلغاء',
+                'الفونتات والمكتبات لا تبلوك الصفحة أوفلاين',
+                'تحسين الـ Service Worker — كاش أذكى للمكتبات',
+                'صفحة الأصناف تعرض عدد الأصناف بدل الكمية',
+            ]
+        },
         {
             version: '4.2',
             date: '2026-03-17',
@@ -1540,22 +1574,18 @@
     }
 
     function updateStats() {
-        // إجمالي الكمية = مجموع كل الكميات في الجدول الحالي
-        const rows = document.querySelectorAll('#resultTable tbody tr');
-        let totalQty = 0;
-        rows.forEach(r => { totalQty += parseInt(r.cells[2]?.innerText) || 0; });
-        document.getElementById("totalItemsCount").textContent = totalQty;
+        // صفحة الأصناف ← عدد الأصناف المحفوظة
+        document.getElementById("totalItemsCount").textContent = localItems.length;
         document.getElementById("historyCount").textContent = invoiceHistory.length + " فاتورة";
     }
 
     function updateOrderCount() {
+        // صفحة الطلبية ← الكمية الإجمالية
         const rows = document.querySelectorAll('#resultTable tbody tr');
         let totalQty = 0;
         rows.forEach(r => { totalQty += parseInt(r.cells[2]?.innerText) || 0; });
         const el = document.getElementById('orderCount');
         if (el) el.textContent = rows.length + ' صنف — ' + totalQty + ' قطعة';
-        // تحديث stat الكمية
-        document.getElementById("totalItemsCount").textContent = totalQty;
     }
 
     function toggleClientPanel() {
@@ -1815,7 +1845,7 @@
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="${P.accent}" style="flex-shrink:0;"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
                         ${footerText}
                     </div>
-                    <div style="font-size:10px;font-weight:700;color:${P.accent};letter-spacing:2px;white-space:nowrap;">V 4.2</div>
+                    <div style="font-size:10px;font-weight:700;color:${P.accent};letter-spacing:2px;white-space:nowrap;">V 4.3</div>
                 </div>
 
             </div>
@@ -2568,10 +2598,7 @@
         const grid = document.getElementById("itemsGrid"); grid.innerHTML = "";
         let filtered = localItems.filter(i => i.toLowerCase().includes(filter.toLowerCase()));
         filtered = getSortedItems(filtered);
-        document.getElementById("totalItemsCount").textContent = (() => {
-            const rows = document.querySelectorAll('#resultTable tbody tr');
-            let q = 0; rows.forEach(r => { q += parseInt(r.cells[2]?.innerText) || 0; }); return q;
-        })();
+        document.getElementById("totalItemsCount").textContent = localItems.length;
         if (filtered.length === 0) { grid.innerHTML = `<div class="empty-state"><div class="icon">📦</div><p>لا توجد أصناف محفوظة</p></div>`; return; }
 
         // تجميع حسب أول كلمة في وضع prefix
@@ -3191,23 +3218,57 @@
     (function registerSW() {
         if (!('serviceWorker' in navigator)) return;
         const swCode = `
-const CACHE = 'mahallawi-v4';
-const ASSETS = [
-    'https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&family=Cairo:wght@300;400;600;700;900&display=swap',
+const CACHE = 'mahallawi-v4.3';
+const MUST_CACHE = [
     'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js',
     'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js'
 ];
+
 self.addEventListener('install', e => {
-    e.waitUntil(caches.open(CACHE).then(cache => cache.addAll(ASSETS).catch(()=>{})));
+    e.waitUntil(
+        caches.open(CACHE).then(cache =>
+            Promise.all(MUST_CACHE.map(url =>
+                fetch(url).then(res => cache.put(url, res)).catch(() => {})
+            ))
+        )
+    );
     self.skipWaiting();
 });
+
 self.addEventListener('activate', e => {
-    e.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))));
+    e.waitUntil(
+        caches.keys().then(keys =>
+            Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))
+        )
+    );
     self.clients.claim();
 });
+
 self.addEventListener('fetch', e => {
     if (e.request.method !== 'GET') return;
-    e.respondWith(fetch(e.request).then(res => { const clone = res.clone(); caches.open(CACHE).then(c => c.put(e.request, clone)); return res; }).catch(() => caches.match(e.request)));
+    // الـ Google APIs والـ Scripts: cache-first
+    const url = e.request.url;
+    if (url.includes('cdnjs.cloudflare.com') || url.includes('fonts.googleapis.com') || url.includes('fonts.gstatic.com')) {
+        e.respondWith(
+            caches.match(e.request).then(cached => {
+                if (cached) return cached;
+                return fetch(e.request).then(res => {
+                    const clone = res.clone();
+                    caches.open(CACHE).then(c => c.put(e.request, clone));
+                    return res;
+                }).catch(() => cached);
+            })
+        );
+        return;
+    }
+    // باقي الطلبات: network-first مع fallback للكاش
+    e.respondWith(
+        fetch(e.request).then(res => {
+            const clone = res.clone();
+            caches.open(CACHE).then(c => c.put(e.request, clone));
+            return res;
+        }).catch(() => caches.match(e.request))
+    );
 });`;
         const blob = new Blob([swCode], { type: 'application/javascript' });
         const swURL = URL.createObjectURL(blob);
@@ -3248,13 +3309,18 @@ self.addEventListener('fetch', e => {
         const b = document.getElementById('offlineBanner');
         if (b) { b.classList.add('show'); }
         updateOnlineStatus();
+        // إظهار modal تنبيه قطع النت
+        const modal = document.getElementById('offlineModal');
+        if (modal) modal.classList.remove('hidden');
     }
 
     function showOnlineBanner() {
         const ob = document.getElementById('offlineBanner');
         const nb = document.getElementById('onlineBanner');
+        const om = document.getElementById('offlineModal');
         if (ob) ob.classList.remove('show');
         if (nb) { nb.classList.add('show'); setTimeout(() => nb.classList.remove('show'), 3000); }
+        if (om) om.classList.add('hidden');
         updateOnlineStatus();
         syncFromCloud();
     }
