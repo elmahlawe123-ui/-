@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>نظام المحلاوي — V 4.1</title>
+    <title>نظام المحلاوي — V 4.2</title>
     <meta name="theme-color" content="#090d18">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -866,7 +866,7 @@
     <div class="splash-brand">المحلاوي</div>
     <div class="splash-tagline">نظام إدارة الطلبيات</div>
     <div class="splash-bar-wrap"><div class="splash-bar"></div></div>
-    <div class="splash-version">V 4.1</div>
+    <div class="splash-version">V 4.2</div>
 </div>
 
 <!-- Swipe Indicators -->
@@ -878,7 +878,7 @@
     <div class="login-card">
         <img src="https://i.ibb.co/4R44srhj/image.jpg" class="login-avatar" alt="logo">
         <span class="brand-name" style="display:block;margin-bottom:4px;">المحلاوي</span>
-        <div class="login-version">Version 4.1</div>
+        <div class="login-version">Version 4.2</div>
         <div class="login-divider"></div>
         <div class="input-wrapper">
             <input type="password" id="passInput" placeholder="🔐  أدخل الرمز السري" style="text-align:center; margin-bottom:10px;" onkeydown="if(event.key==='Enter') checkPassword()">
@@ -1152,7 +1152,7 @@
             <div class="card" style="text-align:center; padding:28px 22px;">
                 <img src="https://i.ibb.co/4R44srhj/image.jpg" style="width:72px;height:72px;border-radius:50%;border:2px solid var(--gold-dim);box-shadow:0 0 20px var(--gold-glow);margin-bottom:12px;">
                 <div style="font-family:'Aref Ruqaa';font-size:24px;color:var(--gold-light);margin-bottom:4px;">نظام المحلاوي</div>
-                <div class="version-badge" style="display:inline-block;">V 4.1</div>
+                <div class="version-badge" style="display:inline-block;">V 4.2</div>
                 <div style="margin-top:16px; display:flex; justify-content:center; gap:20px;">
                     <div style="text-align:center;"><div id="statsItemsCount" style="font-size:22px;font-weight:900;color:var(--gold-light);font-family:'Aref Ruqaa';">0</div><div style="font-size:11px;color:var(--text-muted);">صنف محفوظ</div></div>
                     <div style="width:1px;background:var(--border);"></div>
@@ -1456,9 +1456,20 @@
     const LOGO_URL = 'https://i.ibb.co/4R44srhj/image.jpg';
 
     // ─── نظام الإصدارات ───
-    const APP_VERSION = '4.1';
-    const APP_BUILD   = '2026.03.16';
+    const APP_VERSION = '4.2';
+    const APP_BUILD   = '2026.03.17';
     const CHANGELOG = [
+        {
+            version: '4.2',
+            date: '2026-03-17',
+            changes: [
+                'ترتيب الأصناف: أبجدي / أحدث / تشابه / الأكثر استخداماً',
+                'سجل العمليات: فواتير، أصناف، حذف، مزامنة',
+                'خيارات وقت المزامنة التلقائية',
+                'إصلاح مشكلة التعديل — الصنف يتحدث بدل ما يتضاف من جديد',
+                'إشعارات المتصفح عند وصول فاتورة جديدة',
+            ]
+        },
         {
             version: '4.1',
             date: '2026-03-16',
@@ -1466,7 +1477,6 @@
                 'مزامنة حقيقية للفواتير والأصناف بين الهواتف',
                 'زر المزامنة في الهيدر',
                 'مزامنة تلقائية كل دقيقتين',
-                'إشعارات عند وصول فاتورة جديدة',
                 'مفتاح تشغيل/إيقاف التمرير',
                 'عداد الكمية الإجمالية بدل عدد الأصناف',
             ]
@@ -1805,7 +1815,7 @@
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="${P.accent}" style="flex-shrink:0;"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
                         ${footerText}
                     </div>
-                    <div style="font-size:10px;font-weight:700;color:${P.accent};letter-spacing:2px;white-space:nowrap;">V 4.1</div>
+                    <div style="font-size:10px;font-weight:700;color:${P.accent};letter-spacing:2px;white-space:nowrap;">V 4.2</div>
                 </div>
 
             </div>
@@ -2198,8 +2208,8 @@
     async function syncItemsFromCloud() {
         const data = await cloudGet('getItems');
         if (Array.isArray(data) && data.length > 0) {
-            const merged = [...new Set([...data, ...localItems])];
-            localItems = merged;
+            // استبدال القائمة كاملة من الشيت (مش دمج) عشان التعديل والحذف يتعكس صح
+            localItems = data;
             localStorage.setItem("items", JSON.stringify(localItems));
             renderCloudItems(); updateStats();
         }
@@ -2588,8 +2598,7 @@
 
     function buildItemRow(item) {
         const div = document.createElement("div"); div.className = "item-row";
-        const span = document.createElement("span"); span.style.fontSize = "14px";
-        span.style.flex = "1";
+        const span = document.createElement("span"); span.style.cssText = "font-size:14px;flex:1;";
         span.textContent = item;
         // بادج عدد الاستخدامات
         const usage = itemUsageCount[item] || 0;
