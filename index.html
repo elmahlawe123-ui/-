@@ -1491,6 +1491,7 @@
                 'الفونتات والمكتبات لا تبلوك الصفحة أوفلاين',
                 'تحسين الـ Service Worker — كاش أذكى للمكتبات',
                 'صفحة الأصناف تعرض عدد الأصناف بدل الكمية',
+                'حفظ الأصناف الجديدة في قائمة انتظار أوفلاين ورفعها للشيت عند عودة النت',
             ]
         },
         {
@@ -2584,8 +2585,30 @@
             localItems.push(name);
             localStorage.setItem("items", JSON.stringify(localItems));
             renderCloudItems(); updateStats();
-            await cloudPost({ action: 'add', item: name });
+            if (navigator.onLine) {
+                await cloudPost({ action: 'add', item: name });
+            } else {
+                // حفظ في قائمة انتظار للمزامنة لما النت يرجع
+                const queue = JSON.parse(localStorage.getItem('offlineQueue') || '[]');
+                queue.push({ action: 'add', item: name });
+                localStorage.setItem('offlineQueue', JSON.stringify(queue));
+            }
             logActivity('item_add', name);
+        }
+    }
+
+    // مزامنة العمليات المعلقة لما النت يرجع
+    async function flushOfflineQueue() {
+        const queue = JSON.parse(localStorage.getItem('offlineQueue') || '[]');
+        if (queue.length === 0) return;
+        const failed = [];
+        for (const op of queue) {
+            const res = await cloudPost(op);
+            if (!res) failed.push(op);
+        }
+        localStorage.setItem('offlineQueue', JSON.stringify(failed));
+        if (failed.length === 0 && queue.length > 0) {
+            showToast(`✅ تم رفع ${queue.length} صنف معلق للشيت`);
         }
     }
 
@@ -3322,7 +3345,8 @@ self.addEventListener('fetch', e => {
         if (nb) { nb.classList.add('show'); setTimeout(() => nb.classList.remove('show'), 3000); }
         if (om) om.classList.add('hidden');
         updateOnlineStatus();
-        syncFromCloud();
+        // أول نبعت العمليات المعلقة، بعدين نزامن
+        flushOfflineQueue().then(() => syncFromCloud());
     }
 
     window.addEventListener('offline', showOfflineBanner);
