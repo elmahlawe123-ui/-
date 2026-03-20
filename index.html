@@ -1255,6 +1255,8 @@ function checkPin(){
     applyPermissions();render();showPage('dashboard');initDashLayout();
     pushHistory();
     toast(`مرحباً ${currentUser.displayName} 👋`,'success');
+    // Auto-pull on login if URL set
+    if(getSyncUrl()){setTimeout(()=>syncPull(),1500);}
   } else {
     pinBuffer='';
     const err=document.getElementById('loginError');
@@ -1977,9 +1979,24 @@ function addLoan(){
 }
 
 function doArchive(){
-  if(!confirm("ترحيل الشهر وتصفير السلف وأيام العمل؟"))return;
-  archive.push({date:new Date().toLocaleDateString(),total:loans.reduce((s,l)=>s+l.amt,0)});
-  attendance=[];loans=[];save();render();showPage('dashboard');toast('📂 تم الترحيل','success');
+  showConfirmModal('📂 ترحيل الشهر','سيتم تصفير الحضور والسلف وحفظ تقرير شهري في Google Sheets',async()=>{
+    const total=loans.reduce((s,l)=>s+l.amt,0);
+    archive.push({date:new Date().toLocaleDateString(),total});
+    // Send monthly report to sheet before clearing
+    const url=getSyncUrl();
+    if(url){
+      try{
+        const payload={attendance,loans};
+        await fetch(url+'?action=archiveMonth',{
+          method:'POST',
+          headers:{'Content-Type':'application/x-www-form-urlencoded'},
+          body:'action=archiveMonth&data='+encodeURIComponent(JSON.stringify(payload))+'&username='+encodeURIComponent(currentUser?currentUser.username:'')
+        });
+      }catch(e){console.warn('Sheet archive failed:',e.message);}
+    }
+    attendance=[];loans=[];save();render();showPage('dashboard');
+    toast('📂 تم الترحيل وحفظ التقرير الشهري','success');
+  });
 }
 
 /* ══ PROFILE ══ */
@@ -2444,9 +2461,10 @@ document.addEventListener('DOMContentLoaded',()=>{
 
 /* ══ GOOGLE SHEETS SYNC ══ */
 const SYNC_URL_KEY='rawy_sync_url';
+const DEFAULT_SYNC_URL='https://script.google.com/macros/s/AKfycbzXkGjuge7GB_UK1Fm87q0mQqECTBS_97-WznV6ccKpzjV-lh9ntEORTLO2wgNxxRe_Dw/exec';
 const SYNC_AUTO_KEY='rawy_sync_auto';
 
-function getSyncUrl(){return localStorage.getItem(SYNC_URL_KEY)||'';}
+function getSyncUrl(){return localStorage.getItem(SYNC_URL_KEY)||DEFAULT_SYNC_URL;}
 function saveSyncUrl(){
   const v=(document.getElementById('syncUrlInput')||{value:''}).value.trim();
   if(!v){toast('⚠️ أدخل الرابط','error');return;}
@@ -2517,7 +2535,7 @@ function updateSyncIntervalStatus(){
 
 function renderSyncSettings(){
   const urlEl=document.getElementById('syncUrlInput');
-  if(urlEl)urlEl.value=getSyncUrl();
+  if(urlEl)urlEl.value=localStorage.getItem(SYNC_URL_KEY)||DEFAULT_SYNC_URL;
   const autoEl=document.getElementById('autoSyncCheck');
   if(autoEl)autoEl.checked=localStorage.getItem(SYNC_AUTO_KEY)==='true';
   setSyncLastTime(localStorage.getItem('rawy_last_sync'));
@@ -2538,7 +2556,7 @@ async function syncPush(){
     const res=await fetch(url+'?action=push',{
       method:'POST',
       headers:{'Content-Type':'application/x-www-form-urlencoded'},
-      body:'action=push&data='+encodeURIComponent(JSON.stringify(payload))
+      body:'action=push&data='+encodeURIComponent(JSON.stringify(payload))+'&username='+encodeURIComponent(currentUser?currentUser.username:'')
     });
     const json=await res.json();
     if(json.error)throw new Error(json.error);
